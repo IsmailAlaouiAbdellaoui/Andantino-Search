@@ -1,0 +1,10 @@
+C:\Users\Smail\source\repos\Andantino-Search\Andantino-Search\bin\Debug\Andantino-Search.exe.config
+C:\Users\Smail\source\repos\Andantino-Search\Andantino-Search\bin\Debug\Andantino-Search.exe
+C:\Users\Smail\source\repos\Andantino-Search\Andantino-Search\bin\Debug\Andantino-Search.pdb
+C:\Users\Smail\source\repos\Andantino-Search\Andantino-Search\obj\Debug\Andantino-Search.csprojAssemblyReference.cache
+C:\Users\Smail\source\repos\Andantino-Search\Andantino-Search\obj\Debug\Andantino_Search.Form1.resources
+C:\Users\Smail\source\repos\Andantino-Search\Andantino-Search\obj\Debug\Andantino_Search.Properties.Resources.resources
+C:\Users\Smail\source\repos\Andantino-Search\Andantino-Search\obj\Debug\Andantino-Search.csproj.GenerateResource.cache
+C:\Users\Smail\source\repos\Andantino-Search\Andantino-Search\obj\Debug\Andantino-Search.csproj.CoreCompileInputs.cache
+C:\Users\Smail\source\repos\Andantino-Search\Andantino-Search\obj\Debug\Andantino-Search.exe
+C:\Users\Smail\source\repos\Andantino-Search\Andantino-Search\obj\Debug\Andantino-Search.pdb
