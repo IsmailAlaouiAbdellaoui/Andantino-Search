@@ -18,6 +18,9 @@ namespace Andantino_Search
         static float first_center_x = 20f;
         float first_center_y = first_center_x;
         List<PointF> centers = new List<PointF>();
+        List<Hexagon> hexes = new List<Hexagon>();
+        List<Hexagon> hexes_board = new List<Hexagon>();
+
         //List<PointF[]> hexes = new List<new PointF[6]>();
 
 
@@ -26,24 +29,72 @@ namespace Andantino_Search
             InitializeComponent();
         }
 
-        
+
 
 
         private void Form1_Load(object sender, EventArgs e)
         {
             float center_x = first_center_x;
             float center_y = first_center_y;
-            for (int i = 0; i < 2; i++)
+
+            ///TEST PART
+
+            //int length = 5, i = 0, j = 0, k, l;
+            //int row, col;
+            //for (row = 0, k = length, l = 2 * length - 1; row < length; row++, k--, l++)
+            //{
+            //    for (col = 0; col < 3 * length; col++)
+            //    {
+            //        if (col >= k && col <= l)
+            //        {
+            //            centers.Add(new PointF(center_x, center_y));
+            //            hexes.Add(new Hexagon())
+            //        }
+            //        else
+            //        {
+            //            centers.Add(new PointF(0f, 0f));
+            //        }
+
+            //        center_x += 2 * size * (float)Math.Sqrt(0.75);
+            //    }
+
+            //    if (row % 2 == 1)
+            //    {
+            //        center_x = first_center_x;
+            //    }
+            //    else
+            //    {
+            //        center_x = first_center_x + size * (float)Math.Sqrt(0.75);
+            //    }
+            //    center_y = center_y + 1.5f * size;
+            //}
+            /////END OF TEST PART
+
+
+
+
+
+
+            ////Working part
+            for (int i = 0; i < 19; i++)
             {
                 for (int j = 0; j < 19; j++)
                 {
-                    
                     centers.Add(new PointF(center_x, center_y));
-                    center_x +=  2 *size * (float)Math.Sqrt(0.75);
+                    hexes.Add(new Hexagon(j, i, new PointF(center_x, center_y)));
+                    center_x += 2 * size * (float)Math.Sqrt(0.75);
                 }
-                center_x = first_center_x + size * (float)Math.Sqrt(0.75);
-                center_y = center_y + 1.5f * size;
 
+                if (i % 2 == 1)
+                {
+                    center_x = first_center_x;
+                    center_y = center_y + 1.5f * size;
+                }
+                else
+                {
+                    center_x = first_center_x + size * (float)Math.Sqrt(0.75);
+                    center_y = center_y + 1.5f * size;
+                }
             }
 
 
@@ -53,61 +104,89 @@ namespace Andantino_Search
         private void picGrid_Paint_1(object sender, PaintEventArgs e)
         {
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            //float size = 20f;
+            ///////TEST PART
+
+            //int length = 5, i = 0, j = 0, k, l;
+            //int row;
+            //int col;
+
+            //for (row = 0, k = length, l = 2 * length - 1; row < length; row++, k--, l++)
+            //{
+            //    //PointF[] points = HexToPoints(height, row, 0);
+            //    //if (points[4].Y > ymax) break;
+            //    for (col = 0; col < 3 * length; col++)
+            //    {
+            //        PointF[] hexes_points = new PointF[6];
+            //        for (int h = 0; h < 6; h++)
+            //        {
+            //            hexes_points[j] = pointy_hex_corner(centers[i], size, j);
+            //        }
+            //        //points = HexToPoints(height, row, col);
+            //        if (col >= k && col <= l)
+            //        {
+            //            e.Graphics.DrawPolygon(Pens.Black, hexes_points);
+
+            //        }
+
+            //    }
+            //}
+
+            ////// END OF TEST PART
+
+            ////WORKING PART
+
             for (int i = 0; i < centers.Count; i++)
             {
-                PointF[] hexes_points = new PointF[6];
-                for (int j = 0; j < 6; j++)
+                if (centers[i].X != 0f && centers[i].Y != 0f)
                 {
-                    hexes_points[j] = pointy_hex_corner(centers[i], size, j);
+                    PointF[] hexes_points = new PointF[6];
+                    for (int j = 0; j < 6; j++)
+                    {
+                        hexes_points[j] = pointy_hex_corner(centers[i], size, j);
+                    }
+                    e.Graphics.DrawPolygon(Pens.Black, hexes_points);
+                    using (StringFormat sf = new StringFormat())
+                    {
+                        sf.Alignment = StringAlignment.Center;
+                        sf.LineAlignment = StringAlignment.Center;
+                        float x = centers[i].X;
+                        float y = centers[i].Y;
+                        string label = "(" + hexes[i].row.ToString() + ", " +
+                            hexes[i].column.ToString() + ")";
+                        e.Graphics.DrawString(label, this.Font,
+                            Brushes.Black, x, y, sf);
+                    }
                 }
-                e.Graphics.DrawPolygon(Pens.Black, hexes_points);
+
             }
 
+        }
 
+        private List<Hexagon> set_hexes_board(List<Hexagon> hexes)
+        {
+            List<Hexagon> hexes_board = new List<Hexagon>();
+            int row_start = 0;
+            int col_start = 5;
+            int number_hexes_row = 10;
+            int max_number_hexes_row = 2 * number_hexes_row - 1;
+            for (int i = 0; i < number_hexes_row; i++)
+            {
+                for (int j = 0; j < hexes.Count; j++)
+                {
+                    if(hexes[j].row == row_start && hexes[j].column == col_start)
+                    {
+                        hexes_board.Add(hexes[j]);
+                    }
+                }
+                col_start += 1;
+                number_hexes_row++;
+                if(number_hexes_row == max_number_hexes_row)
+                {
+                    break;
+                }
+            }
 
-            PointF center = new PointF(20, 20);
-            
-            float horizontal_spacing = size * (float)Math.Sqrt(0.75);
-            float vertical_spacing = size;
-            
-
-            PointF[] points = new PointF[6];
-
-            //for (int i = 0; i < hexes.Count; i++)
-            //{
-            //    e.Graphics.DrawPolygon(Pens.Black, hexes[i]);
-            //}
-
-            //for (int i = 0; i < length; i++)
-            //{
-
-            //}
-            //for (int i = 0; i < 6; i++)
-            //{
-            //    points[i] = pointy_hex_corner(center, size, i);
-            //}
-            //e.Graphics.DrawPolygon(Pens.Black, points);
-
-            //PointF[] points2 = new PointF[6];
-            //PointF new_center = new PointF(center.X + 2 * horizontal_spacing, center.Y);
-            //for (int i = 0; i < 6; i++)
-            //{
-            //    points2[i] = pointy_hex_corner(new_center, size, i);
-
-            //}
-            //e.Graphics.DrawPolygon(Pens.Black, points2);
-
-
-            //PointF[] points3 = new PointF[6];
-            //PointF center3 = new PointF(center.X + horizontal_spacing, center.Y +  1.5f* vertical_spacing);
-            //for (int i = 0; i < 6; i++)
-            //{
-            //    points3[i] = pointy_hex_corner(center3, size, i);
-
-            //}
-            //e.Graphics.DrawPolygon(Pens.Black, points3);
-
+            return hexes_board;
 
         }
 
