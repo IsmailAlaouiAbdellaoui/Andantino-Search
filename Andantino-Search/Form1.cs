@@ -20,6 +20,7 @@ namespace Andantino_Search
         List<PointF> centers = new List<PointF>();
         List<Hexagon> hexes = new List<Hexagon>();
         List<Hexagon> hexes_board = new List<Hexagon>();
+        EnumSymbols test = EnumSymbols.Empty;
 
         //List<PointF[]> hexes = new List<new PointF[6]>();
 
@@ -166,8 +167,6 @@ namespace Andantino_Search
         {
             List<Hexagon> hexes_board = new List<Hexagon>();
 
-
-
             ///Working part
 
             //int row_start = 0;
@@ -261,8 +260,6 @@ namespace Andantino_Search
                 }
                 row_start += 1;
             }
-
-
             return hexes_board;
         }
 
