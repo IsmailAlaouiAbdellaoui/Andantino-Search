@@ -1,0 +1,10 @@
+F:\GitHub\Andantino-Search\Andantino-Search\bin\Release\Andantino-Search.exe.config
+F:\GitHub\Andantino-Search\Andantino-Search\bin\Release\Andantino-Search.exe
+F:\GitHub\Andantino-Search\Andantino-Search\bin\Release\Andantino-Search.pdb
+F:\GitHub\Andantino-Search\Andantino-Search\obj\Release\Andantino-Search.csprojAssemblyReference.cache
+F:\GitHub\Andantino-Search\Andantino-Search\obj\Release\Andantino_Search.Form1.resources
+F:\GitHub\Andantino-Search\Andantino-Search\obj\Release\Andantino_Search.Properties.Resources.resources
+F:\GitHub\Andantino-Search\Andantino-Search\obj\Release\Andantino-Search.csproj.GenerateResource.cache
+F:\GitHub\Andantino-Search\Andantino-Search\obj\Release\Andantino-Search.csproj.CoreCompileInputs.cache
+F:\GitHub\Andantino-Search\Andantino-Search\obj\Release\Andantino-Search.exe
+F:\GitHub\Andantino-Search\Andantino-Search\obj\Release\Andantino-Search.pdb
