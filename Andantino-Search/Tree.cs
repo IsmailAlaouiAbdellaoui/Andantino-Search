@@ -74,19 +74,19 @@ namespace Andantino_Search
 
         /// </summary>
 
-        public TreeNode<T> Root
+        //public TreeNode<T> Root
 
-        {
+        //{
 
-            get
+        //    get
 
-            {
+        //    {
 
-                return this.root;
+        //        return this.root;
 
-            }
+        //    }
 
-        }
+        //}
 
 
 
