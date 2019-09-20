@@ -191,30 +191,7 @@ namespace Andantino_Search
 
             ////WORKING PART
 
-            //for (int i = 0; i < centers.Count; i++)
-            //{
-            //    if (centers[i].X != 0f && centers[i].Y != 0f)
-            //    {
-            //        PointF[] hexes_points = new PointF[6];
-            //        for (int j = 0; j < 6; j++)
-            //        {
-            //            hexes_points[j] = pointy_hex_corner(centers[i], size, j);
-            //        }
-            //        e.Graphics.DrawPolygon(Pens.Black, hexes_points);
-            //        using (StringFormat sf = new StringFormat())
-            //        {
-            //            sf.Alignment = StringAlignment.Center;
-            //            sf.LineAlignment = StringAlignment.Center;
-            //            float x = centers[i].X;
-            //            float y = centers[i].Y;
-            //            string label = "(" + hexes[i].row.ToString() + ", " +
-            //                hexes[i].column.ToString() + ")";
-            //            e.Graphics.DrawString(label, this.Font,
-            //                Brushes.Black, x, y, sf);
-            //        }
-            //    }
-
-            //}
+            
             PointF center_coin_init = new PointF(10f, 10f); ;
             for (int i = 0; i < hexes_board.Count; i++)
             {
@@ -281,6 +258,34 @@ namespace Andantino_Search
 
             }
 
+
+        }
+
+        public void show_all_hexes(List<PointF> hexes_centers, Graphics g)
+        {
+            for (int i = 0; i < hexes_centers.Count; i++)
+            {
+                if (hexes_centers[i].X != 0f && hexes_centers[i].Y != 0f)
+                {
+                    PointF[] hexes_points = new PointF[6];
+                    for (int j = 0; j < 6; j++)
+                    {
+                        hexes_points[j] = pointy_hex_corner(hexes_centers[i], size, j);
+                    }
+                    g.DrawPolygon(Pens.Black, hexes_points);
+                    using (StringFormat sf = new StringFormat())
+                    {
+                        sf.Alignment = StringAlignment.Center;
+                        sf.LineAlignment = StringAlignment.Center;
+                        float x = centers[i].X;
+                        float y = centers[i].Y;
+                        string label = "(" + hexes[i].row.ToString() + ", " +
+                            hexes[i].column.ToString() + ")";
+                        g.DrawString(label, this.Font,
+                            Brushes.Black, x, y, sf);
+                    }
+                }
+            }
 
         }
 
