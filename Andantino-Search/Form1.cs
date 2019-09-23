@@ -16,11 +16,11 @@ namespace Andantino_Search
         static float first_center_x = 20f;
         float first_center_y = first_center_x + 30f;
 
-        Pen color_board = Pens.DarkSlateGray;
+        Pen color_board = Pens.LightGray;
         Brush color_player1 = Brushes.RoyalBlue;
         Brush color_player2 = Brushes.Crimson;
 
-        Pen color_possible_hexes_p1 = Pens.Blue;
+        Pen color_possible_hexes_p1 = Pens.DarkBlue;
         Pen color_possible_hexes_p2 = Pens.Crimson;
 
         List<PointF> centers = new List<PointF>();
@@ -33,6 +33,8 @@ namespace Andantino_Search
 
         List<Hexagon> player2_hexes = new List<Hexagon>();
         List<Hexagon> player2_possible_hexes = new List<Hexagon>();
+
+        List<Hexagon> possible_hexes = new List<Hexagon>();
 
         int row_init_coin = 9;
         int col_init_coin = 9;
@@ -98,11 +100,14 @@ namespace Andantino_Search
 
             }
             player2_possible_hexes = get_neighbors(player1_hexes[0]);
-            textBox1.Text = player1_possible_hexes.Count.ToString();
-            textBox3.Text = player2_possible_hexes.Count.ToString();
-
-
-
+            possible_hexes = get_neighbors(player1_hexes[0]);
+            for (int i = 0; i < possible_hexes.Count; i++)
+            {
+                dataGridView1.Rows.Add("(" + possible_hexes[i].row.ToString() + "," + possible_hexes[i].column.ToString() + ")");
+            }
+            textBox1.Text = possible_hexes.Count.ToString();
+            
+            label2.ForeColor = Color.Crimson;
 
 
         }
@@ -119,7 +124,11 @@ namespace Andantino_Search
             {
                 if (hexes_board[i].row == left_neighbor_row && hexes_board[i].column == left_neighbor_col)
                 {
-                    neighbors.Add(hexes_board[i]);
+                    //if(!hexes_board.Contains(hexes_board[i]) && !hexes_board.Contains(hexes_board[i]))
+                    //{
+                        neighbors.Add(hexes_board[i]);
+                    //}
+                    
                 }
             }
 
@@ -129,7 +138,10 @@ namespace Andantino_Search
             {
                 if (hexes_board[i].row == right_neighbor_row && hexes_board[i].column == right_neighbor_col)
                 {
-                    neighbors.Add(hexes_board[i]);
+                    //if (!hexes_board.Contains(hexes_board[i]) && !hexes_board.Contains(hexes_board[i]))
+                    //{
+                        neighbors.Add(hexes_board[i]);
+                    //}
                 }
 
             }
@@ -184,6 +196,49 @@ namespace Andantino_Search
                         neighbors.Add(hexes_board[i]);
                     }
                 }
+            }
+            else
+            {
+                int upper_left_neighbor_col = column_hex-1;
+                for (int i = 0; i < hexes_board.Count; i++)
+                {
+                    if (hexes_board[i].row == upper_left_neighbor_row && hexes_board[i].column == upper_left_neighbor_col)
+                    {
+                        neighbors.Add(hexes_board[i]);
+                    }
+
+                }
+
+
+                int upper_right_neighbor_col = column_hex ;
+                for (int i = 0; i < hexes_board.Count; i++)
+                {
+                    if (hexes_board[i].row == upper_right_neighbor_row && hexes_board[i].column == upper_right_neighbor_col)
+                    {
+                        neighbors.Add(hexes_board[i]);
+                    }
+
+                }
+
+                int bottom_left_neighbor_col = column_hex - 1;
+                for (int i = 0; i < hexes_board.Count; i++)
+                {
+                    if (hexes_board[i].row == bottom_left_neighbor_row && hexes_board[i].column == bottom_left_neighbor_col)
+                    {
+                        neighbors.Add(hexes_board[i]);
+                    }
+
+                }
+
+                int bottom_right_neighbor_col = column_hex;
+                for (int i = 0; i < hexes_board.Count; i++)
+                {
+                    if (hexes_board[i].row == bottom_right_neighbor_row && hexes_board[i].column == bottom_right_neighbor_col)
+                    {
+                        neighbors.Add(hexes_board[i]);
+                    }
+                }
+
             }
 
             return neighbors;
@@ -253,35 +308,35 @@ namespace Andantino_Search
             //    e.Graphics.FillPolygon(Brushes.LightBlue, hexes_points);
             //}
 
-            if (player1_possible_hexes.Count > 0)
-            {
-                for (int i = 0; i < player1_possible_hexes.Count; i++)
-                {
-                    PointF[] hexes_points = new PointF[6];
-                    for (int j = 0; j < 6; j++)
-                    {
-                        hexes_points[j] = pointy_hex_corner(player1_possible_hexes[i].center, size, j);
-                    }
-                    e.Graphics.DrawPolygon(color_possible_hexes_p1, hexes_points);
+            //if (player1_possible_hexes.Count > 0)
+            //{
+            //    for (int i = 0; i < player1_possible_hexes.Count; i++)
+            //    {
+            //        PointF[] hexes_points = new PointF[6];
+            //        for (int j = 0; j < 6; j++)
+            //        {
+            //            hexes_points[j] = pointy_hex_corner(player1_possible_hexes[i].center, size, j);
+            //        }
+            //        e.Graphics.DrawPolygon(color_possible_hexes_p1, hexes_points);
 
-                }
-            }
+            //    }
+            //}
 
 
 
-            if (player2_possible_hexes.Count > 0)
-            {
-                for (int i = 0; i < player2_possible_hexes.Count; i++)
-                {
-                    PointF[] hexes_points = new PointF[6];
-                    for (int j = 0; j < 6; j++)
-                    {
-                        hexes_points[j] = pointy_hex_corner(player2_possible_hexes[i].center, size, j);
-                    }
-                    e.Graphics.DrawPolygon(color_possible_hexes_p2, hexes_points);
+            //if (player2_possible_hexes.Count > 0)
+            //{
+            //    for (int i = 0; i < player2_possible_hexes.Count; i++)
+            //    {
+            //        PointF[] hexes_points = new PointF[6];
+            //        for (int j = 0; j < 6; j++)
+            //        {
+            //            hexes_points[j] = pointy_hex_corner(player2_possible_hexes[i].center, size, j);
+            //        }
+            //        e.Graphics.DrawPolygon(color_possible_hexes_p2, hexes_points);
 
-                }
-            }
+            //    }
+            //}
 
 
             //painting player1 coins
@@ -304,6 +359,27 @@ namespace Andantino_Search
                     PointF center_hex = player2_hexes[i].center;
                     e.Graphics.FillEllipse(color_player2, center_hex.X - radius_coins, center_hex.Y - radius_coins, radius_coins + radius_coins, radius_coins + radius_coins);
 
+                }
+            }
+
+            if (possible_hexes.Count>0)
+            {
+                for (int i = 0; i < possible_hexes.Count; i++)
+                {
+                    PointF[] hex_points = new PointF[6];
+                    for (int j = 0; j < 6; j++)
+                    {
+                        hex_points[j] = pointy_hex_corner(possible_hexes[i].center, size, j);
+
+                    }
+                    if(isplayer1_turn)
+                    {
+                        e.Graphics.DrawPolygon(color_possible_hexes_p1, hex_points);
+                    }
+                    else
+                    {
+                        e.Graphics.DrawPolygon(color_possible_hexes_p2, hex_points);
+                    }
                 }
             }
 
@@ -431,37 +507,64 @@ namespace Andantino_Search
             if (!isplayer1_turn && isplayer2_turn)//PLAYER 2 TURN
             {
                 int number_hexes_player2_before = player2_hexes.Count;
-                foreach (var neighbor_of_p1 in player2_possible_hexes.ToList())
+                foreach (var neighbor in possible_hexes.ToList())
                 {
-                    if (hexes_board[index_min_distance].row == neighbor_of_p1.row && hexes_board[index_min_distance].column == neighbor_of_p1.column)
+                    if (row_clicked == neighbor.row && col_clicked == neighbor.column)
                     {
 
-                        player2_hexes.Add(neighbor_of_p1);
-                        //MessageBox.Show(player2_hexes.Count.ToString());
-                        player2_possible_hexes.Clear();
+                        player2_hexes.Add(neighbor);
+                        int index_neighbor_to_delete = 0;
+                        for (int i = 0; i < possible_hexes.Count; i++)
+                        {
+                            if(possible_hexes[i].row == neighbor.row && possible_hexes[i].column == neighbor.column)
+                            {
+                                index_neighbor_to_delete = i;
+                            }
+
+                        }
+                        possible_hexes.RemoveAt(index_neighbor_to_delete);
+                        //player2_possible_hexes.Clear();
                         //picGrid.Refresh();
                         isplayer1_turn = true;
                         label2.Text = "Player 1";
+                        label2.ForeColor = Color.RoyalBlue;
                         isplayer2_turn = false;                        
                         for (int i = 0; i < player2_hexes.Count; i++)//add potential hexes to player1
                         {
-                            var temp_possible_hexes_p1 = get_neighbors(player2_hexes[i]);
-                            for (int j = 0; j < temp_possible_hexes_p1.Count; j++)
+                            var temp_possible_hexes = get_neighbors(player2_hexes[i]);
+                            for (int j = 0; j < temp_possible_hexes.Count; j++)
                             {
-                                if (!hexes_outer_board.Contains(temp_possible_hexes_p1[j]) && !player1_hexes.Contains(temp_possible_hexes_p1[j]) && !player2_hexes.Contains(temp_possible_hexes_p1[j]))
+                                if (!hexes_outer_board.Contains(temp_possible_hexes[j]) && !player1_hexes.Contains(temp_possible_hexes[j]) && !player2_hexes.Contains(temp_possible_hexes[j]) && !possible_hexes.Contains(temp_possible_hexes[j]))
                                 {
-                                    player1_possible_hexes.Add(temp_possible_hexes_p1[j]);
+                                    possible_hexes.Add(temp_possible_hexes[j]);
+                                    dataGridView1.Rows.Add("("+temp_possible_hexes[j].row.ToString() + ","+ temp_possible_hexes[j].column.ToString()+")");
+
+
                                 }
 
                             }
                         }
-                        textBox1.Text = player1_possible_hexes.Count.ToString();
+
+                        for (int i = 0; i < player1_hexes.Count; i++)//add potential hexes to player1
+                        {
+                            var temp_possible_hexes = get_neighbors(player1_hexes[i]);
+                            for (int j = 0; j < temp_possible_hexes.Count; j++)
+                            {
+                                if (!hexes_outer_board.Contains(temp_possible_hexes[j]) && !player1_hexes.Contains(temp_possible_hexes[j]) && !player2_hexes.Contains(temp_possible_hexes[j]) && !possible_hexes.Contains(temp_possible_hexes[j]))
+                                {
+                                    possible_hexes.Add(temp_possible_hexes[j]);
+                                    dataGridView1.Rows.Add("(" + temp_possible_hexes[j].row.ToString() + "," + temp_possible_hexes[j].column.ToString() + ")");
+                                }
+
+                            }
+                        }
                     }
                 }
+                textBox1.Text = possible_hexes.Count.ToString();
                 picGrid.Refresh();
                 if (player2_hexes.Count == number_hexes_player2_before)
                 {
-                    MessageBox.Show("This hex doesnt belong to possible values for player 2,  please choose another hex");
+                    MessageBox.Show("Impossible move ! Please choose another place");
                     return;
                 }
 
@@ -472,31 +575,57 @@ namespace Andantino_Search
 
                 int number_hexes_player1_before = player1_hexes.Count;
 
-                foreach (var neighbor_of_p2 in player1_possible_hexes.ToList())
+                foreach (var neighbor in possible_hexes.ToList())
                 {
-                    if (hexes_board[index_min_distance].row == neighbor_of_p2.row && hexes_board[index_min_distance].column == neighbor_of_p2.column)
+                    if (row_clicked == neighbor.row && col_clicked == neighbor.column)
                     {
-                        player1_hexes.Add(neighbor_of_p2);
-                        player1_possible_hexes.Clear();
-                        isplayer1_turn = false;
-                        isplayer2_turn = true;
-                        label2.Text = "Player 2";
-                        for (int i = 0; i < player1_hexes.Count; i++)
+                        player1_hexes.Add(neighbor);
+                        int index_neighbor_to_delete = 0;
+                        for (int i = 0; i < possible_hexes.Count; i++)
                         {
-                            var temp_possible_hexes_p2 = get_neighbors(player1_hexes[i]);
-                            for (int j = 0; j < temp_possible_hexes_p2.Count; j++)
+                            if (possible_hexes[i].row == neighbor.row && possible_hexes[i].column == neighbor.column)
                             {
-                                if (!hexes_outer_board.Contains(temp_possible_hexes_p2[j]) && !player1_hexes.Contains(temp_possible_hexes_p2[j]) && !player2_hexes.Contains(temp_possible_hexes_p2[j]))
-                                {
-                                    player2_possible_hexes.Add(temp_possible_hexes_p2[j]);
-                                }
-
+                                index_neighbor_to_delete = i;
                             }
 
                         }
-                        textBox3.Text = player2_possible_hexes.Count.ToString();
+                        possible_hexes.RemoveAt(index_neighbor_to_delete);
+
+                        isplayer1_turn = false;
+                        isplayer2_turn = true;
+                        label2.Text = "Player 2";
+                        label2.ForeColor = Color.Crimson;
+                        for (int i = 0; i < player2_hexes.Count; i++)//add potential hexes to player1
+                        {
+                            var temp_possible_hexes = get_neighbors(player2_hexes[i]);
+                            for (int j = 0; j < temp_possible_hexes.Count; j++)
+                            {
+                                if (!hexes_outer_board.Contains(temp_possible_hexes[j]) && !player1_hexes.Contains(temp_possible_hexes[j]) && !player2_hexes.Contains(temp_possible_hexes[j]) && !possible_hexes.Contains(temp_possible_hexes[j]))
+                                {
+                                    possible_hexes.Add(temp_possible_hexes[j]);
+                                    dataGridView1.Rows.Add("(" + temp_possible_hexes[j].row.ToString() + "," + temp_possible_hexes[j].column.ToString() + ")");
+                                }
+
+                            }
+                        }
+
+                        for (int i = 0; i < player1_hexes.Count; i++)//add potential hexes to player1
+                        {
+                            var temp_possible_hexes = get_neighbors(player1_hexes[i]);
+                            for (int j = 0; j < temp_possible_hexes.Count; j++)
+                            {
+                                if (!hexes_outer_board.Contains(temp_possible_hexes[j]) && !player1_hexes.Contains(temp_possible_hexes[j]) && !player2_hexes.Contains(temp_possible_hexes[j]) && !possible_hexes.Contains(temp_possible_hexes[j]))
+                                {
+                                    possible_hexes.Add(temp_possible_hexes[j]);
+                                    dataGridView1.Rows.Add("(" + temp_possible_hexes[j].row.ToString() + "," + temp_possible_hexes[j].column.ToString() + ")");
+                                }
+
+                            }
+                        }
+                        
                     }
                 }
+                textBox1.Text = possible_hexes.Count.ToString();
                 picGrid.Refresh();
                 if (player1_hexes.Count == number_hexes_player1_before)
                 {
