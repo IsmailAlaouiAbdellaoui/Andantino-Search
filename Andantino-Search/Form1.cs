@@ -29,10 +29,10 @@ namespace Andantino_Search
         List<Hexagon> hexes_outer_board = new List<Hexagon>();
 
         List<Hexagon> player1_hexes = new List<Hexagon>();
-        List<Hexagon> player1_possible_hexes = new List<Hexagon>();
+        //List<Hexagon> player1_possible_hexes = new List<Hexagon>();
 
         List<Hexagon> player2_hexes = new List<Hexagon>();
-        List<Hexagon> player2_possible_hexes = new List<Hexagon>();
+        //List<Hexagon> player2_possible_hexes = new List<Hexagon>();
 
         List<Hexagon> possible_hexes = new List<Hexagon>();
 
@@ -43,7 +43,7 @@ namespace Andantino_Search
         bool isplayer1_turn = false;
         bool isplayer2_turn = true;
 
-        int turn_number = 1;
+        //int turn_number = 1;
         //EnumSymbols test = EnumSymbols.Empty;
 
         //List<PointF[]> hexes = new List<new PointF[6]>();
@@ -99,7 +99,7 @@ namespace Andantino_Search
                 }
 
             }
-            player2_possible_hexes = get_neighbors(player1_hexes[0]);
+            //player2_possible_hexes = get_neighbors(player1_hexes[0]);
             possible_hexes = get_neighbors(player1_hexes[0]);
             for (int i = 0; i < possible_hexes.Count; i++)
             {
@@ -276,17 +276,17 @@ namespace Andantino_Search
                 e.Graphics.DrawPolygon(color_board, hexes_points);
                 //if (checkBox1.Checked)
                 //{
-                using (StringFormat sf = new StringFormat())
-                {
-                    sf.Alignment = StringAlignment.Center;
-                    sf.LineAlignment = StringAlignment.Center;
-                    float x = hexes_board[i].center.X;
-                    float y = hexes_board[i].center.Y;
-                    string label = "(" + hexes_board[i].row.ToString() + ", " +
-                        hexes_board[i].column.ToString() + ")";
-                    e.Graphics.DrawString(label, this.Font,
-                        Brushes.Black, x, y, sf);
-                }
+                //using (StringFormat sf = new StringFormat())
+                //{
+                //    sf.Alignment = StringAlignment.Center;
+                //    sf.LineAlignment = StringAlignment.Center;
+                //    float x = hexes_board[i].center.X;
+                //    float y = hexes_board[i].center.Y;
+                //    string label = "(" + hexes_board[i].row.ToString() + ", " +
+                //        hexes_board[i].column.ToString() + ")";
+                //    e.Graphics.DrawString(label, this.Font,
+                //        Brushes.Black, x, y, sf);
+                //}
 
                 //}
                 //else

@@ -2,7 +2,7 @@
 
 namespace Andantino_Search
 {
-    public class Hexagon
+    public struct Hexagon
     {
         public int column { get; set; }
         public int row { get; set; }
