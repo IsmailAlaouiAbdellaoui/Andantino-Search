@@ -14,10 +14,13 @@ namespace Andantino_Search
 
         static float size = 20f;
         static float first_center_x = 20f;
-        float first_center_y = first_center_x;
+        float first_center_y = first_center_x + 30f;
 
         Pen color_board = Pens.DarkSlateGray;
         Brush color_player1 = Brushes.RoyalBlue;
+        Brush color_player2 = Brushes.Crimson;
+
+        Pen color_possible_hexes_p1 = Pens.Blue;
         Pen color_possible_hexes_p2 = Pens.Crimson;
 
         List<PointF> centers = new List<PointF>();
@@ -37,7 +40,8 @@ namespace Andantino_Search
 
         bool isplayer1_turn = false;
         bool isplayer2_turn = true;
-
+        
+        int turn_number = 1;
         //EnumSymbols test = EnumSymbols.Empty;
 
         //List<PointF[]> hexes = new List<new PointF[6]>();
@@ -94,7 +98,9 @@ namespace Andantino_Search
 
             }
             player2_possible_hexes = get_neighbors(player1_hexes[0]);
-            
+            textBox1.Text = player1_possible_hexes.Count.ToString();
+            textBox3.Text = player2_possible_hexes.Count.ToString();
+
 
 
 
@@ -247,17 +253,55 @@ namespace Andantino_Search
             //    e.Graphics.FillPolygon(Brushes.LightBlue, hexes_points);
             //}
 
-            for (int i = 0; i < player2_possible_hexes.Count; i++)
+            if (player1_possible_hexes.Count > 0)
             {
-                PointF[] hexes_points = new PointF[6];
-                for (int j = 0; j < 6; j++)
+                for (int i = 0; i < player1_possible_hexes.Count; i++)
                 {
-                    hexes_points[j] = pointy_hex_corner(player2_possible_hexes[i].center, size, j);
-                }
-                e.Graphics.DrawPolygon(color_possible_hexes_p2, hexes_points);
+                    PointF[] hexes_points = new PointF[6];
+                    for (int j = 0; j < 6; j++)
+                    {
+                        hexes_points[j] = pointy_hex_corner(player1_possible_hexes[i].center, size, j);
+                    }
+                    e.Graphics.DrawPolygon(color_possible_hexes_p1, hexes_points);
 
+                }
             }
 
+
+
+            if (player2_possible_hexes.Count>0)
+            {
+                for (int i = 0; i < player2_possible_hexes.Count; i++)
+                {
+                    PointF[] hexes_points = new PointF[6];
+                    for (int j = 0; j < 6; j++)
+                    {
+                        hexes_points[j] = pointy_hex_corner(player2_possible_hexes[i].center, size, j);
+                    }
+                    e.Graphics.DrawPolygon(color_possible_hexes_p2, hexes_points);
+
+                }
+            }
+
+
+
+
+
+
+            //painting player2 coins
+            if(player2_hexes.Count>0)
+            {
+                for (int i = 0; i < player2_hexes.Count; i++)
+                {
+                    PointF center_hex = player2_hexes[i].center;
+                    e.Graphics.FillEllipse(color_player2, center_hex.X - radius_coins, center_hex.Y - radius_coins, radius_coins + radius_coins, radius_coins + radius_coins);
+
+                }
+            }
+
+
+            textBox4.Text = player1_hexes.Count.ToString();
+            textBox5.Text = player2_hexes.Count.ToString();
 
         }
 
@@ -363,7 +407,7 @@ namespace Andantino_Search
             return new PointF(center.X + size * (float)Math.Cos(angle_rad), center.Y + size * (float)Math.Sin(angle_rad));
         }
 
-        private void picGrid_MouseClick(object sender, MouseEventArgs e)
+        public void picGrid_MouseClick(object sender, MouseEventArgs e)
         {
             List<float> distances = new List<float>();
             for (int i = 0; i < hexes_board.Count; i++)
@@ -371,29 +415,94 @@ namespace Andantino_Search
                 distances.Add((float)Math.Sqrt(Math.Pow(hexes_board[i].center.Y - e.Y, 2) + Math.Pow(hexes_board[i].center.X - e.X, 2)));
 
             }
-            //textBox1.Text = "(" + e.X.ToString() + "," + e.Y.ToString() + ")";
             float min_distance = distances.Min();
             int index_min_distance = distances.IndexOf(min_distance);
             textBox2.Text = "row = " + hexes_board[index_min_distance].row.ToString() + ", col = " + hexes_board[index_min_distance].column.ToString();
-            //MessageBox.Show(hexes_outer_board.Count.ToString());
-            //MessageBox.Show(hexes_outer_board[0].center.ToString());
-            //if (isplayer1_turn)
-            //{
-            //    label2.Text = "Player 1";
-            //}
-            //else
-            //{
-            //    label2.Text = "Player 2";
-            //}
 
-            //if(isplayer2_turn)
-            //{
-            //    label2.Text = "Player 2";
-            //}
-            //else
-            //{
-            //    label2.Text = "Player 1";
-            //}
+            if (!isplayer1_turn && isplayer2_turn)
+            {
+                //player2_possible_hexes.Clear();
+                int number_hexes_player2_before = player2_hexes.Count;
+                //foreach (var hex_p1 in player1_hexes)
+                //{
+                //    //List<Hexagon> temp_hexes = new List<Hexagon>();
+                //    var temp_hexes = get_neighbors(hex_p1);
+                //    foreach (var hex in temp_hexes)
+                //    {
+                //        player2_possible_hexes.Add(hex);
+                //    }
+                //}
+                //MessageBox.Show(player2_possible_hexes.Count.ToString());
+                //from the row and column captured by the click, check if there is a hex with the same col and row
+                foreach (var neighbor_of_p1 in player2_possible_hexes.ToList())
+                {
+                    if (hexes_board[index_min_distance].row == neighbor_of_p1.row && hexes_board[index_min_distance].column == neighbor_of_p1.column)
+                    {
+                        
+                        player2_hexes.Add(neighbor_of_p1);
+                        //MessageBox.Show(player2_hexes.Count.ToString());
+                        player2_possible_hexes.Clear();
+                        //picGrid.Refresh();
+                        isplayer1_turn = true;
+                        isplayer2_turn = false;
+                        //add potential hexes to player1
+                        for (int i = 0; i < player2_hexes.Count; i++)
+                        {
+                            var temp_possible_hexes_p1 = get_neighbors(player2_hexes[i]);
+                            for (int j = 0; j < temp_possible_hexes_p1.Count; j++)
+                            {
+                                if (!hexes_outer_board.Contains(temp_possible_hexes_p1[j]) && !player1_hexes.Contains(temp_possible_hexes_p1[j]) && !player2_hexes.Contains(temp_possible_hexes_p1[j]))
+                                {
+                                    player1_possible_hexes.Add(temp_possible_hexes_p1[j]);
+                                }
+
+                            }
+                        }
+                    }
+                }
+                picGrid.Refresh();
+                if (player2_hexes.Count == number_hexes_player2_before)
+                {
+                    MessageBox.Show("This hex doesnt belong to possible values for player 2,  please choose another hex");
+                    return;
+                }
+
+                //check possible values for player2
+                //if hex clicked doesnt belong to possible values, textbox
+                //else colorize this hex, add it to p2hexes list and inverse bools
+                //clear possible values for player2
+            }
+
+            else
+            {
+                //check possible values for player1
+                //if hex clicked doesnt belong
+                int number_hexes_player1_before = player1_hexes.Count;
+                //foreach (var hex_p2 in player2_possible_hexes)
+                //{
+                //    //List<Hexagon> temp_hexes = new List<Hexagon>();
+                //    var temp_hexes = get_neighbors(hex_p2);
+                //    foreach (var hex in temp_hexes)
+                //    {
+                //        player1_possible_hexes.Add(hex);
+                //    }
+                //}
+                foreach (var neighbor_of_p2 in player1_possible_hexes)
+                {
+                    if (hexes_board[index_min_distance].row == neighbor_of_p2.row && hexes_board[index_min_distance].column == neighbor_of_p2.column)
+                    {
+                        player1_hexes.Add(neighbor_of_p2);
+                        player1_possible_hexes.Clear();
+                        isplayer1_turn = false;
+                        isplayer2_turn = true;
+                    }
+                }
+                if (player1_hexes.Count == number_hexes_player1_before)
+                {
+                    MessageBox.Show("This hex doesnt belong to possible values for player 1,  please choose another hex");
+                    return;
+                }
+            }
 
         }
     }
