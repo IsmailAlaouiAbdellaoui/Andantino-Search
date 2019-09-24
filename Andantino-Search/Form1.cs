@@ -510,8 +510,11 @@ namespace Andantino_Search
             if (!isplayer1_turn && isplayer2_turn)//PLAYER 2 TURN
             {
                 int number_hexes_player2_before = player2_hexes.Count;
+                if(possible_hexes.Any(hex => hex.row == row_clicked && hex.column == col_clicked))
+                {
+                    player2_hexes.Add(possible_hexes.Find(hex => hex.row == row_clicked && hex.column == col_clicked));
+                }
                 
-                player2_hexes.Add(possible_hexes.Find(hex => hex.row == row_clicked && hex.column == col_clicked));
                 if (player2_hexes.Count>number_hexes_player2_before)//if new hex in player2
                 {
                     //Hexagon last_p2_hex = player2_hexes[player2_hexes.Count - 1];
@@ -571,7 +574,10 @@ namespace Andantino_Search
             {
 
                 int number_hexes_player1_before = player1_hexes.Count;
-                player1_hexes.Add(possible_hexes.Find(hex => hex.row == row_clicked && hex.column == col_clicked));
+                if (possible_hexes.Any(hex => hex.row == row_clicked && hex.column == col_clicked))
+                {
+                    player1_hexes.Add(possible_hexes.Find(hex => hex.row == row_clicked && hex.column == col_clicked));
+                }
 
                 if (player1_hexes.Count>number_hexes_player1_before)
                 {
