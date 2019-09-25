@@ -36,6 +36,8 @@ namespace Andantino_Search
 
         List<Hexagon> possible_hexes = new List<Hexagon>();
 
+        List<Hexagon> all_players_hexes = new List<Hexagon>();
+
         int row_init_coin = 9;
         int col_init_coin = 9;
         float radius_coins = 10f;
@@ -632,6 +634,71 @@ namespace Andantino_Search
                 }
 
             }
+
+        }
+
+        public bool check_is_victory(Hexagon new_hex, int which_player_played)//P1 = 1, P2 = 2
+        {
+            bool is_winner = false;
+            //keep going direction right 5 times, if hex is the opposite player or in outer hex board 
+            //or not in all_players_hex, break
+            //while going, keep incrementing a number that starts at 1
+            //go opposite direction and do the same 5 - number times it went first, and keep incrementing same number
+            //
+
+            //part going horizontal
+            int count_sequential = 1;
+            int number_coins_required = 5;
+            int row = new_hex.row;
+            int col = new_hex.column;
+            for (int i = 1; i <= number_coins_required-1; i++)
+            {
+                if (which_player_played == 1)
+                {
+                    if (player2_hexes.Any(hex => hex.row == row && hex.column == col + i) || hexes_outer_board.Any(hex=>hex.row == row && hex.column == col + i) || !all_players_hexes.Any(hex=>hex.row == row && hex.column == col + i))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        count_sequential += 1;
+                    }
+                        
+                }
+                else//player 2 just played
+                {
+                    if (player1_hexes.Any(hex => hex.row == row && hex.column == col + i) || hexes_outer_board.Any(hex => hex.row == row && hex.column == col + i) || !all_players_hexes.Any(hex => hex.row == row && hex.column == col + i))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        count_sequential += 1;
+                    }
+
+                }
+            }
+            for (int i = 1; i <= number_coins_required - 1; i++)
+            {
+                if(which_player_played == 1)
+                {
+                    if (player2_hexes.Any(hex => hex.row == row && hex.column == col - i) || hexes_outer_board.Any(hex => hex.row == row && hex.column == col - i) || !all_players_hexes.Any(hex => hex.row == row && hex.column == col - i))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        count_sequential += 1;
+                    }
+
+                }
+            }
+
+
+
+
+
+            return is_winner;
 
         }
     }
