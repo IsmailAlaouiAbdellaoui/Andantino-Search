@@ -12,16 +12,12 @@ namespace Andantino_Search
 
 
 
-        static float size = 20f;
-        static float first_center_x = 20f;
-        float first_center_y = first_center_x + 30f;
+        //static float size = 20f;
+        
 
-        Pen color_board = Pens.LightGray;
-        Brush color_player1 = Brushes.RoyalBlue;
-        Brush color_player2 = Brushes.Crimson;
-
-        Pen color_possible_hexes_p1 = Pens.DarkBlue;
-        Pen color_possible_hexes_p2 = Pens.Crimson;
+        
+        //Brush color_player1 = Brushes.RoyalBlue;
+        
 
         List<PointF> centers = new List<PointF>();
         List<Hexagon> hexes = new List<Hexagon>();
@@ -29,18 +25,18 @@ namespace Andantino_Search
         List<Hexagon> hexes_outer_board = new List<Hexagon>();
 
         List<Hexagon> player1_hexes = new List<Hexagon>();
-        //List<Hexagon> player1_possible_hexes = new List<Hexagon>();
+
 
         List<Hexagon> player2_hexes = new List<Hexagon>();
-        //List<Hexagon> player2_possible_hexes = new List<Hexagon>();
+
 
         List<Hexagon> possible_hexes = new List<Hexagon>();
 
         List<Hexagon> all_players_hexes = new List<Hexagon>();
 
-        int row_init_coin = 9;
-        int col_init_coin = 9;
-        float radius_coins = 10f;
+        //int row_init_coin = 9;
+        //int col_init_coin = 9;
+        //float radius_coins = 10f;
 
         bool isplayer1_turn = false;
         bool isplayer2_turn = true;
@@ -63,8 +59,8 @@ namespace Andantino_Search
         {
             //List<Hexagon> p1_neighbors = new List<Hexagon>();
             label2.Text = "Player 2";
-            float center_x = first_center_x;
-            float center_y = first_center_y;
+            float center_x = Option.first_center_x;
+            float center_y = Option.first_center_y;
 
             ////Working part
             for (int i = 0; i < 19; i++)
@@ -73,19 +69,19 @@ namespace Andantino_Search
                 {
                     centers.Add(new PointF(center_x, center_y));
                     hexes.Add(new Hexagon(j, i, new PointF(center_x, center_y)));
-                    center_x += 2 * size * (float)Math.Sqrt(0.75);
+                    center_x += 2 * Option.size * (float)Math.Sqrt(0.75);
                 }
 
                 if (i % 2 == 1)
                 {
-                    center_x = first_center_x;
+                    center_x = Option.first_center_x;
 
                 }
                 else
                 {
-                    center_x = first_center_x + size * (float)Math.Sqrt(0.75);
+                    center_x = Option.first_center_x + Option.size * (float)Math.Sqrt(0.75);
                 }
-                center_y = center_y + 1.5f * size;
+                center_y = center_y + 1.5f * Option.size;
             }
 
             hexes_board = set_hexes_board(hexes);
@@ -94,19 +90,16 @@ namespace Andantino_Search
             //add player1 coin to his hexes
             for (int i = 0; i < hexes_board.Count; i++)
             {
-                if (hexes_board[i].row == row_init_coin && hexes_board[i].column == col_init_coin)
+                if (hexes_board[i].row == Option.row_init_coin && hexes_board[i].column == Option.col_init_coin)
                 {
                     player1_hexes.Add(hexes_board[i]);
 
                 }
 
             }
-            //player2_possible_hexes = get_neighbors(player1_hexes[0]);
+ 
             possible_hexes = get_neighbors(player1_hexes[0]);
-            //for (int i = 0; i < possible_hexes.Count; i++)
-            //{
-            //    dataGridView1.Rows.Add("(" + possible_hexes[i].row.ToString() + "," + possible_hexes[i].column.ToString() + ")");
-            //}
+
             textBox1.Text = possible_hexes.Count.ToString();
             
             label2.ForeColor = Color.Crimson;
@@ -252,142 +245,87 @@ namespace Andantino_Search
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
 
-            ////WORKING PART
+            draw_hexes_board(e.Graphics);
+
+            //painting player1 coins
+            draw_player1_hexes(e.Graphics);
 
 
-            PointF center_coin_init = new PointF(10f, 10f); ;
-            for (int i = 0; i < hexes_board.Count; i++)
-            {
-                if (hexes_board[i].row == row_init_coin && hexes_board[i].column == col_init_coin)
-                {
-                    center_coin_init = hexes_board[i].center;
+            //painting player2 coins
+            draw_player2_hexes(e.Graphics);
+            
 
-                }
+            draw_possible_hexes(e.Graphics);
 
-            }
-            //e.Graphics.DrawEllipse(Pens.Red,center_coin_init.X - radius_coins, center_coin_init.Y - radius_coins, 2 * radius_coins, 2 * radius_coins);
-            e.Graphics.FillEllipse(color_player1, center_coin_init.X - radius_coins, center_coin_init.Y - radius_coins, radius_coins + radius_coins, radius_coins + radius_coins);
+            textBox4.Text = player1_hexes.Count.ToString();
+            textBox5.Text = player2_hexes.Count.ToString();
 
+        }
+
+        public void draw_hexes_board(Graphics g)
+        {
             for (int i = 0; i < hexes_board.Count; i++)
             {
                 PointF[] hexes_points = new PointF[6];
                 for (int j = 0; j < 6; j++)
                 {
-                    hexes_points[j] = pointy_hex_corner(hexes_board[i].center, size, j);
+                    hexes_points[j] = pointy_hex_corner(hexes_board[i].center, Option.size, j);
                 }
-                e.Graphics.DrawPolygon(color_board, hexes_points);
-                //if (checkBox1.Checked)
-                //{
-                using (StringFormat sf = new StringFormat())
-                {
-                    sf.Alignment = StringAlignment.Center;
-                    sf.LineAlignment = StringAlignment.Center;
-                    float x = hexes_board[i].center.X;
-                    float y = hexes_board[i].center.Y;
-                    string label = "(" + hexes_board[i].row.ToString() + ", " +
-                        hexes_board[i].column.ToString() + ")";
-                    e.Graphics.DrawString(label, this.Font,
-                        Brushes.Black, x, y, sf);
-                }
-
-                //}
-                //else
-                //{
-                //    picGrid.Refresh();
-                //}
-
+                g.DrawPolygon(Option.color_board, hexes_points);
+                draw_coordinates_board(g, hexes_board[i]);
 
             }
+        }
 
-            //for (int k = 0; k < hexes_outer_board.Count; k++)
-            //{
-            //    PointF[] hexes_points = new PointF[6];
-            //    for (int l = 0; l < 6; l++)
-            //    {
-            //        hexes_points[l] = pointy_hex_corner(hexes_outer_board[k].center, size, l);
-            //    }
-            //    e.Graphics.DrawPolygon(Pens.Purple, hexes_points);
-            //    e.Graphics.FillPolygon(Brushes.LightBlue, hexes_points);
-            //}
-
-            //if (player1_possible_hexes.Count > 0)
-            //{
-            //    for (int i = 0; i < player1_possible_hexes.Count; i++)
-            //    {
-            //        PointF[] hexes_points = new PointF[6];
-            //        for (int j = 0; j < 6; j++)
-            //        {
-            //            hexes_points[j] = pointy_hex_corner(player1_possible_hexes[i].center, size, j);
-            //        }
-            //        e.Graphics.DrawPolygon(color_possible_hexes_p1, hexes_points);
-
-            //    }
-            //}
-
-
-
-            //if (player2_possible_hexes.Count > 0)
-            //{
-            //    for (int i = 0; i < player2_possible_hexes.Count; i++)
-            //    {
-            //        PointF[] hexes_points = new PointF[6];
-            //        for (int j = 0; j < 6; j++)
-            //        {
-            //            hexes_points[j] = pointy_hex_corner(player2_possible_hexes[i].center, size, j);
-            //        }
-            //        e.Graphics.DrawPolygon(color_possible_hexes_p2, hexes_points);
-
-            //    }
-            //}
-
-
-            //painting player1 coins
+        public void draw_player1_hexes(Graphics g)
+        {
             if (player1_hexes.Count > 0)
             {
                 for (int i = 0; i < player1_hexes.Count; i++)
                 {
                     PointF center_hex = player1_hexes[i].center;
-                    e.Graphics.FillEllipse(color_player1, center_hex.X - radius_coins, center_hex.Y - radius_coins, radius_coins + radius_coins, radius_coins + radius_coins);
+                    g.FillEllipse(Option.color_player1, center_hex.X - Option.radius_coins, center_hex.Y - Option.radius_coins, 2 * Option.radius_coins, 2 * Option.radius_coins);
 
                 }
             }
+        }
 
-
-            //painting player2 coins
+        public void draw_player2_hexes(Graphics g)
+        {
             if (player2_hexes.Count > 0)
             {
                 for (int i = 0; i < player2_hexes.Count; i++)
                 {
                     PointF center_hex = player2_hexes[i].center;
-                    e.Graphics.FillEllipse(color_player2, center_hex.X - radius_coins, center_hex.Y - radius_coins, radius_coins + radius_coins, radius_coins + radius_coins);
+                    g.FillEllipse(Option.color_player2, center_hex.X - Option.radius_coins, center_hex.Y - Option.radius_coins, 2 * Option.radius_coins, 2 * Option.radius_coins);
 
                 }
             }
 
-            if (possible_hexes.Count>0)
+        }
+
+        public void draw_possible_hexes(Graphics g)
+        {
+            if (possible_hexes.Count > 0)
             {
                 for (int i = 0; i < possible_hexes.Count; i++)
                 {
                     PointF[] hex_points = new PointF[6];
                     for (int j = 0; j < 6; j++)
                     {
-                        hex_points[j] = pointy_hex_corner(possible_hexes[i].center, size, j);
+                        hex_points[j] = pointy_hex_corner(possible_hexes[i].center, Option.size, j);
 
                     }
-                    if(isplayer1_turn)
+                    if (isplayer1_turn)
                     {
-                        e.Graphics.DrawPolygon(color_possible_hexes_p1, hex_points);
+                        g.DrawPolygon(Option.color_possible_hexes_p1, hex_points);
                     }
                     else
                     {
-                        e.Graphics.DrawPolygon(color_possible_hexes_p2, hex_points);
+                        g.DrawPolygon(Option.color_possible_hexes_p2, hex_points);
                     }
                 }
             }
-
-            textBox4.Text = player1_hexes.Count.ToString();
-            textBox5.Text = player2_hexes.Count.ToString();
-
         }
 
         public void show_all_hexes(List<PointF> hexes_centers, Graphics g)
@@ -399,7 +337,7 @@ namespace Andantino_Search
                     PointF[] hexes_points = new PointF[6];
                     for (int j = 0; j < 6; j++)
                     {
-                        hexes_points[j] = pointy_hex_corner(hexes_centers[i], size, j);
+                        hexes_points[j] = pointy_hex_corner(hexes_centers[i], Option.size, j);
                     }
                     g.DrawPolygon(Pens.Black, hexes_points);
                     using (StringFormat sf = new StringFormat())
@@ -416,6 +354,35 @@ namespace Andantino_Search
                 }
             }
 
+        }
+
+        public void draw_hexes_outer_border(Graphics g)
+        {
+            for (int k = 0; k < hexes_outer_board.Count; k++)
+            {
+                PointF[] hexes_points = new PointF[6];
+                for (int l = 0; l < 6; l++)
+                {
+                    hexes_points[l] = pointy_hex_corner(hexes_outer_board[k].center, Option.size, l);
+                }
+                g.DrawPolygon(Pens.Purple, hexes_points);
+                g.FillPolygon(Brushes.LightBlue, hexes_points);
+            }
+        }
+
+        public void draw_coordinates_board(Graphics g, Hexagon hex)
+        {
+            using (StringFormat sf = new StringFormat())
+            {
+                sf.Alignment = StringAlignment.Center;
+                sf.LineAlignment = StringAlignment.Center;
+                float x = hex.center.X;
+                float y = hex.center.Y;
+                string label = "(" + hex.row.ToString() + ", " +
+                    hex.column.ToString() + ")";
+                g.DrawString(label, this.Font,
+                    Brushes.Black, x, y, sf);
+            }
         }
 
         public List<Hexagon> set_hexes_board(List<Hexagon> hexes)
@@ -647,7 +614,9 @@ namespace Andantino_Search
             //
 
             //part going horizontal
-            int count_sequential = 1;
+            int horizontal_sequential = 1;// -
+            int right_diagonal_sequential = 1;// /
+            int left_diagonal_sequential = 1;// \
             int number_coins_required = 5;
             int row = new_hex.row;
             int col = new_hex.column;
@@ -661,7 +630,7 @@ namespace Andantino_Search
                     }
                     else
                     {
-                        count_sequential += 1;
+                        horizontal_sequential += 1;
                     }
                         
                 }
@@ -673,26 +642,107 @@ namespace Andantino_Search
                     }
                     else
                     {
-                        count_sequential += 1;
+                        horizontal_sequential += 1;
                     }
 
                 }
             }
+            if(horizontal_sequential != 5)//if there are not already 5 in 1 direction
+            {
+                for (int i = 1; i <= number_coins_required - 1; i++)
+                {
+                    if (which_player_played == 1)
+                    {
+                        if (player2_hexes.Any(hex => hex.row == row && hex.column == col - i) || hexes_outer_board.Any(hex => hex.row == row && hex.column == col - i) || !all_players_hexes.Any(hex => hex.row == row && hex.column == col - i))
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            horizontal_sequential += 1;
+                        }
+
+                    }
+                    else//player 2 just played
+                    {
+                        if (player1_hexes.Any(hex => hex.row == row && hex.column == col - i) || hexes_outer_board.Any(hex => hex.row == row && hex.column == col - i) || !all_players_hexes.Any(hex => hex.row == row && hex.column == col - i))
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            horizontal_sequential += 1;
+                        }
+
+                    }
+                }
+            }
+            //right diagonal going up
+            //row always - 1
+            //if row even, next col is the same
+            //if row is odd, next col + 1
+            int[] odd_start_addition = new int[4] { 1, 0, 1, 0 };
+            int[] even_start_addition = new int[4] { 0, 1, 0, 1 };
             for (int i = 1; i <= number_coins_required - 1; i++)
             {
-                if(which_player_played == 1)
+                if (which_player_played == 1)
                 {
-                    if (player2_hexes.Any(hex => hex.row == row && hex.column == col - i) || hexes_outer_board.Any(hex => hex.row == row && hex.column == col - i) || !all_players_hexes.Any(hex => hex.row == row && hex.column == col - i))
+                    if( row % 2 == 0)
                     {
-                        break;
+                        if (player2_hexes.Any(hex => hex.row == row-i && hex.column == col + even_start_addition[i]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col + even_start_addition[i]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col + even_start_addition[i]))
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            right_diagonal_sequential += 1;
+                        }
                     }
                     else
                     {
-                        count_sequential += 1;
+                        if (player2_hexes.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition[i]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition[i]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition[i]))
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            right_diagonal_sequential += 1;
+                        }
+
+                    }
+                    
+
+                }
+                else//player 2 just played
+                {
+                    if (row % 2 == 0)
+                    {
+                        if (player1_hexes.Any(hex => hex.row == row - i && hex.column == col + even_start_addition[i]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col + even_start_addition[i]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col + even_start_addition[i]))
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            right_diagonal_sequential += 1;
+                        }
+                    }
+                    else
+                    {
+                        if (player1_hexes.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition[i]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition[i]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition[i]))
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            right_diagonal_sequential += 1;
+                        }
+
                     }
 
                 }
             }
+
+
 
 
 

@@ -54,10 +54,12 @@
     </Compile>
     <Compile Include="Hexagon.cs" />
     <Compile Include="EnumSymbols.cs" />
+    <Compile Include="Option.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tree.cs" />
     <Compile Include="TreeNode.cs" />
+    <Compile Include="Util.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
