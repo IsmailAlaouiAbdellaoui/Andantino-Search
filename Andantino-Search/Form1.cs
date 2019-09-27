@@ -607,7 +607,7 @@ namespace Andantino_Search
         public bool check_is_victory(Hexagon new_hex, int which_player_played)//P1 = 1, P2 = 2
         {
             bool is_winner = false;
-            //keep going direction right 5 times, if hex is the opposite player or in outer hex board 
+            //keep going direction right 4 times, if hex is the opposite player or in outer hex board 
             //or not in all_players_hex, break
             //while going, keep incrementing a number that starts at 1
             //go opposite direction and do the same 5 - number times it went first, and keep incrementing same number
@@ -620,6 +620,8 @@ namespace Andantino_Search
             int number_coins_required = 5;
             int row = new_hex.row;
             int col = new_hex.column;
+
+            #region horizontal
             for (int i = 1; i <= number_coins_required-1; i++)
             {
                 if (which_player_played == 1)
@@ -677,73 +679,279 @@ namespace Andantino_Search
                     }
                 }
             }
+
+            #endregion
+            #region diagonal_/
             //right diagonal going up
             //row always - 1
             //if row even, next col is the same
             //if row is odd, next col + 1
-            int[] odd_start_addition = new int[4] { 1, 0, 1, 0 };
-            int[] even_start_addition = new int[4] { 0, 1, 0, 1 };
-            for (int i = 1; i <= number_coins_required - 1; i++)
+            if (horizontal_sequential !=5)
             {
-                if (which_player_played == 1)
+                int[] odd_start_addition_upright = new int[4] { 1, 0, 1, 0 };
+                int[] even_start_addition_upright = new int[4] { 0, 1, 0, 1 };
+                for (int i = 1; i <= number_coins_required - 1; i++)
                 {
-                    if( row % 2 == 0)
+                    if (which_player_played == 1)
                     {
-                        if (player2_hexes.Any(hex => hex.row == row-i && hex.column == col + even_start_addition[i]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col + even_start_addition[i]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col + even_start_addition[i]))
+                        if (row % 2 == 0)
                         {
-                            break;
+                            if (player2_hexes.Any(hex => hex.row == row - i && hex.column == col + even_start_addition_upright[i-1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col + even_start_addition_upright[i - 1]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col + even_start_addition_upright[i - 1]))
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                right_diagonal_sequential += 1;
+                            }
                         }
                         else
                         {
-                            right_diagonal_sequential += 1;
+                            if (player2_hexes.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition_upright[i - 1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition_upright[i - 1]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition_upright[i - 1]))
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                right_diagonal_sequential += 1;
+                            }
+
+                        }
+
+
+                    }
+                    else//player 2 just played
+                    {
+                        if (row % 2 == 0)
+                        {
+                            if (player1_hexes.Any(hex => hex.row == row - i && hex.column == col + even_start_addition_upright[i-1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col + even_start_addition_upright[i-1]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col + even_start_addition_upright[i-1]))
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                right_diagonal_sequential += 1;
+                            }
+                        }
+                        else
+                        {
+                            if (player1_hexes.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition_upright[i-1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition_upright[i-1]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition_upright[i-1]))
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                right_diagonal_sequential += 1;
+                            }
+
+                        }
+
+                    }
+                }
+
+                if (right_diagonal_sequential != 5)//diagonal right going down
+                {
+                    int[] odd_start_downleft = new int[4] { 0, 1, 0, 1 };
+                    int[] even_start_downleft = new int[4] { 1, 0, 1, 0 };
+                    for (int i = 1; i <= number_coins_required - 1; i++)
+                    {
+                        if (which_player_played == 1)
+                        {
+                            if (row % 2 == 0)
+                            {
+                                if (player2_hexes.Any(hex => hex.row == row + i && hex.column == col - even_start_downleft[i - 1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col - even_start_downleft[i - 1]) || !all_players_hexes.Any(hex => hex.row == row + i && hex.column == col - even_start_downleft[i-1]))
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    right_diagonal_sequential += 1;
+                                }
+                            }
+                            else
+                            {
+                                if (player2_hexes.Any(hex => hex.row == row + i && hex.column == col + odd_start_downleft[i-1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col + odd_start_downleft[i-1]) || !all_players_hexes.Any(hex => hex.row == row + i && hex.column == col + odd_start_downleft[i-1]))
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    right_diagonal_sequential += 1;
+                                }
+
+                            }
+
+
+                        }
+                        else
+                        {
+                            if (row % 2 == 0)
+                            {
+                                if (player1_hexes.Any(hex => hex.row == row + i && hex.column == col - even_start_downleft[i - 1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col - even_start_downleft[i - 1]) || !all_players_hexes.Any(hex => hex.row == row + i && hex.column == col - even_start_downleft[i - 1]))
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    right_diagonal_sequential += 1;
+                                }
+                            }
+                            else
+                            {
+                                if (player1_hexes.Any(hex => hex.row == row + i && hex.column == col + odd_start_downleft[i - 1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col + odd_start_downleft[i - 1]) || !all_players_hexes.Any(hex => hex.row == row + i && hex.column == col + odd_start_downleft[i - 1]))
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    right_diagonal_sequential += 1;
+                                }
+
+                            }
+                        }
+                    }
+
+                }
+                
+            }
+            #endregion
+
+            #region diagonal_\
+            if (horizontal_sequential != 5 || right_diagonal_sequential != 5)
+            {
+                int[] odd_start_upleft = new int[4] { 0, 1, 0, 1 };
+                int[] even_start_upleft = new int[4] { 1, 0, 1, 0 };
+
+                for (int i = 1; i <= number_coins_required - 1; i++)
+                {
+                    if (which_player_played == 1)
+                    {
+                        if (row % 2 == 0)
+                        {
+                            if (player2_hexes.Any(hex => hex.row == row - i && hex.column == col - even_start_upleft[i - 1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col - even_start_upleft[i - 1]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col - even_start_upleft[i - 1]))
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                left_diagonal_sequential += 1;
+                            }
+                        }
+                        else
+                        {
+                            if (player2_hexes.Any(hex => hex.row == row - i && hex.column == col - odd_start_upleft[i - 1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col - odd_start_upleft[i - 1]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col - odd_start_upleft[i - 1]))
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                left_diagonal_sequential += 1;
+                            }
+
                         }
                     }
                     else
                     {
-                        if (player2_hexes.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition[i]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition[i]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition[i]))
+                        if (row % 2 == 0)
                         {
-                            break;
+                            if (player1_hexes.Any(hex => hex.row == row - i && hex.column == col - even_start_upleft[i - 1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col - even_start_upleft[i - 1]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col - even_start_upleft[i - 1]))
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                left_diagonal_sequential += 1;
+                            }
                         }
                         else
                         {
-                            right_diagonal_sequential += 1;
+                            if (player1_hexes.Any(hex => hex.row == row - i && hex.column == col - odd_start_upleft[i - 1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col - odd_start_upleft[i - 1]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col - odd_start_upleft[i - 1]))
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                left_diagonal_sequential += 1;
+                            }
+
                         }
-
                     }
-                    
-
                 }
-                else//player 2 just played
+                if (left_diagonal_sequential != 5)//diagonal left going down
                 {
-                    if (row % 2 == 0)
+                    int[] odd_start_downright = new int[4] { 1, 0, 1, 0 };
+                    int[] even_start_downright = new int[4] { 0, 1, 0, 1 };
+                    for (int i = 1; i <= number_coins_required - 1; i++)
                     {
-                        if (player1_hexes.Any(hex => hex.row == row - i && hex.column == col + even_start_addition[i]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col + even_start_addition[i]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col + even_start_addition[i]))
+                        if (which_player_played == 1)
                         {
-                            break;
+                            if (row % 2 == 0)
+                            {
+                                if (player1_hexes.Any(hex => hex.row == row + i && hex.column == col + even_start_downright[i - 1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col + even_start_downright[i - 1]) || !all_players_hexes.Any(hex => hex.row == row + i && hex.column == col + even_start_downright[i - 1]))
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    left_diagonal_sequential += 1;
+                                }
+                            }
+                            else
+                            {
+                                if (player1_hexes.Any(hex => hex.row == row + i && hex.column == col + odd_start_downright[i - 1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col + odd_start_downright[i - 1]) || !all_players_hexes.Any(hex => hex.row == row + i && hex.column == col + odd_start_downright[i - 1]))
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    left_diagonal_sequential += 1;
+                                }
+
+                            }
                         }
                         else
                         {
-                            right_diagonal_sequential += 1;
-                        }
-                    }
-                    else
-                    {
-                        if (player1_hexes.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition[i]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition[i]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition[i]))
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            right_diagonal_sequential += 1;
+                            if (row % 2 == 0)
+                            {
+                                if (player2_hexes.Any(hex => hex.row == row + i && hex.column == col + even_start_downright[i - 1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col + even_start_downright[i - 1]) || !all_players_hexes.Any(hex => hex.row == row + i && hex.column == col + even_start_downright[i - 1]))
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    left_diagonal_sequential += 1;
+                                }
+                            }
+                            else
+                            {
+                                if (player2_hexes.Any(hex => hex.row == row + i && hex.column == col + odd_start_downright[i - 1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col + odd_start_downright[i - 1]) || !all_players_hexes.Any(hex => hex.row == row + i && hex.column == col + odd_start_downright[i - 1]))
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    left_diagonal_sequential += 1;
+                                }
+
+                            }
+
                         }
 
                     }
-
                 }
+                #endregion
+
+
+
+
             }
 
 
 
+            if (horizontal_sequential == 5 || right_diagonal_sequential == 5 || left_diagonal_sequential == 5)
+            {
+                is_winner = true;
+            }
 
 
 
