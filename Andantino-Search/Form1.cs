@@ -34,6 +34,8 @@ namespace Andantino_Search
 
         List<Hexagon> all_players_hexes = new List<Hexagon>();
 
+        List<Hexagon> empty_hexes;
+
         //int row_init_coin = 9;
         //int col_init_coin = 9;
         //float radius_coins = 10f;
@@ -67,7 +69,7 @@ namespace Andantino_Search
             {
                 for (int j = 0; j < 19; j++)
                 {
-                    centers.Add(new PointF(center_x, center_y));
+                    //centers.Add(new PointF(center_x, center_y));
                     hexes.Add(new Hexagon(j, i, new PointF(center_x, center_y)));
                     center_x += 2 * Option.size * (float)Math.Sqrt(0.75);
                 }
@@ -85,18 +87,12 @@ namespace Andantino_Search
             }
 
             hexes_board = set_hexes_board(hexes);
+            empty_hexes = new List<Hexagon>(hexes_board);
 
 
-            //add player1 coin to his hexes
-            for (int i = 0; i < hexes_board.Count; i++)
-            {
-                if (hexes_board[i].row == Option.row_init_coin && hexes_board[i].column == Option.col_init_coin)
-                {
-                    player1_hexes.Add(hexes_board[i]);
-
-                }
-
-            }
+            Hexagon player1 = hexes_board.Find(hex => hex.row == Option.row_init_coin && hex.column == Option.col_init_coin);
+            player1_hexes.Add(player1);
+            empty_hexes.Remove(player1);
  
             possible_hexes = get_neighbors(player1_hexes[0]);
 
@@ -269,7 +265,7 @@ namespace Andantino_Search
                 PointF[] hexes_points = new PointF[6];
                 for (int j = 0; j < 6; j++)
                 {
-                    hexes_points[j] = pointy_hex_corner(hexes_board[i].center, Option.size, j);
+                    hexes_points[j] = Pointy_hex_corner(hexes_board[i].center, Option.size, j);
                 }
                 g.DrawPolygon(Option.color_board, hexes_points);
                 draw_coordinates_board(g, hexes_board[i]);
@@ -313,7 +309,7 @@ namespace Andantino_Search
                     PointF[] hex_points = new PointF[6];
                     for (int j = 0; j < 6; j++)
                     {
-                        hex_points[j] = pointy_hex_corner(possible_hexes[i].center, Option.size, j);
+                        hex_points[j] = Pointy_hex_corner(possible_hexes[i].center, Option.size, j);
 
                     }
                     if (isplayer1_turn)
@@ -337,7 +333,7 @@ namespace Andantino_Search
                     PointF[] hexes_points = new PointF[6];
                     for (int j = 0; j < 6; j++)
                     {
-                        hexes_points[j] = pointy_hex_corner(hexes_centers[i], Option.size, j);
+                        hexes_points[j] = Pointy_hex_corner(hexes_centers[i], Option.size, j);
                     }
                     g.DrawPolygon(Pens.Black, hexes_points);
                     using (StringFormat sf = new StringFormat())
@@ -363,7 +359,7 @@ namespace Andantino_Search
                 PointF[] hexes_points = new PointF[6];
                 for (int l = 0; l < 6; l++)
                 {
-                    hexes_points[l] = pointy_hex_corner(hexes_outer_board[k].center, Option.size, l);
+                    hexes_points[l] = Pointy_hex_corner(hexes_outer_board[k].center, Option.size, l);
                 }
                 g.DrawPolygon(Pens.Purple, hexes_points);
                 g.FillPolygon(Brushes.LightBlue, hexes_points);
@@ -452,11 +448,11 @@ namespace Andantino_Search
             return hexes_board;
         }
 
-        private PointF pointy_hex_corner(PointF center, float size, int i)
+        private PointF Pointy_hex_corner(PointF center, float size, int i)
         {
-            var angle_deg = 60 * i - 30;
-            var angle_rad = Math.PI / 180 * angle_deg;
-            return new PointF(center.X + size * (float)Math.Cos(angle_rad), center.Y + size * (float)Math.Sin(angle_rad));
+            int angle_deg = (60 * i) - 30;
+            double angle_rad = Math.PI / 180 * angle_deg;
+            return new PointF(center.X + (size * (float)Math.Cos(angle_rad)), center.Y + (size * (float)Math.Sin(angle_rad)));
         }
 
         public void picGrid_MouseClick(object sender, MouseEventArgs e)
@@ -475,13 +471,20 @@ namespace Andantino_Search
             textBox2.Text = "row = " + row_clicked.ToString() + ", col = " + col_clicked.ToString();
 
             List<Hexagon> neighbors2 = new List<Hexagon>();
-
+            int[] result = new int[3];
             if (!isplayer1_turn && isplayer2_turn)//PLAYER 2 TURN
             {
+
+                
+
                 int number_hexes_player2_before = player2_hexes.Count;
                 if(possible_hexes.Any(hex => hex.row == row_clicked && hex.column == col_clicked))
                 {
                     player2_hexes.Add(possible_hexes.Find(hex => hex.row == row_clicked && hex.column == col_clicked));
+                    //all_players_hexes.Add(hexes_board[index_min_distance]);
+                    empty_hexes.Remove(hexes_board[index_min_distance]);
+                    result = check_is_victory(hexes_board[index_min_distance], 2);
+
                 }
                 
                 if (player2_hexes.Count>number_hexes_player2_before)//if new hex in player2
@@ -515,7 +518,7 @@ namespace Andantino_Search
                     possible_hexes.Clear();
                     for (int i = 0; i < neighbors2.Count; i++)
                     {
-                        var temp_list = new List<Hexagon>(neighbors2);
+                        List<Hexagon> temp_list = new List<Hexagon>(neighbors2);
                         temp_list.RemoveAt(i);
                         if (temp_list.Contains(neighbors2[i]) && !player1_hexes.Contains(neighbors2[i]) && !player2_hexes.Contains(neighbors2[i]) && !possible_hexes.Contains(neighbors2[i]))
                         {
@@ -523,10 +526,10 @@ namespace Andantino_Search
                         }
                     }
 
-                    for (int i = 0; i < possible_hexes.Count; i++)
-                    {
-                        dataGridView1.Rows.Add("(" + possible_hexes[i].row.ToString() + "," + possible_hexes[i].column.ToString() + ")");
-                    }
+                    //for (int i = 0; i < possible_hexes.Count; i++)
+                    //{
+                    //    dataGridView1.Rows.Add("(" + possible_hexes[i].row.ToString() + "," + possible_hexes[i].column.ToString() + ")");
+                    //}
                     textBox1.Text = possible_hexes.Count.ToString();
                     picGrid.Refresh();
                 }
@@ -541,11 +544,14 @@ namespace Andantino_Search
 
             else//PLAYER 1 TURN
             {
-
+                //result = check_is_victory(hexes_board[index_min_distance], 1);
                 int number_hexes_player1_before = player1_hexes.Count;
                 if (possible_hexes.Any(hex => hex.row == row_clicked && hex.column == col_clicked))
                 {
                     player1_hexes.Add(possible_hexes.Find(hex => hex.row == row_clicked && hex.column == col_clicked));
+                    //all_players_hexes.Add(hexes_board[index_min_distance]);
+                    empty_hexes.Remove(hexes_board[index_min_distance]);
+                    result = check_is_victory(hexes_board[index_min_distance], 1);
                 }
 
                 if (player1_hexes.Count>number_hexes_player1_before)
@@ -578,7 +584,7 @@ namespace Andantino_Search
                     possible_hexes.Clear();
                     for (int i = 0; i < neighbors2.Count; i++)
                     {
-                        var temp_list = new List<Hexagon>(neighbors2);
+                        List<Hexagon> temp_list = new List<Hexagon>(neighbors2);
                         temp_list.RemoveAt(i);
                         if (temp_list.Contains(neighbors2[i]) && !player1_hexes.Contains(neighbors2[i]) && !player2_hexes.Contains(neighbors2[i]) && !possible_hexes.Contains(neighbors2[i]))
                         {
@@ -586,10 +592,10 @@ namespace Andantino_Search
                         }
                     }
 
-                    for (int i = 0; i < possible_hexes.Count; i++)
-                    {
-                        dataGridView1.Rows.Add("(" + possible_hexes[i].row.ToString() + "," + possible_hexes[i].column.ToString() + ")");
-                    }
+                    //for (int i = 0; i < possible_hexes.Count; i++)
+                    //{
+                    //    dataGridView1.Rows.Add("(" + possible_hexes[i].row.ToString() + "," + possible_hexes[i].column.ToString() + ")");
+                    //}
                     textBox1.Text = possible_hexes.Count.ToString();
                     picGrid.Refresh();
                 }
@@ -601,32 +607,23 @@ namespace Andantino_Search
                 }
 
             }
+            dataGridView1.Rows.Clear();
+            //dataGridView1.Refresh();
+            dataGridView1.Rows.Add("-:" + result[0].ToString() + ", /:" + result[1].ToString() + ", \\:" + result[2].ToString());
+            
 
         }
 
-        public bool check_is_victory(Hexagon new_hex, int which_player_played)//P1 = 1, P2 = 2
+        public int count_horizontal_sequence(Hexagon new_hex, int number_coins_required, int which_player_played)
         {
-            bool is_winner = false;
-            //keep going direction right 4 times, if hex is the opposite player or in outer hex board 
-            //or not in all_players_hex, break
-            //while going, keep incrementing a number that starts at 1
-            //go opposite direction and do the same 5 - number times it went first, and keep incrementing same number
-            //
-
-            //part going horizontal
-            int horizontal_sequential = 1;// -
-            int right_diagonal_sequential = 1;// /
-            int left_diagonal_sequential = 1;// \
-            int number_coins_required = 5;
             int row = new_hex.row;
             int col = new_hex.column;
-
-            #region horizontal
-            for (int i = 1; i <= number_coins_required-1; i++)
+            int horizontal_sequential = 1;
+            for (int i = 1; i <= number_coins_required - 1; i++)
             {
                 if (which_player_played == 1)
                 {
-                    if (player2_hexes.Any(hex => hex.row == row && hex.column == col + i) || hexes_outer_board.Any(hex=>hex.row == row && hex.column == col + i) || !all_players_hexes.Any(hex=>hex.row == row && hex.column == col + i))
+                    if (player2_hexes.Any(hex => hex.row == row && hex.column == col + i) || hexes_outer_board.Any(hex => hex.row == row && hex.column == col + i) || empty_hexes.Any(hex => hex.row == row && hex.column == col + i))
                     {
                         break;
                     }
@@ -634,11 +631,11 @@ namespace Andantino_Search
                     {
                         horizontal_sequential += 1;
                     }
-                        
+
                 }
                 else//player 2 just played
                 {
-                    if (player1_hexes.Any(hex => hex.row == row && hex.column == col + i) || hexes_outer_board.Any(hex => hex.row == row && hex.column == col + i) || !all_players_hexes.Any(hex => hex.row == row && hex.column == col + i))
+                    if (player1_hexes.Any(hex => hex.row == row && hex.column == col + i) || hexes_outer_board.Any(hex => hex.row == row && hex.column == col + i) || empty_hexes.Any(hex => hex.row == row && hex.column == col + i))
                     {
                         break;
                     }
@@ -649,13 +646,13 @@ namespace Andantino_Search
 
                 }
             }
-            if(horizontal_sequential != 5)//if there are not already 5 in 1 direction
+            if (horizontal_sequential != 5)//if there are not already 5 in 1 direction
             {
                 for (int i = 1; i <= number_coins_required - 1; i++)
                 {
                     if (which_player_played == 1)
                     {
-                        if (player2_hexes.Any(hex => hex.row == row && hex.column == col - i) || hexes_outer_board.Any(hex => hex.row == row && hex.column == col - i) || !all_players_hexes.Any(hex => hex.row == row && hex.column == col - i))
+                        if (player2_hexes.Any(hex => hex.row == row && hex.column == col - i) || hexes_outer_board.Any(hex => hex.row == row && hex.column == col - i) || empty_hexes.Any(hex => hex.row == row && hex.column == col - i))
                         {
                             break;
                         }
@@ -667,7 +664,7 @@ namespace Andantino_Search
                     }
                     else//player 2 just played
                     {
-                        if (player1_hexes.Any(hex => hex.row == row && hex.column == col - i) || hexes_outer_board.Any(hex => hex.row == row && hex.column == col - i) || !all_players_hexes.Any(hex => hex.row == row && hex.column == col - i))
+                        if (player1_hexes.Any(hex => hex.row == row && hex.column == col - i) || hexes_outer_board.Any(hex => hex.row == row && hex.column == col - i) || empty_hexes.Any(hex => hex.row == row && hex.column == col - i))
                         {
                             break;
                         }
@@ -680,23 +677,27 @@ namespace Andantino_Search
                 }
             }
 
-            #endregion
-            #region diagonal_/
-            //right diagonal going up
-            //row always - 1
-            //if row even, next col is the same
-            //if row is odd, next col + 1
-            if (horizontal_sequential !=5)
+
+            return horizontal_sequential;
+
+        }
+
+        public int count_diagonal_right_sequence(Hexagon new_hex, int number_coins_required, int which_player_played, int horizontal_sequential)
+        {
+            int right_diagonal_sequential = 1;// /
+            if (horizontal_sequential != 5)
             {
-                int[] odd_start_addition_upright = new int[4] { 1, 0, 1, 0 };
-                int[] even_start_addition_upright = new int[4] { 0, 1, 0, 1 };
+                int row = new_hex.row;
+                int col = new_hex.column;
+                int[] odd_start_addition_upright = new int[4] { 1, 1, 2, 2 };
+                int[] even_start_addition_upright = new int[4] { 0, 1, 1, 2 };
                 for (int i = 1; i <= number_coins_required - 1; i++)
                 {
                     if (which_player_played == 1)
                     {
                         if (row % 2 == 0)
                         {
-                            if (player2_hexes.Any(hex => hex.row == row - i && hex.column == col + even_start_addition_upright[i-1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col + even_start_addition_upright[i - 1]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col + even_start_addition_upright[i - 1]))
+                            if (player2_hexes.Any(hex => hex.row == row - i && hex.column == col + even_start_addition_upright[i - 1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col + even_start_addition_upright[i - 1]) || empty_hexes.Any(hex => hex.row == row - i && hex.column == col + even_start_addition_upright[i - 1]))
                             {
                                 break;
                             }
@@ -707,7 +708,7 @@ namespace Andantino_Search
                         }
                         else
                         {
-                            if (player2_hexes.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition_upright[i - 1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition_upright[i - 1]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition_upright[i - 1]))
+                            if (player2_hexes.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition_upright[i - 1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition_upright[i - 1]) || empty_hexes.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition_upright[i - 1]))
                             {
                                 break;
                             }
@@ -724,7 +725,7 @@ namespace Andantino_Search
                     {
                         if (row % 2 == 0)
                         {
-                            if (player1_hexes.Any(hex => hex.row == row - i && hex.column == col + even_start_addition_upright[i-1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col + even_start_addition_upright[i-1]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col + even_start_addition_upright[i-1]))
+                            if (player1_hexes.Any(hex => hex.row == row - i && hex.column == col + even_start_addition_upright[i - 1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col + even_start_addition_upright[i - 1]) || empty_hexes.Any(hex => hex.row == row - i && hex.column == col + even_start_addition_upright[i - 1]))
                             {
                                 break;
                             }
@@ -735,7 +736,7 @@ namespace Andantino_Search
                         }
                         else
                         {
-                            if (player1_hexes.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition_upright[i-1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition_upright[i-1]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition_upright[i-1]))
+                            if (player1_hexes.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition_upright[i - 1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition_upright[i - 1]) || empty_hexes.Any(hex => hex.row == row - i && hex.column == col + odd_start_addition_upright[i - 1]))
                             {
                                 break;
                             }
@@ -751,18 +752,24 @@ namespace Andantino_Search
 
                 if (right_diagonal_sequential != 5)//diagonal right going down
                 {
-                    int[] odd_start_downleft = new int[4] { 0, 1, 0, 1 };
-                    int[] even_start_downleft = new int[4] { 1, 0, 1, 0 };
+                    int[] odd_start_downleft = new int[4] { 0, 1, 1, 2 };
+                    int[] even_start_downleft = new int[4] { 1, 1, 2, 2 };
                     for (int i = 1; i <= number_coins_required - 1; i++)
                     {
                         if (which_player_played == 1)
                         {
                             if (row % 2 == 0)
                             {
-                                if (player2_hexes.Any(hex => hex.row == row + i && hex.column == col - even_start_downleft[i - 1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col - even_start_downleft[i - 1]) || !all_players_hexes.Any(hex => hex.row == row + i && hex.column == col - even_start_downleft[i-1]))
+                                if (player2_hexes.Any(hex => hex.row == row + i && hex.column == col - even_start_downleft[i - 1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col - even_start_downleft[i - 1]))// ||hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col - even_start_downleft[i - 1])
+                                {
+
+                                    break;
+                                }
+                                if (empty_hexes.Any(hex => hex.row == row + i && hex.column == col - even_start_downleft[i - 1]))
                                 {
                                     break;
                                 }
+
                                 else
                                 {
                                     right_diagonal_sequential += 1;
@@ -770,7 +777,12 @@ namespace Andantino_Search
                             }
                             else
                             {
-                                if (player2_hexes.Any(hex => hex.row == row + i && hex.column == col + odd_start_downleft[i-1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col + odd_start_downleft[i-1]) || !all_players_hexes.Any(hex => hex.row == row + i && hex.column == col + odd_start_downleft[i-1]))
+                                if (player2_hexes.Any(hex => hex.row == row + i && hex.column == col - odd_start_downleft[i - 1]))
+                                {
+                                    break;
+                                }
+
+                                if (empty_hexes.Any(hex => hex.row == row + i && hex.column == col - odd_start_downleft[i - 1]))
                                 {
                                     break;
                                 }
@@ -787,7 +799,7 @@ namespace Andantino_Search
                         {
                             if (row % 2 == 0)
                             {
-                                if (player1_hexes.Any(hex => hex.row == row + i && hex.column == col - even_start_downleft[i - 1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col - even_start_downleft[i - 1]) || !all_players_hexes.Any(hex => hex.row == row + i && hex.column == col - even_start_downleft[i - 1]))
+                                if (player1_hexes.Any(hex => hex.row == row + i && hex.column == col - even_start_downleft[i - 1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col - even_start_downleft[i - 1]) || empty_hexes.Any(hex => hex.row == row + i && hex.column == col - even_start_downleft[i - 1]))
                                 {
                                     break;
                                 }
@@ -798,7 +810,7 @@ namespace Andantino_Search
                             }
                             else
                             {
-                                if (player1_hexes.Any(hex => hex.row == row + i && hex.column == col + odd_start_downleft[i - 1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col + odd_start_downleft[i - 1]) || !all_players_hexes.Any(hex => hex.row == row + i && hex.column == col + odd_start_downleft[i - 1]))
+                                if (player1_hexes.Any(hex => hex.row == row + i && hex.column == col - odd_start_downleft[i - 1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col - odd_start_downleft[i - 1]) || empty_hexes.Any(hex => hex.row == row + i && hex.column == col - odd_start_downleft[i - 1]))
                                 {
                                     break;
                                 }
@@ -812,15 +824,22 @@ namespace Andantino_Search
                     }
 
                 }
-                
-            }
-            #endregion
 
-            #region diagonal_\
-            if (horizontal_sequential != 5 || right_diagonal_sequential != 5)
+            }
+
+
+            return right_diagonal_sequential;
+        }
+
+        public int count_left_diagonal_sequence(Hexagon new_hex, int number_coins_required, int which_player_played, int horizontal_sequential, int right_diagonal_sequential)
+        {
+            int left_diagonal_sequential = 1;
+            if (horizontal_sequential != 5 || right_diagonal_sequential != 5)//going up
             {
-                int[] odd_start_upleft = new int[4] { 0, 1, 0, 1 };
-                int[] even_start_upleft = new int[4] { 1, 0, 1, 0 };
+                int row = new_hex.row;
+                int col = new_hex.column;
+                int[] odd_start_upleft = new int[4] { 0, 1, 1, 2 };
+                int[] even_start_upleft = new int[4] { 1, 1, 2, 2 };
 
                 for (int i = 1; i <= number_coins_required - 1; i++)
                 {
@@ -828,7 +847,7 @@ namespace Andantino_Search
                     {
                         if (row % 2 == 0)
                         {
-                            if (player2_hexes.Any(hex => hex.row == row - i && hex.column == col - even_start_upleft[i - 1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col - even_start_upleft[i - 1]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col - even_start_upleft[i - 1]))
+                            if (player2_hexes.Any(hex => hex.row == row - i && hex.column == col - even_start_upleft[i - 1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col - even_start_upleft[i - 1]) || empty_hexes.Any(hex => hex.row == row - i && hex.column == col - even_start_upleft[i - 1]))
                             {
                                 break;
                             }
@@ -839,7 +858,7 @@ namespace Andantino_Search
                         }
                         else
                         {
-                            if (player2_hexes.Any(hex => hex.row == row - i && hex.column == col - odd_start_upleft[i - 1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col - odd_start_upleft[i - 1]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col - odd_start_upleft[i - 1]))
+                            if (player2_hexes.Any(hex => hex.row == row - i && hex.column == col - odd_start_upleft[i - 1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col - odd_start_upleft[i - 1]) || empty_hexes.Any(hex => hex.row == row - i && hex.column == col - odd_start_upleft[i - 1]))
                             {
                                 break;
                             }
@@ -854,7 +873,7 @@ namespace Andantino_Search
                     {
                         if (row % 2 == 0)
                         {
-                            if (player1_hexes.Any(hex => hex.row == row - i && hex.column == col - even_start_upleft[i - 1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col - even_start_upleft[i - 1]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col - even_start_upleft[i - 1]))
+                            if (player1_hexes.Any(hex => hex.row == row - i && hex.column == col - even_start_upleft[i - 1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col - even_start_upleft[i - 1]) || empty_hexes.Any(hex => hex.row == row - i && hex.column == col - even_start_upleft[i - 1]))
                             {
                                 break;
                             }
@@ -865,7 +884,7 @@ namespace Andantino_Search
                         }
                         else
                         {
-                            if (player1_hexes.Any(hex => hex.row == row - i && hex.column == col - odd_start_upleft[i - 1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col - odd_start_upleft[i - 1]) || !all_players_hexes.Any(hex => hex.row == row - i && hex.column == col - odd_start_upleft[i - 1]))
+                            if (player1_hexes.Any(hex => hex.row == row - i && hex.column == col - odd_start_upleft[i - 1]) || hexes_outer_board.Any(hex => hex.row == row - i && hex.column == col - odd_start_upleft[i - 1]) || empty_hexes.Any(hex => hex.row == row - i && hex.column == col - odd_start_upleft[i - 1]))
                             {
                                 break;
                             }
@@ -879,15 +898,15 @@ namespace Andantino_Search
                 }
                 if (left_diagonal_sequential != 5)//diagonal left going down
                 {
-                    int[] odd_start_downright = new int[4] { 1, 0, 1, 0 };
-                    int[] even_start_downright = new int[4] { 0, 1, 0, 1 };
+                    int[] odd_start_downright = new int[4] { 1, 1, 2, 2 };
+                    int[] even_start_downright = new int[4] { 0, 1, 1, 2 };
                     for (int i = 1; i <= number_coins_required - 1; i++)
                     {
                         if (which_player_played == 1)
                         {
                             if (row % 2 == 0)
                             {
-                                if (player1_hexes.Any(hex => hex.row == row + i && hex.column == col + even_start_downright[i - 1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col + even_start_downright[i - 1]) || !all_players_hexes.Any(hex => hex.row == row + i && hex.column == col + even_start_downright[i - 1]))
+                                if (player2_hexes.Any(hex => hex.row == row + i && hex.column == col + even_start_downright[i - 1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col + even_start_downright[i - 1]) || empty_hexes.Any(hex => hex.row == row + i && hex.column == col + even_start_downright[i - 1]))
                                 {
                                     break;
                                 }
@@ -898,7 +917,7 @@ namespace Andantino_Search
                             }
                             else
                             {
-                                if (player1_hexes.Any(hex => hex.row == row + i && hex.column == col + odd_start_downright[i - 1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col + odd_start_downright[i - 1]) || !all_players_hexes.Any(hex => hex.row == row + i && hex.column == col + odd_start_downright[i - 1]))
+                                if (player2_hexes.Any(hex => hex.row == row + i && hex.column == col + odd_start_downright[i - 1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col + odd_start_downright[i - 1]) || empty_hexes.Any(hex => hex.row == row + i && hex.column == col + odd_start_downright[i - 1]))
                                 {
                                     break;
                                 }
@@ -913,7 +932,7 @@ namespace Andantino_Search
                         {
                             if (row % 2 == 0)
                             {
-                                if (player2_hexes.Any(hex => hex.row == row + i && hex.column == col + even_start_downright[i - 1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col + even_start_downright[i - 1]) || !all_players_hexes.Any(hex => hex.row == row + i && hex.column == col + even_start_downright[i - 1]))
+                                if (player1_hexes.Any(hex => hex.row == row + i && hex.column == col + even_start_downright[i - 1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col + even_start_downright[i - 1]) || empty_hexes.Any(hex => hex.row == row + i && hex.column == col + even_start_downright[i - 1]))
                                 {
                                     break;
                                 }
@@ -924,7 +943,7 @@ namespace Andantino_Search
                             }
                             else
                             {
-                                if (player2_hexes.Any(hex => hex.row == row + i && hex.column == col + odd_start_downright[i - 1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col + odd_start_downright[i - 1]) || !all_players_hexes.Any(hex => hex.row == row + i && hex.column == col + odd_start_downright[i - 1]))
+                                if (player1_hexes.Any(hex => hex.row == row + i && hex.column == col + odd_start_downright[i - 1]) || hexes_outer_board.Any(hex => hex.row == row + i && hex.column == col + odd_start_downright[i - 1]) || empty_hexes.Any(hex => hex.row == row + i && hex.column == col + odd_start_downright[i - 1]))
                                 {
                                     break;
                                 }
@@ -939,24 +958,35 @@ namespace Andantino_Search
 
                     }
                 }
-                #endregion
-
-
 
 
             }
+            return left_diagonal_sequential;
+        }
 
+        public int[] check_is_victory(Hexagon new_hex, int which_player_played)//P1 = 1, P2 = 2
+        {
+            bool is_winner = false;
+            int[] test = new int[3];
+            
+            int number_coins_required = 5;
 
+            int horizontal_sequential = count_horizontal_sequence(new_hex, number_coins_required, which_player_played);
+
+            int right_diagonal_sequential = count_diagonal_right_sequence(new_hex, number_coins_required, which_player_played, horizontal_sequential);
+
+            int left_diagonal_sequential = count_left_diagonal_sequence(new_hex, number_coins_required, which_player_played, horizontal_sequential, right_diagonal_sequential);
 
             if (horizontal_sequential == 5 || right_diagonal_sequential == 5 || left_diagonal_sequential == 5)
             {
                 is_winner = true;
             }
+            test[0] = horizontal_sequential;
+            test[1] = right_diagonal_sequential;
+            test[2] = left_diagonal_sequential;
 
-
-
-
-            return is_winner;
+            return test;
+            //return is_winner;
 
         }
     }
