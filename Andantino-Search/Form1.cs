@@ -10,17 +10,8 @@ namespace Andantino_Search
     public partial class Form1 : Form
     {
 
-
-
-        //static float size = 20f;
-        
-
-        
-        //Brush color_player1 = Brushes.RoyalBlue;
-        
-
         List<PointF> centers = new List<PointF>();
-        List<Hexagon> hexes = new List<Hexagon>();
+        List<Hexagon> all_hexes = new List<Hexagon>();
         List<Hexagon> hexes_board = new List<Hexagon>();
         List<Hexagon> hexes_outer_board = new List<Hexagon>();
 
@@ -32,22 +23,12 @@ namespace Andantino_Search
 
         List<Hexagon> possible_hexes = new List<Hexagon>();
 
-        List<Hexagon> all_players_hexes = new List<Hexagon>();
 
         List<Hexagon> empty_hexes;
 
-        //int row_init_coin = 9;
-        //int col_init_coin = 9;
-        //float radius_coins = 10f;
 
         bool isplayer1_turn = false;
         bool isplayer2_turn = true;
-
-        //int turn_number = 1;
-        //EnumSymbols test = EnumSymbols.Empty;
-
-        //List<PointF[]> hexes = new List<new PointF[6]>();
-
 
         public Form1()
         {
@@ -59,18 +40,34 @@ namespace Andantino_Search
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //List<Hexagon> p1_neighbors = new List<Hexagon>();
             label2.Text = "Player 2";
-            float center_x = Option.first_center_x;
-            float center_y = Option.first_center_y;
 
-            ////Working part
+            set_all_hexes(Option.first_center_x, Option.first_center_y);
+
+            hexes_board = set_hexes_board(all_hexes);
+
+            empty_hexes = new List<Hexagon>(hexes_board);
+
+            Hexagon player1 = hexes_board.Find(hex => hex.row == Option.row_init_coin && hex.column == Option.col_init_coin);
+            player1_hexes.Add(player1);
+            empty_hexes.Remove(player1);
+ 
+            possible_hexes = get_neighbors(player1_hexes[0]);
+
+            textBox1.Text = possible_hexes.Count.ToString();
+            
+            label2.ForeColor = Color.Crimson;
+
+        }
+
+        public void set_all_hexes(float center_x, float center_y)
+        {
             for (int i = 0; i < 19; i++)
             {
                 for (int j = 0; j < 19; j++)
                 {
                     //centers.Add(new PointF(center_x, center_y));
-                    hexes.Add(new Hexagon(j, i, new PointF(center_x, center_y)));
+                    all_hexes.Add(new Hexagon(j, i, new PointF(center_x, center_y)));
                     center_x += 2 * Option.size * (float)Math.Sqrt(0.75);
                 }
 
@@ -85,21 +82,6 @@ namespace Andantino_Search
                 }
                 center_y = center_y + 1.5f * Option.size;
             }
-
-            hexes_board = set_hexes_board(hexes);
-            empty_hexes = new List<Hexagon>(hexes_board);
-
-
-            Hexagon player1 = hexes_board.Find(hex => hex.row == Option.row_init_coin && hex.column == Option.col_init_coin);
-            player1_hexes.Add(player1);
-            empty_hexes.Remove(player1);
- 
-            possible_hexes = get_neighbors(player1_hexes[0]);
-
-            textBox1.Text = possible_hexes.Count.ToString();
-            
-            label2.ForeColor = Color.Crimson;
-
 
         }
 
@@ -235,7 +217,6 @@ namespace Andantino_Search
             return neighbors;
         }
 
-
         private void picGrid_Paint_1(object sender, PaintEventArgs e)
         {
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -324,7 +305,7 @@ namespace Andantino_Search
             }
         }
 
-        public void show_all_hexes(List<PointF> hexes_centers, Graphics g)
+        public void draw_all_hexes(List<PointF> hexes_centers, Graphics g)
         {
             for (int i = 0; i < hexes_centers.Count; i++)
             {
@@ -342,8 +323,8 @@ namespace Andantino_Search
                         sf.LineAlignment = StringAlignment.Center;
                         float x = centers[i].X;
                         float y = centers[i].Y;
-                        string label = "(" + hexes[i].row.ToString() + ", " +
-                            hexes[i].column.ToString() + ")";
+                        string label = "(" + all_hexes[i].row.ToString() + ", " +
+                            all_hexes[i].column.ToString() + ")";
                         g.DrawString(label, this.Font,
                             Brushes.Black, x, y, sf);
                     }
@@ -391,7 +372,7 @@ namespace Andantino_Search
             {
                 for (int j = 0; j < number_hexes_row; j++)
                 {
-                    for (int k = 0; k < hexes.Count; k++)
+                    for (int k = 0; k < all_hexes.Count; k++)
                     {
                         if (hexes[k].row == row_start && hexes[k].column == col_start)
                         {
@@ -481,7 +462,6 @@ namespace Andantino_Search
                 if(possible_hexes.Any(hex => hex.row == row_clicked && hex.column == col_clicked))
                 {
                     player2_hexes.Add(possible_hexes.Find(hex => hex.row == row_clicked && hex.column == col_clicked));
-                    //all_players_hexes.Add(hexes_board[index_min_distance]);
                     empty_hexes.Remove(hexes_board[index_min_distance]);
                     result = check_is_victory(hexes_board[index_min_distance], 2);
 
@@ -549,7 +529,6 @@ namespace Andantino_Search
                 if (possible_hexes.Any(hex => hex.row == row_clicked && hex.column == col_clicked))
                 {
                     player1_hexes.Add(possible_hexes.Find(hex => hex.row == row_clicked && hex.column == col_clicked));
-                    //all_players_hexes.Add(hexes_board[index_min_distance]);
                     empty_hexes.Remove(hexes_board[index_min_distance]);
                     result = check_is_victory(hexes_board[index_min_distance], 1);
                 }
@@ -716,10 +695,7 @@ namespace Andantino_Search
                             {
                                 right_diagonal_sequential += 1;
                             }
-
                         }
-
-
                     }
                     else//player 2 just played
                     {
@@ -744,9 +720,7 @@ namespace Andantino_Search
                             {
                                 right_diagonal_sequential += 1;
                             }
-
                         }
-
                     }
                 }
 
@@ -790,10 +764,7 @@ namespace Andantino_Search
                                 {
                                     right_diagonal_sequential += 1;
                                 }
-
                             }
-
-
                         }
                         else
                         {
@@ -822,12 +793,8 @@ namespace Andantino_Search
                             }
                         }
                     }
-
                 }
-
             }
-
-
             return right_diagonal_sequential;
         }
 
@@ -866,7 +833,6 @@ namespace Andantino_Search
                             {
                                 left_diagonal_sequential += 1;
                             }
-
                         }
                     }
                     else
@@ -892,7 +858,6 @@ namespace Andantino_Search
                             {
                                 left_diagonal_sequential += 1;
                             }
-
                         }
                     }
                 }
@@ -925,7 +890,6 @@ namespace Andantino_Search
                                 {
                                     left_diagonal_sequential += 1;
                                 }
-
                             }
                         }
                         else
@@ -951,19 +915,13 @@ namespace Andantino_Search
                                 {
                                     left_diagonal_sequential += 1;
                                 }
-
                             }
-
                         }
-
                     }
                 }
-
-
             }
             return left_diagonal_sequential;
         }
-
         public int[] check_is_victory(Hexagon new_hex, int which_player_played)//P1 = 1, P2 = 2
         {
             bool is_winner = false;
