@@ -30,6 +30,8 @@ namespace Andantino_Search
         bool isplayer1_turn = false;
         bool isplayer2_turn = true;
 
+        static bool is_game_over = false;
+
         public Form1()
         {
             InitializeComponent();
@@ -438,6 +440,7 @@ namespace Andantino_Search
 
         public void picGrid_MouseClick(object sender, MouseEventArgs e)
         {
+
             
             List<float> distances = new List<float>();
             for (int i = 0; i < hexes_board.Count; i++)
@@ -452,7 +455,8 @@ namespace Andantino_Search
             textBox2.Text = "row = " + row_clicked.ToString() + ", col = " + col_clicked.ToString();
 
             List<Hexagon> neighbors2 = new List<Hexagon>();
-            int[] result = new int[3];
+            //int[] result = new int[3];
+            bool result;
             if (!isplayer1_turn && isplayer2_turn)//PLAYER 2 TURN
             {
 
@@ -588,7 +592,7 @@ namespace Andantino_Search
             }
             dataGridView1.Rows.Clear();
             //dataGridView1.Refresh();
-            dataGridView1.Rows.Add("-:" + result[0].ToString() + ", /:" + result[1].ToString() + ", \\:" + result[2].ToString());
+            //dataGridView1.Rows.Add("-:" + result[0].ToString() + ", /:" + result[1].ToString() + ", \\:" + result[2].ToString());
             
 
         }
@@ -922,10 +926,10 @@ namespace Andantino_Search
             }
             return left_diagonal_sequential;
         }
-        public int[] check_is_victory(Hexagon new_hex, int which_player_played)//P1 = 1, P2 = 2
+        public bool check_is_victory(Hexagon new_hex, int which_player_played)//P1 = 1, P2 = 2
         {
             bool is_winner = false;
-            int[] test = new int[3];
+            //int[] test = new int[3];
             
             int number_coins_required = 5;
 
@@ -939,13 +943,41 @@ namespace Andantino_Search
             {
                 is_winner = true;
             }
-            test[0] = horizontal_sequential;
-            test[1] = right_diagonal_sequential;
-            test[2] = left_diagonal_sequential;
+            //test[0] = horizontal_sequential;
+            //test[1] = right_diagonal_sequential;
+            //test[2] = left_diagonal_sequential;
 
-            return test;
+            return is_winner;
             //return is_winner;
 
         }
+        //public static int evaluate()
+
+
+        //public static double minimax(State s, int depth, bool maximizing_player)
+        //{
+        //    if (depth == 0 || is_game_over)
+        //    {
+        //        return 3.0;
+        //    }
+        //    if (maximizing_player)
+        //    {
+        //        double maxEval = double.NegativeInfinity;
+        //        for (int i = 0; i < s.possible_hexes.Count; i++)
+        //        {
+        //            double eval = minimax(s, depth - 1, false);//not s but a copy of it
+        //            maxEval = Math.Max(maxEval, eval);
+        //        }
+        //        return maxEval;
+        //    }
+        //    else
+        //    {
+        //        double minEval = double.PositiveInfinity;
+        //        for (int i = 0; i < s.possible_hexes.Count; i++)
+        //        {
+        //            double eval = minimax(s, depth - 1, false);//copy of s
+        //        }
+        //    }
+        //}
     }
 }

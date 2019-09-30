@@ -14,6 +14,9 @@ namespace Andantino_Search
         int evaluation_p2;
 
         List<Hexagon> empty_hexes;
-        List<Hexagon> possible_hexes;
+        //public List<Hexagon> possible_hexes;
+        public List<Hexagon> possible_hexes { get; set; }
+
+
     }
 }
