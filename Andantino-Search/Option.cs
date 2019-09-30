@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 
 
 namespace Andantino_Search
@@ -24,5 +25,11 @@ namespace Andantino_Search
         public static int row_init_coin = 9;
         public static int col_init_coin = 9;
         public static float radius_coins = 10f;
+
+        public static int number_coins_required = 5;
+
+        public static Font font_coordinates = new Font("Microsoft Sans Serif", 8.25f);
+
+        public static List<Hexagon> hexes_outer_board = new List<Hexagon>();
     }
 }
