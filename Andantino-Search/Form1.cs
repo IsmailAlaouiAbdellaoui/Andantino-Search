@@ -847,6 +847,10 @@ namespace Andantino_Search
 
                 return evaluate(s);
             }
+
+            State clone_of_s = ObjectCopier.Clone(s);
+
+
             if (maximizing_player)
             {
                 double maxEval = double.NegativeInfinity;

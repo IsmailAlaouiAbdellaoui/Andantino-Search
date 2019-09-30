@@ -8,40 +8,40 @@ namespace Andantino_Search
 {
     public struct State
     {
-        public Hexagon move {  get;  set; }
+        public Hexagon move {  get;  set; }// Move that led to this State
 
-        public int player;//1 for max and 0 for min
+        public int player { get; set; }//1 for max and 2 for min // player who needs to make the move
 
-        public List<Hexagon> player1_hexes;
-        public int evaluation_p1;
+        public List<Hexagon> player1_hexes { get; set; }//player
+        public int evaluation_p1 { get; set; }//player
 
-        public List<Hexagon> player2_hexes;
-        public int evaluation_p2;
+        public List<Hexagon> player2_hexes { get; set; }//opponent
+        public int evaluation_p2 { get; set; }//opponent
 
-        public int depth;
+        public int depth { get; set; }
 
-        public List<Hexagon> empty_hexes;
+        public List<Hexagon> empty_hexes { get; set; }
 
-        public List<Hexagon> possible_hexes;
+        public static List<Hexagon> possible_hexes { get; set; }
 
-        public double value;
+        public double value { get; set; }
 
-        public bool is_game_over;
+        public bool is_game_over { get; set; }
 
         public State(Hexagon move, int player, List<Hexagon> p1_hexes, int eva_p1, List<Hexagon> p2_hexes, int eva_p2, int depth,
             List<Hexagon> empty_hexes, List<Hexagon> possible_hexes, bool is_over, double value)
         {
             this.move = move;
-            this.player = player;
+            this.player = player;//P1 = 1, P2 = 2
             player1_hexes = p1_hexes;
             evaluation_p1 = eva_p1;
             player2_hexes = p2_hexes;
             evaluation_p2 = eva_p2;
             this.depth = depth;
             this.empty_hexes = empty_hexes;
-            this.possible_hexes = possible_hexes;
+            State.possible_hexes = possible_hexes;
             is_game_over = is_over;
-            this.value = value;//dumb value because of c# requirement
+            this.value = value;
 
             int horizontal_score = count_horizontal_sequence(move, Option.number_coins_required, player);
 
@@ -50,7 +50,7 @@ namespace Andantino_Search
             int left_diagonal_score = count_left_diagonal_sequence(move, Option.number_coins_required, player, horizontal_score, right_diagonal_score);
 
             double value_temp = Math.Pow(horizontal_score, horizontal_score) + Math.Pow(right_diagonal_score, right_diagonal_score) + Math.Pow(left_diagonal_score, left_diagonal_score);
-            value = value_temp;
+            value = value_temp;// maybe useless ? The value will be computed outside of this, maybe in get_state_after_move
 
 
         }
@@ -409,6 +409,33 @@ namespace Andantino_Search
 
             return is_winner;
             //return is_winner;
+
+        }
+
+        public static State get_state_after_move(State start_state,Hexagon move)//New state after move from 1 of possible hexes
+        {
+            State s = new State();
+            s.move = move;
+            if(start_state.player == 1)
+            {
+                s.player = 2;
+            }
+            else
+            {
+                s.player = 1;
+            }
+
+
+            //s.depth = 
+            //if(!possible_hexes.Contains(move))
+            //{
+
+            //}
+            //change player hexes
+            //
+            return s;
+
+            //cloning is useless since we now create a new state ?
 
         }
 
