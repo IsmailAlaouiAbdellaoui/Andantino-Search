@@ -11,6 +11,6 @@ namespace Andantino_Search
     {
         public static List<Hexagon> all_hexes  { get; set; }
         public static List<Hexagon> hexes_in_board { get; set; }
-        
+        //public State grand_ancestor_state { get; set; }    //the very first state of every game
     }
 }

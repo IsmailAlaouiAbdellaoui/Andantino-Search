@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using System.Linq;
+using System.Diagnostics;
 
 namespace Andantino_Search
 {
@@ -28,13 +29,18 @@ namespace Andantino_Search
 
         List<Hexagon> empty_hexes;
 
-        Hexagon ai_move;
+        Hexagon ai_move = new Hexagon();
+
+        State game_state = new State();
 
 
         bool isplayer1_turn = false;
         bool isplayer2_turn = true;
 
-        static bool is_game_over = false;
+        int depth_game = 1;
+
+        static bool global_is_game_over = false;
+        //private static Hexagon ai_move;
 
         public Form1()
         {
@@ -59,15 +65,25 @@ namespace Andantino_Search
 
             empty_hexes = new List<Hexagon>(hexes_board);
 
-            Hexagon player1 = hexes_board.Find(hex => hex.row == Option.row_init_coin && hex.column == Option.col_init_coin);
-            player1_hexes.Add(player1);
-            empty_hexes.Remove(player1);
+            Hexagon player1_hex = hexes_board.Find(hex => hex.row == Option.row_init_coin && hex.column == Option.col_init_coin);
+            player1_hexes.Add(player1_hex);
+            empty_hexes.Remove(player1_hex);
  
             possible_hexes = get_neighbors(player1_hexes[0]);
 
             textBox1.Text = possible_hexes.Count.ToString();
             
             label2.ForeColor = Color.Crimson;
+            game_state.is_game_over = false;
+            game_state.move = player1_hex;
+            game_state.player = 1;
+            game_state.player1_hexes = player1_hexes;
+            game_state.player2_hexes = player2_hexes;
+            game_state.possible_hexes = possible_hexes;
+            game_state.value = 1;
+            game_state.depth = depth_game;
+            game_state.empty_hexes = empty_hexes;
+
 
         }
 
@@ -321,7 +337,8 @@ namespace Andantino_Search
         }
 
 
-
+        //p1 = AI
+        //p2 = Human
         public void picGrid_MouseClick(object sender, MouseEventArgs e)
         {
 
@@ -341,7 +358,7 @@ namespace Andantino_Search
             List<Hexagon> neighbors2 = new List<Hexagon>();
             //int[] result = new int[3];
             bool result;
-            if (!isplayer1_turn && isplayer2_turn)//PLAYER 2 TURN
+            if (!isplayer1_turn && isplayer2_turn)//Human TURN == p2
             {
 
                 
@@ -352,10 +369,54 @@ namespace Andantino_Search
                     player2_hexes.Add(possible_hexes.Find(hex => hex.row == row_clicked && hex.column == col_clicked));
                     empty_hexes.Remove(hexes_board[index_min_distance]);
                     result = check_is_victory(hexes_board[index_min_distance], 2);
+                    //==> Create a new State s that will be the root state for the AI search
+                    
+                    //Hexagon move, int player, List<Hexagon> player1_hexes, List<Hexagon> player2_hexes, int depth, List<Hexagon> empty_hexes, List<Hexagon> possible_hexes, double value, bool is_game_over
+                    Hexagon move = possible_hexes.Find(hex => hex.row == row_clicked && hex.column == col_clicked);
+                    int player = 2;
+                    List<Hexagon> p1_hexes = new List<Hexagon>(player1_hexes);
+                    List<Hexagon> p2_hexes = new List<Hexagon>(player2_hexes);
+                    depth_game++;
+                    List<Hexagon> empty_hexs = new List<Hexagon>(empty_hexes);
+
+
+                    List<Hexagon> possible_hexs = set_possible_hexes(player1_hexes, player2_hexes);
+
+                    int horizontal_score = count_horizontal_sequence(move, Option.number_coins_required, player);
+
+                    int right_diagonal_score = count_diagonal_right_sequence(move, Option.number_coins_required, player, horizontal_score);
+
+                    int left_diagonal_score = count_left_diagonal_sequence(move, Option.number_coins_required, player, horizontal_score, right_diagonal_score);
+
+                    var value = Math.Pow(horizontal_score, horizontal_score) + Math.Pow(right_diagonal_score, right_diagonal_score) + Math.Pow(left_diagonal_score, left_diagonal_score);
+                    bool is_game_over;
+                    if (horizontal_score == 5 || right_diagonal_score == 5 || left_diagonal_score == 5)
+                    {
+                        is_game_over = true;
+                        global_is_game_over = true;
+                        MessageBox.Show("Game over, Player 2 won");
+                    }
+                    else
+                    {
+                        is_game_over = false;
+                    }
+
+                    game_state.move = move;
+                    game_state.is_game_over = is_game_over;
+                    game_state.player = player;
+                    game_state.player1_hexes = p1_hexes;
+                    game_state.player2_hexes = p2_hexes;
+                    game_state.possible_hexes = possible_hexs;
+                    game_state.depth = depth_game;
+                    game_state.empty_hexes = empty_hexs;
+                    game_state.value = value;
+
+                    //or maybe call game_state.create_state_from_move ?
+
 
                 }
-                
-                if (player2_hexes.Count>number_hexes_player2_before)//if new hex in player2
+
+                if (player2_hexes.Count>number_hexes_player2_before)
                 {
                     //Hexagon last_p2_hex = player2_hexes[player2_hexes.Count - 1];
                     isplayer1_turn = true;
@@ -376,7 +437,7 @@ namespace Andantino_Search
 
             }
 
-            else//PLAYER 1 TURN
+            else//AI Turn == p1
             {
                 //result = check_is_victory(hexes_board[index_min_distance], 1);
                 int number_hexes_player1_before = player1_hexes.Count;
@@ -385,6 +446,8 @@ namespace Andantino_Search
                     player1_hexes.Add(possible_hexes.Find(hex => hex.row == row_clicked && hex.column == col_clicked));
                     empty_hexes.Remove(hexes_board[index_min_distance]);
                     result = check_is_victory(hexes_board[index_min_distance], 1);
+                    //minimax(game_state, 2, true);
+                    //game_state = game_state.get_state_after_move(game_state, ai_move);
                 }
 
                 if (player1_hexes.Count>number_hexes_player1_before)
@@ -858,13 +921,11 @@ namespace Andantino_Search
         //    }
         //}
 
-        public static double minimax(State s, int depth, bool maximizing_player)
+        public double minimax(State s, int depth_minimax, bool maximizing_player)
         {
             double eval;
-            Hexagon best_move;
-            if (depth == 0 || s.is_game_over)
+            if (depth_minimax == 0 || s.is_game_over)
             {
-
                 return s.value;
             }
 
@@ -876,18 +937,16 @@ namespace Andantino_Search
                 double maxEval = double.NegativeInfinity;
                 for (int i = 0; i < s.possible_hexes.Count; i++)
                 {
+
                     child_state = s.get_state_after_move(s, s.possible_hexes[i]);
-                    eval = minimax(child_state, depth - 1, false);//not s but a copy of it
-                    //maxEval = Math.Max(maxEval, eval);
+                    eval = minimax(child_state, depth_minimax - 1, false);
+                    
                     if(eval>maxEval)
                     {
-                        best_move = child_state.move;
+                        ai_move = child_state.move;
                         maxEval = eval;
+
                     }
-                    //else
-                    //{
-                    //    maxEval = maxEval;
-                    //}
                 }
                 return maxEval;
             }
@@ -897,16 +956,105 @@ namespace Andantino_Search
                 for (int i = 0; i < s.possible_hexes.Count; i++)
                 {
                     child_state = s.get_state_after_move(s, s.possible_hexes[i]);
-                    eval = minimax(child_state, depth - 1, true);//copy of s
+                    eval = minimax(child_state, depth_minimax - 1, true);
                     if (eval<minEval)
                     {
-                        best_move = child_state.move;
                         minEval = eval;
                     }
-                    //minEval = Math.Min(minEval, eval);
+                    
                 }
                 return minEval;
             }
         }
+
+        public double minimax_alpha_beta_pruning(State s, int depth_alpha_beta, double alpha, double beta, bool maximizing_player )
+        {
+            double eval;
+            if (depth_alpha_beta == 0 || s.is_game_over)
+            {
+                return s.value;
+            }
+
+            State child_state = new State();
+
+
+            if (maximizing_player)
+            {
+                double maxEval = double.NegativeInfinity;
+                for (int i = 0; i < s.possible_hexes.Count; i++)
+                {
+
+                    child_state = s.get_state_after_move(s, s.possible_hexes[i]);
+                    eval = minimax_alpha_beta_pruning(child_state, depth_alpha_beta - 1,alpha,beta, false);
+
+                    if (eval > maxEval)
+                    {
+                        ai_move = child_state.move;
+                        maxEval = eval;
+
+                    }
+
+                    alpha = Math.Max(alpha, eval);
+                    if(beta <= alpha)
+                    {
+                        break;
+                    }
+                }
+                return maxEval;
+            }
+            else
+            {
+                double minEval = double.PositiveInfinity;
+                for (int i = 0; i < s.possible_hexes.Count; i++)
+                {
+                    child_state = s.get_state_after_move(s, s.possible_hexes[i]);
+                    eval = minimax_alpha_beta_pruning(child_state, depth_alpha_beta - 1, alpha, beta, true);
+                    if (eval < minEval)
+                    {
+                        minEval = eval;
+                    }
+                    beta = Math.Min(beta, eval);
+                    if(beta <= alpha)
+                    {
+                        break;
+                    }
+
+                }
+                return minEval;
+            }
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            //double value = minimax(game_state, 4, true);
+            double value = minimax_alpha_beta_pruning(game_state, 6, double.NegativeInfinity, double.PositiveInfinity, true);
+            stopWatch.Stop();
+            depth_game++;
+            //MessageBox.Show("("+ai_move.row.ToString() +","+ ai_move.column.ToString() + "," + "value:"+value.ToString()+")");
+            //labe
+            label4.Text = "(" + ai_move.row.ToString() + "," + ai_move.column.ToString() + "," + "value:" + value.ToString() + ")";
+            TimeSpan ts = stopWatch.Elapsed;
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
+            //MessageBox.Show("RunTime " + elapsedTime);
+            dataGridView1.Rows.Clear();
+            dataGridView1.Rows.Add(elapsedTime);
+
+            game_state = game_state.get_state_after_move(game_state, ai_move);
+
+
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //dataGridView1.Rows.Add("-:" + game_state.move + ", /:" + result[1].ToString() + ", \\:" + result[2].ToString());
+
+        }
+
     }
 }

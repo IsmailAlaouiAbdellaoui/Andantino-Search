@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+//Hexagon move, int player, List<Hexagon> player1_hexes, List<Hexagon> player2_hexes, int depth, List<Hexagon> empty_hexes, List<Hexagon> possible_hexes, double value, bool is_game_over
 namespace Andantino_Search
 {
     public struct State
@@ -28,8 +30,9 @@ namespace Andantino_Search
 
         public bool is_game_over { get; set; }
 
-        public State(Hexagon move, int player, List<Hexagon> p1_hexes, int eva_p1, List<Hexagon> p2_hexes, int eva_p2, int depth,
+        public State(Hexagon move, int player, List<Hexagon> p1_hexes, int eva_p1, List<Hexagon> p2_hexes, int depth,
             List<Hexagon> empty_hexes, List<Hexagon> possible_hexes, bool is_over, double value)
+        //public State()
         {
             this.move = move;
             this.player = player;//P1 = 1, P2 = 2
@@ -643,6 +646,7 @@ namespace Andantino_Search
             //define function is_game_over that checks victory or if all_hexes_taken
             //if 2nd case, then draw
         }
+
 
         
 
