@@ -9,6 +9,8 @@ namespace Andantino_Search
 {
     public partial class Form1 : Form
     {
+        //P1 AI
+        //P2 Human
 
         List<PointF> centers = new List<PointF>();
         List<Hexagon> all_hexes = new List<Hexagon>();
@@ -25,6 +27,8 @@ namespace Andantino_Search
 
 
         List<Hexagon> empty_hexes;
+
+        Hexagon ai_move;
 
 
         bool isplayer1_turn = false;
@@ -45,8 +49,13 @@ namespace Andantino_Search
             label2.Text = "Player 2";
 
             set_all_hexes(Option.first_center_x, Option.first_center_y);
+            GameStatic.all_hexes = new List<Hexagon>(all_hexes);
+            //GameStatic.set_all_hexes(Option.first_center_x, Option.first_center_y);
 
+            //hexes_board = GameStatic.set_hexes_board(all_hexes);
             hexes_board = set_hexes_board(all_hexes);
+            GameStatic.hexes_in_board = new List<Hexagon>(hexes_board);
+            //all_hexes /*=*/ set_
 
             empty_hexes = new List<Hexagon>(hexes_board);
 
@@ -242,7 +251,7 @@ namespace Andantino_Search
 
         }
 
-        
+
 
         public List<Hexagon> set_hexes_board(List<Hexagon> hexes)
         {
@@ -311,7 +320,7 @@ namespace Andantino_Search
             return hexes_board;
         }
 
-        
+
 
         public void picGrid_MouseClick(object sender, MouseEventArgs e)
         {
@@ -353,42 +362,8 @@ namespace Andantino_Search
                     label2.Text = "Player 1";
                     label2.ForeColor = Color.RoyalBlue;
                     isplayer2_turn = false;
-                    for (int i = 0; i < player1_hexes.Count; i++)//choosing possible hexes
-                    {
-                        neighbors2.AddRange(get_neighbors(player1_hexes[i]));
-
-                    }
-                    for (int i = 0; i < player2_hexes.Count; i++)
-                    {
-                        neighbors2.AddRange(get_neighbors(player2_hexes[i]));
-                    }
-
-                    for (int i = 0; i < player1_hexes.Count; i++)
-                    {
-                        int index = neighbors2.FindIndex(hex => hex.Equals(player1_hexes[i]));
-                        neighbors2.RemoveAt(index);
-                    }
-                    for (int i = 0; i < player2_hexes.Count; i++)
-                    {
-                        int index = neighbors2.FindIndex(hex => hex.Equals(player2_hexes[i]));
-                        neighbors2.RemoveAt(index);
-                    }
-
-                    possible_hexes.Clear();
-                    for (int i = 0; i < neighbors2.Count; i++)
-                    {
-                        List<Hexagon> temp_list = new List<Hexagon>(neighbors2);
-                        temp_list.RemoveAt(i);
-                        if (temp_list.Contains(neighbors2[i]) && !player1_hexes.Contains(neighbors2[i]) && !player2_hexes.Contains(neighbors2[i]) && !possible_hexes.Contains(neighbors2[i]))
-                        {
-                            possible_hexes.Add(neighbors2[i]);
-                        }
-                    }
-
-                    //for (int i = 0; i < possible_hexes.Count; i++)
-                    //{
-                    //    dataGridView1.Rows.Add("(" + possible_hexes[i].row.ToString() + "," + possible_hexes[i].column.ToString() + ")");
-                    //}
+                    possible_hexes = set_possible_hexes(player1_hexes, player2_hexes);
+                    
                     textBox1.Text = possible_hexes.Count.ToString();
                     picGrid.Refresh();
                 }
@@ -418,42 +393,8 @@ namespace Andantino_Search
                     isplayer2_turn = true;
                     label2.Text = "Player 2";
                     label2.ForeColor = Color.Crimson;
-                    for (int i = 0; i < player1_hexes.Count; i++)//choosing possible hexes
-                    {
-                        neighbors2.AddRange(get_neighbors(player1_hexes[i]));
-
-                    }
-                    for (int i = 0; i < player2_hexes.Count; i++)
-                    {
-                        neighbors2.AddRange(get_neighbors(player2_hexes[i]));
-                    }
-
-                    for (int i = 0; i < player1_hexes.Count; i++)
-                    {
-                        int index = neighbors2.FindIndex(hex => hex.Equals(player1_hexes[i]));
-                        neighbors2.RemoveAt(index);
-                    }
-                    for (int i = 0; i < player2_hexes.Count; i++)
-                    {
-                        int index = neighbors2.FindIndex(hex => hex.Equals(player2_hexes[i]));
-                        neighbors2.RemoveAt(index);
-                    }
-
-                    possible_hexes.Clear();
-                    for (int i = 0; i < neighbors2.Count; i++)
-                    {
-                        List<Hexagon> temp_list = new List<Hexagon>(neighbors2);
-                        temp_list.RemoveAt(i);
-                        if (temp_list.Contains(neighbors2[i]) && !player1_hexes.Contains(neighbors2[i]) && !player2_hexes.Contains(neighbors2[i]) && !possible_hexes.Contains(neighbors2[i]))
-                        {
-                            possible_hexes.Add(neighbors2[i]);
-                        }
-                    }
-
-                    //for (int i = 0; i < possible_hexes.Count; i++)
-                    //{
-                    //    dataGridView1.Rows.Add("(" + possible_hexes[i].row.ToString() + "," + possible_hexes[i].column.ToString() + ")");
-                    //}
+                    possible_hexes = set_possible_hexes(player1_hexes, player2_hexes);
+                    
                     textBox1.Text = possible_hexes.Count.ToString();
                     picGrid.Refresh();
                 }
@@ -469,6 +410,48 @@ namespace Andantino_Search
             //dataGridView1.Refresh();
             //dataGridView1.Rows.Add("-:" + result[0].ToString() + ", /:" + result[1].ToString() + ", \\:" + result[2].ToString());
             
+
+        }
+
+        public List<Hexagon> set_possible_hexes(List<Hexagon> player1_hexes, List<Hexagon> player2_hexes)
+        {
+            List<Hexagon> neighbors2 = new List<Hexagon>();
+            List<Hexagon> possible_hexes = new List<Hexagon>();
+
+            for (int i = 0; i < player1_hexes.Count; i++)//choosing possible hexes
+            {
+                neighbors2.AddRange(get_neighbors(player1_hexes[i]));
+
+            }
+            for (int i = 0; i < player2_hexes.Count; i++)
+            {
+                neighbors2.AddRange(get_neighbors(player2_hexes[i]));
+            }
+
+            for (int i = 0; i < player1_hexes.Count; i++)
+            {
+                int index = neighbors2.FindIndex(hex => hex.Equals(player1_hexes[i]));
+                neighbors2.RemoveAt(index);
+            }
+            for (int i = 0; i < player2_hexes.Count; i++)
+            {
+                int index = neighbors2.FindIndex(hex => hex.Equals(player2_hexes[i]));
+                neighbors2.RemoveAt(index);
+            }
+
+            for (int i = 0; i < neighbors2.Count; i++)
+            {
+                List<Hexagon> temp_list = new List<Hexagon>(neighbors2);
+                temp_list.RemoveAt(i);
+                if (temp_list.Contains(neighbors2[i]) && !player1_hexes.Contains(neighbors2[i]) && !player2_hexes.Contains(neighbors2[i]) && !possible_hexes.Contains(neighbors2[i]))
+                {
+                    possible_hexes.Add(neighbors2[i]);
+                }
+            }
+
+
+
+            return possible_hexes;
 
         }
 
@@ -839,16 +822,53 @@ namespace Andantino_Search
 
 
 
+        //public static double minimax(State s, int depth, bool maximizing_player)
+        //{
+        //    double eval;
+        //    if (depth == 0 || s.is_game_over)
+        //    {
+
+        //        return s.value;
+        //    }
+
+        //    State child_state = new State();
+
+
+        //    if (maximizing_player)
+        //    {
+        //        double maxEval = double.NegativeInfinity;
+        //        for (int i = 0; i < s.possible_hexes.Count; i++)
+        //        {
+        //            child_state = s.get_state_after_move(s, s.possible_hexes[i]);
+        //            eval = minimax(child_state, depth - 1, false);//not s but a copy of it
+        //            maxEval = Math.Max(maxEval, eval);
+        //        }
+        //        return maxEval;
+        //    }
+        //    else
+        //    {
+        //        double minEval = double.PositiveInfinity;
+        //        for (int i = 0; i < s.possible_hexes.Count; i++)
+        //        {
+        //            child_state = s.get_state_after_move(s, s.possible_hexes[i]);
+        //            eval = minimax(child_state, depth - 1, true);//copy of s
+        //            minEval = Math.Min(minEval, eval);
+        //        }
+        //        return minEval;
+        //    }
+        //}
+
         public static double minimax(State s, int depth, bool maximizing_player)
         {
             double eval;
+            Hexagon best_move;
             if (depth == 0 || s.is_game_over)
             {
 
-                return evaluate(s);
+                return s.value;
             }
 
-            State clone_of_s = ObjectCopier.Clone(s);
+            State child_state = new State();
 
 
             if (maximizing_player)
@@ -856,8 +876,18 @@ namespace Andantino_Search
                 double maxEval = double.NegativeInfinity;
                 for (int i = 0; i < s.possible_hexes.Count; i++)
                 {
-                    eval = minimax(s, depth - 1, false);//not s but a copy of it
-                    maxEval = Math.Max(maxEval, eval);
+                    child_state = s.get_state_after_move(s, s.possible_hexes[i]);
+                    eval = minimax(child_state, depth - 1, false);//not s but a copy of it
+                    //maxEval = Math.Max(maxEval, eval);
+                    if(eval>maxEval)
+                    {
+                        best_move = child_state.move;
+                        maxEval = eval;
+                    }
+                    //else
+                    //{
+                    //    maxEval = maxEval;
+                    //}
                 }
                 return maxEval;
             }
@@ -866,8 +896,14 @@ namespace Andantino_Search
                 double minEval = double.PositiveInfinity;
                 for (int i = 0; i < s.possible_hexes.Count; i++)
                 {
-                    eval = minimax(s, depth - 1, false);//copy of s
-                    minEval = Math.Min(minEval, eval);
+                    child_state = s.get_state_after_move(s, s.possible_hexes[i]);
+                    eval = minimax(child_state, depth - 1, true);//copy of s
+                    if (eval<minEval)
+                    {
+                        best_move = child_state.move;
+                        minEval = eval;
+                    }
+                    //minEval = Math.Min(minEval, eval);
                 }
                 return minEval;
             }

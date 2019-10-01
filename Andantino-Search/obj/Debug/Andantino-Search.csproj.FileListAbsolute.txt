@@ -19,11 +19,11 @@ F:\GitHub\Andantino-Search\Andantino-Search\obj\Debug\Andantino-Search.csproj.Co
 F:\GitHub\Andantino-Search\Andantino-Search\obj\Debug\Andantino-Search.exe
 F:\GitHub\Andantino-Search\Andantino-Search\obj\Debug\Andantino-Search.pdb
 C:\Users\Alaoui\Documents\GitHub\Andantino-Search\Andantino-Search\bin\Debug\Andantino-Search.exe.config
-C:\Users\Alaoui\Documents\GitHub\Andantino-Search\Andantino-Search\obj\Debug\Andantino-Search.exe
-C:\Users\Alaoui\Documents\GitHub\Andantino-Search\Andantino-Search\obj\Debug\Andantino-Search.pdb
 C:\Users\Alaoui\Documents\GitHub\Andantino-Search\Andantino-Search\bin\Debug\Andantino-Search.exe
 C:\Users\Alaoui\Documents\GitHub\Andantino-Search\Andantino-Search\bin\Debug\Andantino-Search.pdb
 C:\Users\Alaoui\Documents\GitHub\Andantino-Search\Andantino-Search\obj\Debug\Andantino-Search.csprojResolveAssemblyReference.cache
 C:\Users\Alaoui\Documents\GitHub\Andantino-Search\Andantino-Search\obj\Debug\Andantino_Search.Form1.resources
 C:\Users\Alaoui\Documents\GitHub\Andantino-Search\Andantino-Search\obj\Debug\Andantino_Search.Properties.Resources.resources
 C:\Users\Alaoui\Documents\GitHub\Andantino-Search\Andantino-Search\obj\Debug\Andantino-Search.csproj.GenerateResource.Cache
+C:\Users\Alaoui\Documents\GitHub\Andantino-Search\Andantino-Search\obj\Debug\Andantino-Search.exe
+C:\Users\Alaoui\Documents\GitHub\Andantino-Search\Andantino-Search\obj\Debug\Andantino-Search.pdb

@@ -13,16 +13,16 @@ namespace Andantino_Search
         public int player { get; set; }//1 for max and 2 for min // player who needs to make the move
 
         public List<Hexagon> player1_hexes { get; set; }//player
-        public int evaluation_p1 { get; set; }//player
+        //public int evaluation_p1 { get; set; }//player
 
         public List<Hexagon> player2_hexes { get; set; }//opponent
-        public int evaluation_p2 { get; set; }//opponent
+        //public int evaluation_p2 { get; set; }//opponent
 
         public int depth { get; set; }
 
         public List<Hexagon> empty_hexes { get; set; }
 
-        public static List<Hexagon> possible_hexes { get; set; }
+        public List<Hexagon> possible_hexes { get; set; }
 
         public double value { get; set; }
 
@@ -34,23 +34,23 @@ namespace Andantino_Search
             this.move = move;
             this.player = player;//P1 = 1, P2 = 2
             player1_hexes = p1_hexes;
-            evaluation_p1 = eva_p1;
+            //evaluation_p1 = eva_p1;
             player2_hexes = p2_hexes;
-            evaluation_p2 = eva_p2;
+            //evaluation_p2 = eva_p2;
             this.depth = depth;
             this.empty_hexes = empty_hexes;
-            State.possible_hexes = possible_hexes;
+            this.possible_hexes = possible_hexes;
             is_game_over = is_over;
             this.value = value;
 
-            int horizontal_score = count_horizontal_sequence(move, Option.number_coins_required, player);
+            //int horizontal_score = count_horizontal_sequence(move, Option.number_coins_required, player);
 
-            int right_diagonal_score = count_diagonal_right_sequence(move, Option.number_coins_required, player, horizontal_score);
+            //int right_diagonal_score = count_diagonal_right_sequence(move, Option.number_coins_required, player, horizontal_score);
 
-            int left_diagonal_score = count_left_diagonal_sequence(move, Option.number_coins_required, player, horizontal_score, right_diagonal_score);
+            //int left_diagonal_score = count_left_diagonal_sequence(move, Option.number_coins_required, player, horizontal_score, right_diagonal_score);
 
-            double value_temp = Math.Pow(horizontal_score, horizontal_score) + Math.Pow(right_diagonal_score, right_diagonal_score) + Math.Pow(left_diagonal_score, left_diagonal_score);
-            value = value_temp;// maybe useless ? The value will be computed outside of this, maybe in get_state_after_move
+            //double value_temp = Math.Pow(horizontal_score, horizontal_score) + Math.Pow(right_diagonal_score, right_diagonal_score) + Math.Pow(left_diagonal_score, left_diagonal_score);
+            //value = value_temp;// maybe useless ? The value will be computed outside of this, maybe in get_state_after_move
 
 
         }
@@ -412,11 +412,191 @@ namespace Andantino_Search
 
         }
 
-        public static State get_state_after_move(State start_state,Hexagon move)//New state after move from 1 of possible hexes
+        private List<Hexagon> get_neighbors(Hexagon middle_hex)
+        {
+            List<Hexagon> neighbors = new List<Hexagon>();
+            int column_hex = middle_hex.column;
+            int row_hex = middle_hex.row;
+
+            int left_neighbor_row = row_hex;
+            int left_neighbor_col = column_hex - 1;
+            for (int i = 0; i < GameStatic.hexes_in_board.Count; i++)
+            {
+                if (GameStatic.hexes_in_board[i].row == left_neighbor_row && GameStatic.hexes_in_board[i].column == left_neighbor_col)
+                {
+
+                    neighbors.Add(GameStatic.hexes_in_board[i]);
+
+
+                }
+            }
+
+            int right_neighbor_row = row_hex;
+            int right_neighbor_col = column_hex + 1;
+            for (int i = 0; i < GameStatic.hexes_in_board.Count; i++)
+            {
+                if (GameStatic.hexes_in_board[i].row == right_neighbor_row && GameStatic.hexes_in_board[i].column == right_neighbor_col)
+                {
+
+                    neighbors.Add(GameStatic.hexes_in_board[i]);
+
+                }
+
+            }
+
+
+            int upper_left_neighbor_row = row_hex - 1;
+
+            int upper_right_neighbor_row = upper_left_neighbor_row;
+
+            int bottom_left_neighbor_row = row_hex + 1;
+
+            int bottom_right_neighbor_row = bottom_left_neighbor_row;
+
+            if (row_hex % 2 != 0)
+            {
+                int upper_left_neighbor_col = column_hex;
+                for (int i = 0; i < GameStatic.hexes_in_board.Count; i++)
+                {
+                    if (GameStatic.hexes_in_board[i].row == upper_left_neighbor_row && GameStatic.hexes_in_board[i].column == upper_left_neighbor_col)
+                    {
+                        neighbors.Add(GameStatic.hexes_in_board[i]);
+                    }
+
+                }
+
+
+                int upper_right_neighbor_col = column_hex + 1;
+                for (int i = 0; i < GameStatic.hexes_in_board.Count; i++)
+                {
+                    if (GameStatic.hexes_in_board[i].row == upper_right_neighbor_row && GameStatic.hexes_in_board[i].column == upper_right_neighbor_col)
+                    {
+                        neighbors.Add(GameStatic.hexes_in_board[i]);
+                    }
+
+                }
+
+                int bottom_left_neighbor_col = column_hex;
+                for (int i = 0; i < GameStatic.hexes_in_board.Count; i++)
+                {
+                    if (GameStatic.hexes_in_board[i].row == bottom_left_neighbor_row && GameStatic.hexes_in_board[i].column == bottom_left_neighbor_col)
+                    {
+                        neighbors.Add(GameStatic.hexes_in_board[i]);
+                    }
+
+                }
+
+                int bottom_right_neighbor_col = column_hex + 1;
+                for (int i = 0; i < GameStatic.hexes_in_board.Count; i++)
+                {
+                    if (GameStatic.hexes_in_board[i].row == bottom_right_neighbor_row && GameStatic.hexes_in_board[i].column == bottom_right_neighbor_col)
+                    {
+                        neighbors.Add(GameStatic.hexes_in_board[i]);
+                    }
+                }
+            }
+            else
+            {
+                int upper_left_neighbor_col = column_hex - 1;
+                for (int i = 0; i < GameStatic.hexes_in_board.Count; i++)
+                {
+                    if (GameStatic.hexes_in_board[i].row == upper_left_neighbor_row && GameStatic.hexes_in_board[i].column == upper_left_neighbor_col)
+                    {
+                        neighbors.Add(GameStatic.hexes_in_board[i]);
+                    }
+
+                }
+
+
+                int upper_right_neighbor_col = column_hex;
+                for (int i = 0; i < GameStatic.hexes_in_board.Count; i++)
+                {
+                    if (GameStatic.hexes_in_board[i].row == upper_right_neighbor_row && GameStatic.hexes_in_board[i].column == upper_right_neighbor_col)
+                    {
+                        neighbors.Add(GameStatic.hexes_in_board[i]);
+                    }
+
+                }
+
+                int bottom_left_neighbor_col = column_hex - 1;
+                for (int i = 0; i < GameStatic.hexes_in_board.Count; i++)
+                {
+                    if (GameStatic.hexes_in_board[i].row == bottom_left_neighbor_row && GameStatic.hexes_in_board[i].column == bottom_left_neighbor_col)
+                    {
+                        neighbors.Add(GameStatic.hexes_in_board[i]);
+                    }
+
+                }
+
+                int bottom_right_neighbor_col = column_hex;
+                for (int i = 0; i < GameStatic.hexes_in_board.Count; i++)
+                {
+                    if (GameStatic.hexes_in_board[i].row == bottom_right_neighbor_row && GameStatic.hexes_in_board[i].column == bottom_right_neighbor_col)
+                    {
+                        neighbors.Add(GameStatic.hexes_in_board[i]);
+                    }
+                }
+
+            }
+
+            return neighbors;
+        }
+
+        public List<Hexagon> set_possible_hexes(List<Hexagon> player1_hexes, List<Hexagon> player2_hexes)
+        {
+            List<Hexagon> neighbors2 = new List<Hexagon>();
+            List<Hexagon> possible_hexes = new List<Hexagon>();
+
+            for (int i = 0; i < player1_hexes.Count; i++)//choosing possible hexes
+            {
+                neighbors2.AddRange(get_neighbors(player1_hexes[i]));
+
+            }
+            for (int i = 0; i < player2_hexes.Count; i++)
+            {
+                neighbors2.AddRange(get_neighbors(player2_hexes[i]));
+            }
+
+            for (int i = 0; i < player1_hexes.Count; i++)
+            {
+                int index = neighbors2.FindIndex(hex => hex.Equals(player1_hexes[i]));
+                neighbors2.RemoveAt(index);
+            }
+            for (int i = 0; i < player2_hexes.Count; i++)
+            {
+                int index = neighbors2.FindIndex(hex => hex.Equals(player2_hexes[i]));
+                neighbors2.RemoveAt(index);
+            }
+
+            for (int i = 0; i < neighbors2.Count; i++)
+            {
+                List<Hexagon> temp_list = new List<Hexagon>(neighbors2);
+                temp_list.RemoveAt(i);
+                if (temp_list.Contains(neighbors2[i]) && !player1_hexes.Contains(neighbors2[i]) && !player2_hexes.Contains(neighbors2[i]) && !possible_hexes.Contains(neighbors2[i]))
+                {
+                    possible_hexes.Add(neighbors2[i]);
+                }
+            }
+
+
+
+            return possible_hexes;
+
+        }
+
+
+        public State get_state_after_move(State ancestor_state,Hexagon move)//New state after move from 1 of possible hexes
         {
             State s = new State();
             s.move = move;
-            if(start_state.player == 1)
+            s.player1_hexes = new List<Hexagon>(ancestor_state.player1_hexes);
+            s.player2_hexes = new List<Hexagon>(ancestor_state.player2_hexes);
+            s.empty_hexes = new List<Hexagon>(ancestor_state.empty_hexes);
+            s.empty_hexes.Remove(move);
+            s.depth = ancestor_state.depth + 1;
+            s.possible_hexes = new List<Hexagon>();
+            
+            if(ancestor_state.player == 1)
             {
                 s.player = 2;
             }
@@ -426,17 +606,42 @@ namespace Andantino_Search
             }
 
 
-            //s.depth = 
-            //if(!possible_hexes.Contains(move))
-            //{
+            if(s.player == 2)
+            { 
+                s.player2_hexes.Add(move);
+                s.is_game_over = s.check_is_victory(move, 2);
+                
 
-            //}
-            //change player hexes
-            //
+            }
+            else//player1
+            {
+                s.player1_hexes.Add(move);
+                s.is_game_over = s.check_is_victory(move, 1);
+
+                
+            }
+            if (!s.is_game_over)// || not draw
+            {
+                //calculate possible hexes
+                s.possible_hexes = s.set_possible_hexes(s.player1_hexes, s.player2_hexes);
+
+            }
+
+            int horizontal_score = s.count_horizontal_sequence(move, Option.number_coins_required, s.player);
+
+            int right_diagonal_score = s.count_diagonal_right_sequence(move, Option.number_coins_required, s.player, horizontal_score);
+
+            int left_diagonal_score = s.count_left_diagonal_sequence(move, Option.number_coins_required, s.player, horizontal_score, right_diagonal_score);
+
+            s.value = Math.Pow(horizontal_score, horizontal_score) + Math.Pow(right_diagonal_score, right_diagonal_score) + Math.Pow(left_diagonal_score, left_diagonal_score);
+
+
             return s;
 
             //cloning is useless since we now create a new state ?
 
+            //define function is_game_over that checks victory or if all_hexes_taken
+            //if 2nd case, then draw
         }
 
         
