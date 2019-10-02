@@ -1012,6 +1012,7 @@ namespace Andantino_Search
                     if (eval < minEval)
                     {
                         minEval = eval;
+                        ai_move = child_state.move;
                     }
                     beta = Math.Min(beta, eval);
                     if(beta <= alpha)
