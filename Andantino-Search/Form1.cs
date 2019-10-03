@@ -5,6 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using System.Linq;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Andantino_Search
 {
@@ -1026,8 +1027,79 @@ namespace Andantino_Search
 
         }
 
+        public double minimax_alpha_beta_pruning_parallel(State s, int depth_alpha_beta, double alpha, double beta, bool maximizing_player)
+        {
+            double eval;
+            if (depth_alpha_beta == 0 || s.is_game_over)
+            {
+                return s.value;
+            }
+
+            State child_state = new State();
+
+
+            if (maximizing_player)
+            {
+                double maxEval = double.NegativeInfinity;
+                Parallel.For(0, s.possible_hexes.Count, (i,parallel_loop_state)
+                     =>
+                 {
+                     child_state = s.get_state_after_move(s, s.possible_hexes[i]);
+                     
+                     eval = minimax_alpha_beta_pruning(child_state, depth_alpha_beta - 1, alpha, beta, false);
+
+                     if (eval > maxEval)
+                     {
+                         ai_move = child_state.move;
+                         maxEval = eval;
+
+                     }
+
+                     alpha = Math.Max(alpha, eval);
+                     if (beta <= alpha)
+                     {
+                         parallel_loop_state.Break();
+                     }
+                 });
+
+                return maxEval;
+            }
+            else
+            {
+                double minEval = double.PositiveInfinity;
+                Parallel.For(0, s.possible_hexes.Count, (i, pls)
+                      =>
+                  {
+                      child_state = s.get_state_after_move(s, s.possible_hexes[i]);
+                      eval = minimax_alpha_beta_pruning(child_state, depth_alpha_beta - 1, alpha, beta, true);
+                      if (eval < minEval)
+                      {
+                          minEval = eval;
+                          //ai_move = child_state.move;
+                      }
+                      beta = Math.Min(beta, eval);
+                      if (beta <= alpha)
+                      {
+                          pls.Break();
+                      }
+
+                  });
+                return minEval;
+            }
+
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
+            //to do
+            //negamax
+            //double check that everything works fine ( value + recursion + pruning)
+            //transposition table
+            //iterative deepening
+            //timer
+            //undo
+            //all span
+            
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
             //double value = minimax(game_state, 4, true);
