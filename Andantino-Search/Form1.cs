@@ -976,7 +976,7 @@ namespace Andantino_Search
                 return s.value;
             }
 
-            State child_state = new State();
+            State child_state;
 
 
             if (maximizing_player)
