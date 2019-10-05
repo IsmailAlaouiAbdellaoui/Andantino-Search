@@ -338,3 +338,10 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+.vs/Andantino-Search/v16/Server/sqlite3/storage.ide-wal
+.vs/Andantino-Search/v16/Server/sqlite3/storage.ide-shm
+.vs/Andantino-Search/v16/Server/sqlite3/storage.ide
+healthchecksdb
+.vs/Andantino-Search/v16/Server/sqlite3/storage.ide-wal
+.vs/Andantino-Search/v16/Server/sqlite3/storage.ide-shm
+.vs/Andantino-Search/v16/Server/sqlite3/storage.ide
