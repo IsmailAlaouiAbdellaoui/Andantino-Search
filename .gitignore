@@ -345,3 +345,6 @@ healthchecksdb
 .vs/Andantino-Search/v16/Server/sqlite3/storage.ide-wal
 .vs/Andantino-Search/v16/Server/sqlite3/storage.ide-shm
 .vs/Andantino-Search/v16/Server/sqlite3/storage.ide
+*.ide
+*.ide-shm
+*.ide-wal
