@@ -1,9 +1,10 @@
 ﻿using System.Drawing;
 using System.Collections.Generic;
+using System;
 
 namespace Andantino_Search
 {
-    public struct Hexagon
+    public struct Hexagon : IComparable<Hexagon>
     {
         public int column { get; set; }
         public int row { get; set; }
@@ -14,6 +15,22 @@ namespace Andantino_Search
             row = r;
             center = cent;
 
+        }
+
+        public int CompareTo(Hexagon other)
+        {
+            if(other.column == column && other.row == row)
+            {
+                return 0;
+            }
+            if(other.row < row)
+            {
+                return -1;
+            }
+            else
+            {
+                return 1;
+            }
         }
 
         //public int CompareTo(Hexagon hex)

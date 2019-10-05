@@ -526,6 +526,9 @@ namespace Andantino_Search
         {
             List<Hexagon> neighbors2 = new List<Hexagon>();
             List<Hexagon> possible_hexes = new List<Hexagon>();
+            ReadOnlySpan<Hexagon> test = new ReadOnlySpan<Hexagon>(neighbors2.ToArray());
+            test.BinarySearch(possible_hexes[0]);
+            neighbors2.BinarySearch(possible_hexes[0]);
 
             for (int i = 0; i < player1_hexes.Count; i++)//choosing possible hexes
             {
@@ -552,7 +555,7 @@ namespace Andantino_Search
             {
                 List<Hexagon> temp_list = new List<Hexagon>(neighbors2);
                 temp_list.RemoveAt(i);
-                if (temp_list.Contains(neighbors2[i]) && !player1_hexes.Contains(neighbors2[i]) && !player2_hexes.Contains(neighbors2[i]) && !possible_hexes.Contains(neighbors2[i]))
+                if (temp_list.AsParallel().Contains(neighbors2[i]) && !player1_hexes.AsParallel().Contains(neighbors2[i]) && !player2_hexes.AsParallel().Contains(neighbors2[i]) && !possible_hexes.AsParallel().Contains(neighbors2[i]))
                 {
                     possible_hexes.Add(neighbors2[i]);
                 }
