@@ -34,6 +34,10 @@ namespace Andantino_Search
 
         State game_state = new State();
 
+        //GameStatic test;
+
+        
+
 
         bool isplayer1_turn = false;
         bool isplayer2_turn = true;
@@ -61,9 +65,19 @@ namespace Andantino_Search
 
             //hexes_board = GameStatic.set_hexes_board(all_hexes);
             hexes_board = set_hexes_board(all_hexes);
-            GameStatic.hexes_in_board = new List<Hexagon>(hexes_board);
-            //all_hexes /*=*/ set_
 
+            GameStatic.hexes_in_board = new List<Hexagon>(hexes_board);
+
+            var span = new Span<Hexagon>(hexes_board.ToArray());
+
+            GameStatic.hexes_board_dict = new Dictionary<Tuple<int, int>, Hexagon>();
+            for (int i = 0; i < hexes_board.Count; i++)
+            {
+                GameStatic.hexes_board_dict.Add(Tuple.Create(hexes_board[i].row, hexes_board[i].column), hexes_board[i]);
+            }
+
+            //GameStatic.hexes_board_memory = new Memory<Hexagon>(hexes_board.ToArray());
+            
             empty_hexes = new List<Hexagon>(hexes_board);
 
             Hexagon player1_hex = hexes_board.Find(hex => hex.row == Option.row_init_coin && hex.column == Option.col_init_coin);

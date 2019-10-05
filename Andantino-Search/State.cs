@@ -423,28 +423,28 @@ namespace Andantino_Search
 
             int left_neighbor_row = row_hex;
             int left_neighbor_col = column_hex - 1;
-            for (int i = 0; i < GameStatic.hexes_in_board.Count; i++)
+
+            try
             {
-                if (GameStatic.hexes_in_board[i].row == left_neighbor_row && GameStatic.hexes_in_board[i].column == left_neighbor_col)
-                {
+                neighbors.Add(GameStatic.hexes_board_dict[Tuple.Create(left_neighbor_row, left_neighbor_col)]);
+            }
+            catch (Exception)
+            {
 
-                    neighbors.Add(GameStatic.hexes_in_board[i]);
-
-
-                }
+                
             }
 
             int right_neighbor_row = row_hex;
             int right_neighbor_col = column_hex + 1;
-            for (int i = 0; i < GameStatic.hexes_in_board.Count; i++)
+
+            try
             {
-                if (GameStatic.hexes_in_board[i].row == right_neighbor_row && GameStatic.hexes_in_board[i].column == right_neighbor_col)
-                {
+                neighbors.Add(GameStatic.hexes_board_dict[Tuple.Create(right_neighbor_row, right_neighbor_col)]);
+            }
+            catch (Exception)
+            {
 
-                    neighbors.Add(GameStatic.hexes_in_board[i]);
-
-                }
-
+               
             }
 
 
@@ -456,89 +456,66 @@ namespace Andantino_Search
 
             int bottom_right_neighbor_row = bottom_left_neighbor_row;
 
+            //dumb values that will be changed anyway
+            int upper_left_neighbor_col = column_hex;
+            int upper_right_neighbor_col = column_hex + 1;
+            int bottom_left_neighbor_col = column_hex;
+            int bottom_right_neighbor_col = column_hex + 1;
+            //dummy values
+
             if (row_hex % 2 != 0)
             {
-                int upper_left_neighbor_col = column_hex;
-                for (int i = 0; i < GameStatic.hexes_in_board.Count; i++)
-                {
-                    if (GameStatic.hexes_in_board[i].row == upper_left_neighbor_row && GameStatic.hexes_in_board[i].column == upper_left_neighbor_col)
-                    {
-                        neighbors.Add(GameStatic.hexes_in_board[i]);
-                    }
-
-                }
-
-
-                int upper_right_neighbor_col = column_hex + 1;
-                for (int i = 0; i < GameStatic.hexes_in_board.Count; i++)
-                {
-                    if (GameStatic.hexes_in_board[i].row == upper_right_neighbor_row && GameStatic.hexes_in_board[i].column == upper_right_neighbor_col)
-                    {
-                        neighbors.Add(GameStatic.hexes_in_board[i]);
-                    }
-
-                }
-
-                int bottom_left_neighbor_col = column_hex;
-                for (int i = 0; i < GameStatic.hexes_in_board.Count; i++)
-                {
-                    if (GameStatic.hexes_in_board[i].row == bottom_left_neighbor_row && GameStatic.hexes_in_board[i].column == bottom_left_neighbor_col)
-                    {
-                        neighbors.Add(GameStatic.hexes_in_board[i]);
-                    }
-
-                }
-
-                int bottom_right_neighbor_col = column_hex + 1;
-                for (int i = 0; i < GameStatic.hexes_in_board.Count; i++)
-                {
-                    if (GameStatic.hexes_in_board[i].row == bottom_right_neighbor_row && GameStatic.hexes_in_board[i].column == bottom_right_neighbor_col)
-                    {
-                        neighbors.Add(GameStatic.hexes_in_board[i]);
-                    }
-                }
+                upper_left_neighbor_col = column_hex;
+                upper_right_neighbor_col = column_hex + 1;
+                bottom_left_neighbor_col = column_hex;
+                bottom_right_neighbor_col = column_hex + 1; 
             }
             else
             {
-                int upper_left_neighbor_col = column_hex - 1;
-                for (int i = 0; i < GameStatic.hexes_in_board.Count; i++)
-                {
-                    if (GameStatic.hexes_in_board[i].row == upper_left_neighbor_row && GameStatic.hexes_in_board[i].column == upper_left_neighbor_col)
-                    {
-                        neighbors.Add(GameStatic.hexes_in_board[i]);
-                    }
-
-                }
+                upper_left_neighbor_col = column_hex - 1;
+                upper_right_neighbor_col = column_hex;
+                bottom_left_neighbor_col = column_hex - 1;
+                bottom_right_neighbor_col = column_hex;
+            }
 
 
-                int upper_right_neighbor_col = column_hex;
-                for (int i = 0; i < GameStatic.hexes_in_board.Count; i++)
-                {
-                    if (GameStatic.hexes_in_board[i].row == upper_right_neighbor_row && GameStatic.hexes_in_board[i].column == upper_right_neighbor_col)
-                    {
-                        neighbors.Add(GameStatic.hexes_in_board[i]);
-                    }
+            try
+            {
+                neighbors.Add(GameStatic.hexes_board_dict[Tuple.Create(upper_left_neighbor_row, upper_left_neighbor_col)]);
+            }
+            catch (Exception)
+            {
 
-                }
 
-                int bottom_left_neighbor_col = column_hex - 1;
-                for (int i = 0; i < GameStatic.hexes_in_board.Count; i++)
-                {
-                    if (GameStatic.hexes_in_board[i].row == bottom_left_neighbor_row && GameStatic.hexes_in_board[i].column == bottom_left_neighbor_col)
-                    {
-                        neighbors.Add(GameStatic.hexes_in_board[i]);
-                    }
+            }
 
-                }
+            try
+            {
+                neighbors.Add(GameStatic.hexes_board_dict[Tuple.Create(upper_right_neighbor_row, upper_right_neighbor_col)]);
+            }
+            catch (Exception)
+            {
 
-                int bottom_right_neighbor_col = column_hex;
-                for (int i = 0; i < GameStatic.hexes_in_board.Count; i++)
-                {
-                    if (GameStatic.hexes_in_board[i].row == bottom_right_neighbor_row && GameStatic.hexes_in_board[i].column == bottom_right_neighbor_col)
-                    {
-                        neighbors.Add(GameStatic.hexes_in_board[i]);
-                    }
-                }
+
+            }
+
+            try
+            {
+                neighbors.Add(GameStatic.hexes_board_dict[Tuple.Create(bottom_left_neighbor_row, bottom_left_neighbor_col)]);
+            }
+            catch (Exception)
+            {
+
+
+            }
+
+            try
+            {
+                neighbors.Add(GameStatic.hexes_board_dict[Tuple.Create(bottom_right_neighbor_row, bottom_right_neighbor_col)]);
+            }
+            catch (Exception)
+            {
+
 
             }
 

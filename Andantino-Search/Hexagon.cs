@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Collections.Generic;
 
 namespace Andantino_Search
 {
@@ -14,5 +15,10 @@ namespace Andantino_Search
             center = cent;
 
         }
+
+        //public int CompareTo(Hexagon hex)
+        //{
+
+        //}
     }
 }
