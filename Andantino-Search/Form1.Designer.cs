@@ -43,18 +43,16 @@
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.RowCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
+            this.RowCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.picGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // picGrid
             // 
-            this.picGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.picGrid.BackColor = System.Drawing.Color.White;
             this.picGrid.Location = new System.Drawing.Point(12, 12);
             this.picGrid.Name = "picGrid";
@@ -180,13 +178,8 @@
             this.RowCol});
             this.dataGridView1.Location = new System.Drawing.Point(741, 388);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(240, 150);
+            this.dataGridView1.Size = new System.Drawing.Size(284, 76);
             this.dataGridView1.TabIndex = 20;
-            // 
-            // RowCol
-            // 
-            this.RowCol.HeaderText = "Hex Info";
-            this.RowCol.Name = "RowCol";
             // 
             // button1
             // 
@@ -217,11 +210,17 @@
             this.label4.TabIndex = 23;
             this.label4.Text = "label4";
             // 
+            // RowCol
+            // 
+            this.RowCol.HeaderText = "Hex Info";
+            this.RowCol.Name = "RowCol";
+            this.RowCol.Width = 200;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1014, 653);
+            this.ClientSize = new System.Drawing.Size(1056, 653);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
@@ -267,10 +266,10 @@
         private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.TextBox textBox7;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn RowCol;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RowCol;
     }
 }
 

@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Linq;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace Andantino_Search
 {
@@ -31,6 +32,7 @@ namespace Andantino_Search
         List<Hexagon> empty_hexes;
 
         Hexagon ai_move = new Hexagon();
+        State ai_state = new State();
 
         State game_state = new State();
 
@@ -939,8 +941,9 @@ namespace Andantino_Search
         public double minimax(State s, int depth_minimax, bool maximizing_player)
         {
             double eval;
-            if (depth_minimax == 0 || s.is_game_over)
+            if (depth_minimax == 0)
             {
+                //ai_move = s.move;
                 return s.value;
             }
 
@@ -954,15 +957,40 @@ namespace Andantino_Search
                 {
 
                     child_state = s.get_state_after_move(s, s.possible_hexes[i]);
+                    string file_directory = check_folder_file_directory();
+                    //log_minimax(file_directory, "Recursive call for min player with depth: " + (depth_minimax - 1));
+                    //log_minimax(file_directory, "Ancestor move: (" + s.move.row + "," + s.move.column + ")");
+                    //log_minimax(file_directory, "Information about the cild");
+                    //log_minimax(file_directory, "move of child state: (" + child_state.move.row + "," + child_state.move.column + "), value: " + child_state.value);
+                    //log_minimax(file_directory, "depth: " + child_state.depth);
+                    //log_minimax(file_directory, "# possible states: " + child_state.possible_hexes.Count);
+                    //log_minimax(file_directory, "\n\n");
                     eval = minimax(child_state, depth_minimax - 1, false);
                     
                     if(eval>maxEval)
                     {
-                        ai_move = child_state.move;
+                        
                         maxEval = eval;
+                        if(s.move.row == game_state.move.row && s.move.column == game_state.move.column)
+                        {
+                            ai_move = child_state.move;
+                            ai_state = child_state;
+                        }
+                        //ai_move = child_state.move;
+                        //ai_state = child_state;
+                        //log_minimax(file_directory, "move chosen in condition: (" + child_state.move.row + "," + child_state.move.column + ")");
+                        //log_minimax(file_directory, "Recursive call for min player with depth: " + (depth_minimax - 1));
+                        //log_minimax(file_directory, "Ancestor move: (" + s.move.row + "," + s.move.column + ")");
+                        //log_minimax(file_directory, "Information about the cild");
+                        //log_minimax(file_directory, "move of child state: (" + child_state.move.row + "," + child_state.move.column + "), value: " + child_state.value);
+                        //log_minimax(file_directory, "depth: " + child_state.depth);
+                        //log_minimax(file_directory, "# possible states: " + child_state.possible_hexes.Count);
+                        //log_minimax(file_directory, "\n\n");
+                        //ai_move = s.move;
 
                     }
                 }
+                //ai_move = s.move;
                 return maxEval;
             }
             else
@@ -971,13 +999,38 @@ namespace Andantino_Search
                 for (int i = 0; i < s.possible_hexes.Count; i++)
                 {
                     child_state = s.get_state_after_move(s, s.possible_hexes[i]);
+                    string file_directory = check_folder_file_directory();
+                    //log_minimax(file_directory,"Recursive call for max player with depth: " + (depth_minimax + 1));
+                    //log_minimax(file_directory, "Ancestor move: (" + s.move.row + "," + s.move.column + ")");
+                    //log_minimax(file_directory, "Information about the cild");
+                    //log_minimax(file_directory,"move of child state: (" + child_state.move.row+","+ child_state.move.column+"), value: "+ child_state.value);
+                    //log_minimax(file_directory,"depth: " + child_state.depth);
+                    //log_minimax(file_directory,"# possible states: " + child_state.possible_hexes.Count);
+                    //log_minimax(file_directory, "\n\n");
                     eval = minimax(child_state, depth_minimax - 1, true);
                     if (eval<minEval)
                     {
+                        
                         minEval = eval;
+                        //ai_move = child_state.move;
+                        if (s.move.row == game_state.move.row && s.move.column == game_state.move.column)
+                        {
+                            ai_move = child_state.move;
+                            ai_state = child_state;
+                        }
+                        //log_minimax(file_directory, "move chosen in condition: (" + child_state.move.row+","+child_state.move.column+")");
+                        //log_minimax(file_directory, "Recursive call for max player with depth: " + (depth_minimax + 1));
+                        //log_minimax(file_directory, "Ancestor move: (" + s.move.row + "," + s.move.column + ")");
+                        //log_minimax(file_directory, "Information about the cild");
+                        //log_minimax(file_directory, "move of child state: (" + child_state.move.row + "," + child_state.move.column + "), value: " + child_state.value);
+                        //log_minimax(file_directory, "depth: " + child_state.depth);
+                        //log_minimax(file_directory, "# possible states: " + child_state.possible_hexes.Count);
+                        //log_minimax(file_directory, "\n\n");
+                        //ai_state = child_state;
                     }
                     
                 }
+                //ai_move = s.move;
                 return minEval;
             }
         }
@@ -1103,6 +1156,40 @@ namespace Andantino_Search
 
         }
 
+        public double negamax(State s, int depth_negamax, double alpha, double beta)
+        {
+            if(depth_negamax == 0)
+            {
+                return s.value;
+            }
+            double score = alpha;
+            for (int i = 0; i < s.possible_hexes.Count; i++)
+            {
+                State child_state = s.get_state_after_move(s, s.possible_hexes[i]);
+                double value = -1 * negamax(child_state, depth_negamax - 1, -beta, -alpha);
+                if(value > score)
+                {
+                    score = value;
+                    if (s.move.row == game_state.move.row && s.move.column == game_state.move.column)
+                    {
+                        ai_move = child_state.move;
+                        ai_state = child_state;
+                    }
+                    //ai_move = child_state.move;
+                    //ai_state = child_state;
+                }
+                if(score>alpha)
+                {
+                    alpha = score;
+                }
+                if (score >= beta)
+                {
+                    break;
+                }
+            }
+            return (score);
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             //to do
@@ -1113,24 +1200,23 @@ namespace Andantino_Search
             //timer
             //undo
             //all span
-            
+
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            double value = minimax(game_state, 4, true);
-            //double value = minimax_alpha_beta_pruning(game_state, 6, double.NegativeInfinity, double.PositiveInfinity, true);
+            //MessageBox.Show("("+game_state.move.row+","+game_state.move.column+")");
+            //double value = minimax(game_state, 3, true);
+            double value = minimax_alpha_beta_pruning(game_state, 4, double.NegativeInfinity, double.PositiveInfinity, true);
+            //double value = negamax(game_state, 3, double.NegativeInfinity, double.PositiveInfinity);
             stopWatch.Stop();
             depth_game++;
-            //MessageBox.Show("("+ai_move.row.ToString() +","+ ai_move.column.ToString() + "," + "value:"+value.ToString()+")");
-            //labe
-            label4.Text = "(" + ai_move.row.ToString() + "," + ai_move.column.ToString() + "," + "value:" + value.ToString() + ")";
+            label4.Text = "(" + ai_move.row.ToString() + "," + ai_move.column.ToString() + "," + "value:" + ai_state.value.ToString() + ")";
             TimeSpan ts = stopWatch.Elapsed;
             string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
             ts.Hours, ts.Minutes, ts.Seconds,
             ts.Milliseconds / 10);
-            //MessageBox.Show("RunTime " + elapsedTime);
             dataGridView1.Rows.Clear();
             dataGridView1.Rows.Add(elapsedTime);
-
+            dataGridView1.Rows.Add("state depth " + ai_state.depth);
             game_state = game_state.get_state_after_move(game_state, ai_move);
 
 
@@ -1143,5 +1229,34 @@ namespace Andantino_Search
 
         }
 
+        public void log_minimax(string file_directory, string info)
+        {
+
+                using (StreamWriter file = new StreamWriter(file_directory, true))
+                {
+                    file.WriteLine(info);
+                }
+            
+        }
+        public string check_folder_file_directory()
+        {
+            string current_directory = Directory.GetCurrentDirectory();
+            string minimax_folder = "\\log_minimax";
+            string complete_directory = current_directory + minimax_folder;
+            string file_directory = complete_directory + "\\log_minimax.txt";
+            if (!Directory.Exists(complete_directory))
+            {
+                Directory.CreateDirectory(complete_directory);
+                if (!File.Exists(file_directory))
+                {
+                    File.Create(file_directory);
+                }
+                
+            }
+            return file_directory;
+
+        }
     }
+
+    
 }

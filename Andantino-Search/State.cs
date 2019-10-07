@@ -57,6 +57,10 @@ namespace Andantino_Search
 
 
         }
+        //public State()
+        //{
+
+        //}
 
         public int count_diagonal_right_sequence(Hexagon new_hex, int number_coins_required, int which_player_played, int horizontal_sequential)
         {
@@ -526,9 +530,9 @@ namespace Andantino_Search
         {
             List<Hexagon> neighbors2 = new List<Hexagon>();
             List<Hexagon> possible_hexes = new List<Hexagon>();
-            ReadOnlySpan<Hexagon> test = new ReadOnlySpan<Hexagon>(neighbors2.ToArray());
-            test.BinarySearch(possible_hexes[0]);
-            neighbors2.BinarySearch(possible_hexes[0]);
+            //ReadOnlySpan<Hexagon> test = new ReadOnlySpan<Hexagon>(neighbors2.ToArray());
+            //test.BinarySearch(possible_hexes[0]);
+            //neighbors2.BinarySearch(possible_hexes[0]);
 
             for (int i = 0; i < player1_hexes.Count; i++)//choosing possible hexes
             {
@@ -543,12 +547,20 @@ namespace Andantino_Search
             for (int i = 0; i < player1_hexes.Count; i++)
             {
                 int index = neighbors2.FindIndex(hex => hex.Equals(player1_hexes[i]));
-                neighbors2.RemoveAt(index);
+                if(index>=0)
+                {
+                    neighbors2.RemoveAt(index);
+                }
+                
             }
             for (int i = 0; i < player2_hexes.Count; i++)
             {
                 int index = neighbors2.FindIndex(hex => hex.Equals(player2_hexes[i]));
-                neighbors2.RemoveAt(index);
+                if(index>=0)
+                {
+                    neighbors2.RemoveAt(index);
+                }
+                
             }
 
             for (int i = 0; i < neighbors2.Count; i++)
