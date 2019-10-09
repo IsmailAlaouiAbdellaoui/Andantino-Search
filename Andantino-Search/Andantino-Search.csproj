@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AI.cs" />
     <Compile Include="Drawing.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -68,10 +69,9 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="GameState.cs" />
     <Compile Include="GameStatic.cs" />
     <Compile Include="Hexagon.cs" />
-    <Compile Include="EnumSymbols.cs" />
-    <Compile Include="ObjectCopier.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

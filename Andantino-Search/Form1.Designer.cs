@@ -29,13 +29,12 @@
         private void InitializeComponent()
         {
             this.picGrid = new System.Windows.Forms.PictureBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label_player_turn = new System.Windows.Forms.Label();
+            this.txtbox_number_possible_hexes = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.txtbox_p1_number_coins = new System.Windows.Forms.TextBox();
+            this.txtbox_p2_number_coins = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -43,10 +42,11 @@
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
             this.RowCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.button_ai_move = new System.Windows.Forms.Button();
+            this.button_show_info = new System.Windows.Forms.Button();
+            this.label_ai_move_result = new System.Windows.Forms.Label();
+            this.button_undo = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.picGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -59,15 +59,9 @@
             this.picGrid.Size = new System.Drawing.Size(711, 629);
             this.picGrid.TabIndex = 0;
             this.picGrid.TabStop = false;
+            this.picGrid.Click += new System.EventHandler(this.picGrid_Click);
             this.picGrid.Paint += new System.Windows.Forms.PaintEventHandler(this.picGrid_Paint_1);
             this.picGrid.MouseClick += new System.Windows.Forms.MouseEventHandler(this.picGrid_MouseClick);
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(729, 12);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 20);
-            this.textBox2.TabIndex = 3;
             // 
             // label1
             // 
@@ -79,22 +73,22 @@
             this.label1.TabIndex = 6;
             this.label1.Text = "Player\'s turn :";
             // 
-            // label2
+            // label_player_turn
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 17F);
-            this.label2.Location = new System.Drawing.Point(736, 99);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(79, 29);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "label2";
+            this.label_player_turn.AutoSize = true;
+            this.label_player_turn.Font = new System.Drawing.Font("Microsoft Sans Serif", 17F);
+            this.label_player_turn.Location = new System.Drawing.Point(736, 99);
+            this.label_player_turn.Name = "label_player_turn";
+            this.label_player_turn.Size = new System.Drawing.Size(79, 29);
+            this.label_player_turn.TabIndex = 7;
+            this.label_player_turn.Text = "label2";
             // 
-            // textBox1
+            // txtbox_number_possible_hexes
             // 
-            this.textBox1.Location = new System.Drawing.Point(860, 166);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(48, 20);
-            this.textBox1.TabIndex = 8;
+            this.txtbox_number_possible_hexes.Location = new System.Drawing.Point(860, 166);
+            this.txtbox_number_possible_hexes.Name = "txtbox_number_possible_hexes";
+            this.txtbox_number_possible_hexes.Size = new System.Drawing.Size(40, 20);
+            this.txtbox_number_possible_hexes.TabIndex = 8;
             // 
             // label3
             // 
@@ -105,19 +99,19 @@
             this.label3.TabIndex = 10;
             this.label3.Text = "Number possible hexes";
             // 
-            // textBox4
+            // txtbox_p1_number_coins
             // 
-            this.textBox4.Location = new System.Drawing.Point(860, 217);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(100, 20);
-            this.textBox4.TabIndex = 12;
+            this.txtbox_p1_number_coins.Location = new System.Drawing.Point(860, 217);
+            this.txtbox_p1_number_coins.Name = "txtbox_p1_number_coins";
+            this.txtbox_p1_number_coins.Size = new System.Drawing.Size(40, 20);
+            this.txtbox_p1_number_coins.TabIndex = 12;
             // 
-            // textBox5
+            // txtbox_p2_number_coins
             // 
-            this.textBox5.Location = new System.Drawing.Point(860, 257);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(100, 20);
-            this.textBox5.TabIndex = 13;
+            this.txtbox_p2_number_coins.Location = new System.Drawing.Point(860, 257);
+            this.txtbox_p2_number_coins.Name = "txtbox_p2_number_coins";
+            this.txtbox_p2_number_coins.Size = new System.Drawing.Size(40, 20);
+            this.txtbox_p2_number_coins.TabIndex = 13;
             // 
             // label5
             // 
@@ -181,49 +175,60 @@
             this.dataGridView1.Size = new System.Drawing.Size(284, 76);
             this.dataGridView1.TabIndex = 20;
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(844, 10);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 21;
-            this.button1.Text = "AI Move";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(741, 359);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 22;
-            this.button2.Text = "show info";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(946, 19);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(35, 13);
-            this.label4.TabIndex = 23;
-            this.label4.Text = "label4";
-            // 
             // RowCol
             // 
             this.RowCol.HeaderText = "Hex Info";
             this.RowCol.Name = "RowCol";
             this.RowCol.Width = 200;
             // 
+            // button_ai_move
+            // 
+            this.button_ai_move.Location = new System.Drawing.Point(741, 12);
+            this.button_ai_move.Name = "button_ai_move";
+            this.button_ai_move.Size = new System.Drawing.Size(75, 23);
+            this.button_ai_move.TabIndex = 21;
+            this.button_ai_move.Text = "AI Move";
+            this.button_ai_move.UseVisualStyleBackColor = true;
+            this.button_ai_move.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // button_show_info
+            // 
+            this.button_show_info.Location = new System.Drawing.Point(741, 359);
+            this.button_show_info.Name = "button_show_info";
+            this.button_show_info.Size = new System.Drawing.Size(75, 23);
+            this.button_show_info.TabIndex = 22;
+            this.button_show_info.Text = "show info";
+            this.button_show_info.UseVisualStyleBackColor = true;
+            this.button_show_info.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // label_ai_move_result
+            // 
+            this.label_ai_move_result.AutoSize = true;
+            this.label_ai_move_result.Location = new System.Drawing.Point(946, 19);
+            this.label_ai_move_result.Name = "label_ai_move_result";
+            this.label_ai_move_result.Size = new System.Drawing.Size(35, 13);
+            this.label_ai_move_result.TabIndex = 23;
+            this.label_ai_move_result.Text = "label4";
+            // 
+            // button_undo
+            // 
+            this.button_undo.Location = new System.Drawing.Point(833, 12);
+            this.button_undo.Name = "button_undo";
+            this.button_undo.Size = new System.Drawing.Size(75, 23);
+            this.button_undo.TabIndex = 24;
+            this.button_undo.Text = "Undo";
+            this.button_undo.UseVisualStyleBackColor = true;
+            this.button_undo.Click += new System.EventHandler(this.button3_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1056, 653);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.button_undo);
+            this.Controls.Add(this.label_ai_move_result);
+            this.Controls.Add(this.button_show_info);
+            this.Controls.Add(this.button_ai_move);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.textBox7);
             this.Controls.Add(this.textBox6);
@@ -231,13 +236,12 @@
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.textBox5);
-            this.Controls.Add(this.textBox4);
+            this.Controls.Add(this.txtbox_p2_number_coins);
+            this.Controls.Add(this.txtbox_p1_number_coins);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.txtbox_number_possible_hexes);
+            this.Controls.Add(this.label_player_turn);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox2);
             this.Controls.Add(this.picGrid);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -252,13 +256,12 @@
         #endregion
 
         private System.Windows.Forms.PictureBox picGrid;
-        private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label_player_turn;
+        private System.Windows.Forms.TextBox txtbox_number_possible_hexes;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.TextBox txtbox_p1_number_coins;
+        private System.Windows.Forms.TextBox txtbox_p2_number_coins;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
@@ -266,10 +269,11 @@
         private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.TextBox textBox7;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button button_ai_move;
+        private System.Windows.Forms.Button button_show_info;
+        private System.Windows.Forms.Label label_ai_move_result;
         private System.Windows.Forms.DataGridViewTextBoxColumn RowCol;
+        private System.Windows.Forms.Button button_undo;
     }
 }
 
