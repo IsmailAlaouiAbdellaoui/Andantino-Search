@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 //Hexagon move, int player, List<Hexagon> state_player1_hexes, List<Hexagon> state_player2_hexes, int depth, List<Hexagon> empty_hexes, List<Hexagon> possible_hexes, double value, bool is_game_over
 namespace Andantino_Search
 {
-    public struct State
+    public struct State : IComparable<State>
     {
         public Hexagon move {  get;  set; }// Move that led to this State
 
@@ -641,8 +641,20 @@ namespace Andantino_Search
             //if 2nd case, then draw
         }
 
-
-        
-
+        public int CompareTo(State other)
+        {
+            if(other.value == value)
+            {
+                return 0;
+            }
+            if(other.value> value)
+            {
+                return -1;
+            }
+            else
+            {
+                return 1;
+            }
+        }
     }
 }
