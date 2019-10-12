@@ -203,6 +203,7 @@ namespace Andantino_Search
         //p2 = Human
         public void picGrid_MouseClick(object sender, MouseEventArgs e)
         {
+            //MessageBox.Show(GameState.game_state.depth.ToString());
             List<float> distances = new List<float>();
             for (int i = 0; i < GameStatic.hexes_in_board.Count; i++)
             {
@@ -249,6 +250,7 @@ namespace Andantino_Search
                 int number_hexes_player1_before = GameState.game_state.state_player1_hexes.Count;
                 if (GameState.game_state.possible_hexes.Any(hex => hex.row == row_clicked && hex.column == col_clicked))
                 {
+                    depth_game++;
                     GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, move);
                     GameState.game_history.Push(GameState.game_state);
                 }
@@ -290,11 +292,11 @@ namespace Andantino_Search
 
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            double value = AI.minimax(GameState.game_state, 3, true);
-            //double value = AI.minimax_alpha_beta_pruning(GameState.game_state, 3, double.NegativeInfinity, double.PositiveInfinity, true);
-            //double value = negamax(GameState.game_state, 3, double.NegativeInfinity, double.PositiveInfinity);
+            //double value = AI.minimax(GameState.game_state, 4, true);
+            double value = AI.minimax_alpha_beta_pruning(GameState.game_state, 3, double.NegativeInfinity, double.PositiveInfinity, true);
+            //double value = AI.negamax(GameState.game_state, 3, double.NegativeInfinity, double.PositiveInfinity);
             stopWatch.Stop();
-            depth_game++;
+            //depth_game++;
             label_ai_move_result.Text = "(" + AI.ai_move.row.ToString() + "," + AI.ai_move.column.ToString() + "," + "value:" + AI.ai_state.value.ToString() + ")";
             TimeSpan ts = stopWatch.Elapsed;
             string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",

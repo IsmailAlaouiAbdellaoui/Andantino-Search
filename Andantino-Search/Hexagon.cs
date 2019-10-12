@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using System.Collections.Generic;
 using System;
 
 namespace Andantino_Search
@@ -32,10 +31,5 @@ namespace Andantino_Search
                 return 1;
             }
         }
-
-        //public int CompareTo(Hexagon hex)
-        //{
-
-        //}
     }
 }

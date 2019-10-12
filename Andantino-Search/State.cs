@@ -15,10 +15,8 @@ namespace Andantino_Search
         public int player { get; set; }//1 for max and 2 for min // player who needs to make the move
 
         public List<Hexagon> state_player1_hexes { get; set; }//player
-        //public int evaluation_p1 { get; set; }//player
 
         public List<Hexagon> state_player2_hexes { get; set; }//opponent
-        //public int evaluation_p2 { get; set; }//opponent
 
         public int depth { get; set; }
 
