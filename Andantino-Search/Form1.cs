@@ -293,7 +293,7 @@ namespace Andantino_Search
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
             //double value = AI.minimax(GameState.game_state, 4, true);
-            double value = AI.minimax_alpha_beta_pruning(GameState.game_state, 3, double.NegativeInfinity, double.PositiveInfinity, true);
+            double value = AI.minimax_alpha_beta_pruning(GameState.game_state, 5, double.NegativeInfinity, double.PositiveInfinity, true);
             //double value = AI.negamax(GameState.game_state, 3, double.NegativeInfinity, double.PositiveInfinity);
             stopWatch.Stop();
             //depth_game++;

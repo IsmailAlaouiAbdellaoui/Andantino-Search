@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Andantino_Search
@@ -117,19 +118,29 @@ namespace Andantino_Search
             if (maximizing_player)
             {
                 double maxEval = double.NegativeInfinity;
+                //List<State> sorted_children = new List<State>();
+                //for (int i = 0; i < s.possible_hexes.Count; i++)
+                //{
+                //    sorted_children.Add(s.get_state_after_move(s, s.possible_hexes[i]));
+                //}
+                //sorted_children.Sort();
                 for (int i = 0; i < s.possible_hexes.Count; i++)
                 {
 
                     child_state = s.get_state_after_move(s, s.possible_hexes[i]);
                     eval = minimax_alpha_beta_pruning(child_state, depth_alpha_beta - 1, alpha, beta, false);
+                    //eval = minimax_alpha_beta_pruning(sorted_children[i], depth_alpha_beta - 1, alpha, beta, false);
 
                     if (eval > maxEval)
                     {
                         //string file_directory = Util.check_folder_file_directory();
-                        if (depth_alpha_beta == 2)
+                        if (depth_alpha_beta == 4)
                         {
                             ai_move = child_state.move;
                             ai_state = child_state;
+                            //ai_move = sorted_children[i].move;
+                            //ai_state = sorted_children[i];
+
                             //Util.log_minimax(file_directory, "!! \tcondition true, move assigned");
 
                         }
@@ -156,19 +167,29 @@ namespace Andantino_Search
             else
             {
                 double minEval = double.PositiveInfinity;
+                //List<State> sorted_children = new List<State>();
+                //for (int i = 0; i < s.possible_hexes.Count; i++)
+                //{
+                //    sorted_children.Add(s.get_state_after_move(s, s.possible_hexes[i]));
+                //}
+                //sorted_children.Sort();
                 for (int i = 0; i < s.possible_hexes.Count; i++)
                 {
                     child_state = s.get_state_after_move(s, s.possible_hexes[i]);
                     eval = minimax_alpha_beta_pruning(child_state, depth_alpha_beta - 1, alpha, beta, true);
+
+                    //eval = minimax_alpha_beta_pruning(sorted_children[i], depth_alpha_beta - 1, alpha, beta, true);
                     if (eval < minEval)
                     {
                         //string file_directory = Util.check_folder_file_directory();
                         minEval = eval;
-                        if(depth_alpha_beta == 2)
+                        if(depth_alpha_beta == 4)
                         {
                             ai_move = child_state.move;
                             ai_state = child_state;
                             //Util.log_minimax(file_directory, "!! \tcondition true, move assigned");
+                            //ai_move = sorted_children[i].move;
+                            //ai_state = sorted_children[i];
                         }
                         //Util.log_minimax(file_directory, "move chosen in condition: (" + child_state.move.row + "," + child_state.move.column + ")");
                         //Util.log_minimax(file_directory, "Recursive call for min player with depth: " + (depth_alpha_beta - 1));
