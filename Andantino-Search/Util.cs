@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Andantino_Search
 {
@@ -49,7 +50,7 @@ namespace Andantino_Search
             return file_directory;
 
         }
-        private ulong Get64BitRandom(ulong minValue, ulong maxValue)
+        public static ulong Get64BitRandom(ulong minValue, ulong maxValue,Random r)
         {
             //code taken from https://social.msdn.microsoft.com/Forums/vstudio/en-US/cb9c7f4d-5f1e-4900-87d8-013205f27587/64-bit-strong-random-function?forum=csharpgeneral
             // Get a random array of 8 bytes. 

@@ -16,7 +16,6 @@ namespace Andantino_Search
 
         //State GameState.game_state = new State();
         //Stack game_history = new Stack();
-        Random r = new Random();
 
         bool isplayer1_turn = false;
         bool isplayer2_turn = true;
@@ -24,15 +23,6 @@ namespace Andantino_Search
         int depth_game = 1;
 
         DateTime Started = DateTime.Now;
-
-        static bool global_is_game_over = false;
-        //private static Hexagon ai_move;
-
-        //Timer t = new Timer();
-        //t.
-
-        //t.
-        //t.Tick += new EventHandler(this.t_Tick);
 
         public Form1()
         {
@@ -71,7 +61,7 @@ namespace Andantino_Search
 
             GameState.game_history.Push(GameState.game_state);
             //MessageBox.Show(GameStatic.hexes_in_board.Count.ToString());
-            generate_zobrist_table();
+            Zobrist.generate_zobrist_table(false);
 
         }
 
@@ -232,10 +222,6 @@ namespace Andantino_Search
             }
             return hexes_board;
         }
-
-
-        //p1 = AI
-        //p2 = Human
         public void picGrid_MouseClick(object sender, MouseEventArgs e)
         {
             //MessageBox.Show(GameState.game_state.depth.ToString());
@@ -388,22 +374,6 @@ namespace Andantino_Search
             label2.Text = test;
 
         }
-
-        public void generate_zobrist_table()
-        {
-            Zobrist.zobrist_dict = new Dictionary<int, ulong>();
-            string dir = Util.check_folder_file_zobrist_directory();
-            for (int i = 0; i < 542; i++)
-            {
-                
-                Zobrist.zobrist_dict.Add(i, Util.Get64BitRandom(Option.minimum_random_value_zobrist, ulong.MaxValue));
-                //Util.log_info(dir, Zobrist.zobrist_dict[i].ToString());
-            }
-        }
-
-
-        
-
 
     }
 
