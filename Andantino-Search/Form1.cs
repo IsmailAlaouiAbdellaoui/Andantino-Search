@@ -24,8 +24,16 @@ namespace Andantino_Search
 
         int depth_game = 1;
 
+        DateTime Started = DateTime.Now;
+
         static bool global_is_game_over = false;
         //private static Hexagon ai_move;
+
+        //Timer t = new Timer();
+        //t.
+
+        //t.
+        //t.Tick += new EventHandler(this.t_Tick);
 
         public Form1()
         {
@@ -34,7 +42,13 @@ namespace Andantino_Search
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            label_player_turn.Text = "Player 2";
+
+
+            set_labels();
+
+            set_timer();
+
+            
 
             GameStatic.all_hexes = new List<Hexagon>();
             GameStatic.hexes_in_board = new List<Hexagon>();
@@ -56,11 +70,34 @@ namespace Andantino_Search
             Hexagon player1_hex = GameStatic.hexes_in_board.Find(hex => hex.row == Option.row_init_coin && hex.column == Option.col_init_coin);
             set_initial_state(player1_hex);
 
-            label_player_turn.ForeColor = Color.Crimson;
+            
             txtbox_number_possible_hexes.Text = GameState.game_state.possible_hexes.Count.ToString();
 
             GameState.game_history.Push(GameState.game_state);
 
+        }
+
+        public void set_labels()
+        {
+            label2.Text = "00:00";
+            label2.Font = Option.font_counter;
+
+            label_time_limit.ForeColor = Option.color_time_limit;
+            label_time_limit.Font = Option.font_time_limit;
+
+            label_player_turn.Text = "Player 2";
+
+            label_player_turn.ForeColor = Color.Crimson;
+
+
+
+        }
+
+        public void set_timer()
+        {
+            timer1.Tick += new EventHandler(this.t_Tick);
+            timer1.Interval = 1000;
+            timer1.Start();
         }
 
         public void set_initial_state(Hexagon first_hex)
@@ -272,39 +309,34 @@ namespace Andantino_Search
                 }
 
             }
-            dataGridView1.Rows.Clear();            
+            //dataGridView1.Rows.Clear();            
 
         }
-
-
-        
 
         private void button1_Click(object sender, EventArgs e)
         {
             //to do
-            //negamax
             //double check that everything works fine ( value + recursion + pruning)
             //transposition table
             //iterative deepening
             //timer
-            //undo
             //all span
 
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            //double value = AI.minimax(GameState.game_state, 4, true);
-            double value = AI.minimax_alpha_beta_pruning(GameState.game_state, 5, double.NegativeInfinity, double.PositiveInfinity, true);
-            //double value = AI.negamax(GameState.game_state, 3, double.NegativeInfinity, double.PositiveInfinity);
+            //double value = AI.minimax(GameState.game_state, Option.depth_of_search, true);
+            double value = AI.minimax_alpha_beta_pruning(GameState.game_state, Option.depth_of_search, Option.minimum_score, double.PositiveInfinity, true);
+            //double value = AI.negamax(GameState.game_state, Option.depth_of_search, double.NegativeInfinity, double.PositiveInfinity);
             stopWatch.Stop();
             //depth_game++;
             label_ai_move_result.Text = "(" + AI.ai_move.row.ToString() + "," + AI.ai_move.column.ToString() + "," + "value:" + AI.ai_state.value.ToString() + ")";
             TimeSpan ts = stopWatch.Elapsed;
-            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-            ts.Hours, ts.Minutes, ts.Seconds,
-            ts.Milliseconds / 10);
-            dataGridView1.Rows.Clear();
-            dataGridView1.Rows.Add(elapsedTime);
-            dataGridView1.Rows.Add("state depth " + AI.ai_state.depth);
+            string elapsedTimeString = String.Format("{0:00}:{1:00}:{2:00}",ts.Minutes, ts.Seconds,ts.Milliseconds / 10);
+            //dataGridView1.Rows.Clear();
+            //dataGridView1.Rows.Add(elapsedTime);
+            label_ai_move_stats.Text = elapsedTimeString + ", depth =  " + AI.ai_state.depth;
+
+
             //GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, ai_move);
             //game_history.Push(GameState.game_state);
 
@@ -312,13 +344,6 @@ namespace Andantino_Search
 
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            //dataGridView1.Rows.Add("-:" + GameState.game_state.move + ", /:" + result[1].ToString() + ", \\:" + result[2].ToString());
-
-        }
-
-        
 
         private void button3_Click(object sender, EventArgs e)
         {
@@ -349,6 +374,20 @@ namespace Andantino_Search
 
         private void picGrid_Click(object sender, EventArgs e)
         {
+
+        }
+
+        public void t_Tick(object sender, EventArgs e)
+        {
+
+            TimeSpan span_counter = TimeSpan.FromSeconds((DateTime.Now - Started).TotalSeconds);
+            if(span_counter >= TimeSpan.FromMinutes(Option.time_limit_minutes_tournament))
+            {
+                label_time_limit.Text = "TIME LIMIT REACHED !";
+                label2.ForeColor = Option.color_time_limit;
+            }
+            var test = String.Format("{0:00}:{1:00}", span_counter.Minutes, span_counter.Seconds);
+            label2.Text = test;
 
         }
     }

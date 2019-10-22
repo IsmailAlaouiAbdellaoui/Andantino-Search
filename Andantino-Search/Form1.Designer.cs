@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.picGrid = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label_player_turn = new System.Windows.Forms.Label();
@@ -41,14 +42,15 @@
             this.label8 = new System.Windows.Forms.Label();
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.textBox7 = new System.Windows.Forms.TextBox();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.RowCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.button_ai_move = new System.Windows.Forms.Button();
-            this.button_show_info = new System.Windows.Forms.Button();
             this.label_ai_move_result = new System.Windows.Forms.Label();
             this.button_undo = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.label_ai_move_stats = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label_time_limit = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.picGrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // picGrid
@@ -165,22 +167,6 @@
             this.textBox7.Size = new System.Drawing.Size(40, 20);
             this.textBox7.TabIndex = 19;
             // 
-            // dataGridView1
-            // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.RowCol});
-            this.dataGridView1.Location = new System.Drawing.Point(741, 388);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(284, 76);
-            this.dataGridView1.TabIndex = 20;
-            // 
-            // RowCol
-            // 
-            this.RowCol.HeaderText = "Hex Info";
-            this.RowCol.Name = "RowCol";
-            this.RowCol.Width = 200;
-            // 
             // button_ai_move
             // 
             this.button_ai_move.Location = new System.Drawing.Point(741, 12);
@@ -191,24 +177,14 @@
             this.button_ai_move.UseVisualStyleBackColor = true;
             this.button_ai_move.Click += new System.EventHandler(this.button1_Click);
             // 
-            // button_show_info
-            // 
-            this.button_show_info.Location = new System.Drawing.Point(741, 359);
-            this.button_show_info.Name = "button_show_info";
-            this.button_show_info.Size = new System.Drawing.Size(75, 23);
-            this.button_show_info.TabIndex = 22;
-            this.button_show_info.Text = "show info";
-            this.button_show_info.UseVisualStyleBackColor = true;
-            this.button_show_info.Click += new System.EventHandler(this.button2_Click);
-            // 
             // label_ai_move_result
             // 
             this.label_ai_move_result.AutoSize = true;
             this.label_ai_move_result.Location = new System.Drawing.Point(946, 19);
             this.label_ai_move_result.Name = "label_ai_move_result";
-            this.label_ai_move_result.Size = new System.Drawing.Size(35, 13);
+            this.label_ai_move_result.Size = new System.Drawing.Size(68, 13);
             this.label_ai_move_result.TabIndex = 23;
-            this.label_ai_move_result.Text = "label4";
+            this.label_ai_move_result.Text = "AI Move Info";
             // 
             // button_undo
             // 
@@ -220,16 +196,56 @@
             this.button_undo.UseVisualStyleBackColor = true;
             this.button_undo.Click += new System.EventHandler(this.button3_Click);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(826, 466);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(35, 13);
+            this.label2.TabIndex = 25;
+            this.label2.Text = "label2";
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            // 
+            // label_ai_move_stats
+            // 
+            this.label_ai_move_stats.AutoSize = true;
+            this.label_ai_move_stats.Location = new System.Drawing.Point(865, 372);
+            this.label_ai_move_stats.Name = "label_ai_move_stats";
+            this.label_ai_move_stats.Size = new System.Drawing.Size(0, 13);
+            this.label_ai_move_stats.TabIndex = 26;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(771, 372);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(88, 13);
+            this.label4.TabIndex = 27;
+            this.label4.Text = "Stats of AI move:";
+            // 
+            // label_time_limit
+            // 
+            this.label_time_limit.AutoSize = true;
+            this.label_time_limit.Location = new System.Drawing.Point(754, 529);
+            this.label_time_limit.Name = "label_time_limit";
+            this.label_time_limit.Size = new System.Drawing.Size(0, 13);
+            this.label_time_limit.TabIndex = 28;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1056, 653);
+            this.Controls.Add(this.label_time_limit);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label_ai_move_stats);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.button_undo);
             this.Controls.Add(this.label_ai_move_result);
-            this.Controls.Add(this.button_show_info);
             this.Controls.Add(this.button_ai_move);
-            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.textBox7);
             this.Controls.Add(this.textBox6);
             this.Controls.Add(this.label8);
@@ -247,7 +263,6 @@
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.picGrid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -268,12 +283,14 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.TextBox textBox7;
-        private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button button_ai_move;
-        private System.Windows.Forms.Button button_show_info;
         private System.Windows.Forms.Label label_ai_move_result;
-        private System.Windows.Forms.DataGridViewTextBoxColumn RowCol;
         private System.Windows.Forms.Button button_undo;
+        private System.Windows.Forms.Label label2;
+        public System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Label label_ai_move_stats;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label_time_limit;
     }
 }
 

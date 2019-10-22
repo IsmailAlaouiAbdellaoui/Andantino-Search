@@ -31,5 +31,15 @@ namespace Andantino_Search
         public static Font font_coordinates = new Font("Microsoft Sans Serif", 8.25f);
 
         public static List<Hexagon> hexes_outer_board = new List<Hexagon>();
+
+        public static int depth_of_search = 5;
+
+        public static double minimum_score = 3;
+
+        public static Font font_counter = new Font("Microsoft Sans Serif", 25f);
+
+        public static Font font_time_limit = new Font("Microsoft Sans Serif", 18f);
+        public static Color color_time_limit = Color.Crimson;
+        public static int time_limit_minutes_tournament = 10;
     }
 }

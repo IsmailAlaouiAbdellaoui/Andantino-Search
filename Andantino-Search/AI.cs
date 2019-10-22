@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Andantino_Search
@@ -41,7 +40,7 @@ namespace Andantino_Search
                     {
 
                         maxEval = eval;
-                        if (s.move.row == GameState.game_state.move.row && s.move.column == GameState.game_state.move.column)
+                        if(s.depth == Option.depth_of_search - 1)
                         {
                             ai_move = child_state.move;
                             ai_state = child_state;
@@ -60,7 +59,6 @@ namespace Andantino_Search
 
                     }
                 }
-                //ai_move = s.move;
                 return maxEval;
             }
             else
@@ -82,8 +80,7 @@ namespace Andantino_Search
                     {
 
                         minEval = eval;
-                        //ai_move = child_state.move;
-                        if (s.move.row == GameState.game_state.move.row && s.move.column == GameState.game_state.move.column)
+                        if(s.depth == Option.depth_of_search - 1)
                         {
                             ai_move = child_state.move;
                             ai_state = child_state;
@@ -100,7 +97,6 @@ namespace Andantino_Search
                     }
 
                 }
-                //ai_move = s.move;
                 return minEval;
             }
         }
@@ -117,7 +113,7 @@ namespace Andantino_Search
 
             if (maximizing_player)
             {
-                double maxEval = double.NegativeInfinity;
+                double maxEval = Option.minimum_score;
                 //List<State> sorted_children = new List<State>();
                 //for (int i = 0; i < s.possible_hexes.Count; i++)
                 //{
@@ -134,7 +130,7 @@ namespace Andantino_Search
                     if (eval > maxEval)
                     {
                         //string file_directory = Util.check_folder_file_directory();
-                        if (depth_alpha_beta == 4)
+                        if (depth_alpha_beta == Option.depth_of_search - 1)
                         {
                             ai_move = child_state.move;
                             ai_state = child_state;
@@ -183,7 +179,7 @@ namespace Andantino_Search
                     {
                         //string file_directory = Util.check_folder_file_directory();
                         minEval = eval;
-                        if(depth_alpha_beta == 4)
+                        if(depth_alpha_beta == Option.depth_of_search - 1)
                         {
                             ai_move = child_state.move;
                             ai_state = child_state;
