@@ -41,5 +41,7 @@ namespace Andantino_Search
         public static Font font_time_limit = new Font("Microsoft Sans Serif", 18f);
         public static Color color_time_limit = Color.Crimson;
         public static int time_limit_minutes_tournament = 10;
+
+        public static ulong minimum_random_value_zobrist = 1; //if 0 then exception
     }
 }

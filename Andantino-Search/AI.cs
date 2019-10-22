@@ -26,14 +26,14 @@ namespace Andantino_Search
                 {
 
                     child_state = s.get_state_after_move(s, s.possible_hexes[i]);
-                    //string file_directory = Util.check_folder_file_directory();
-                    //Util.log_minimax(file_directory, "Recursive call for min player with depth: " + (depth_minimax - 1));
-                    //Util.log_minimax(file_directory, "Ancestor move: (" + s.move.row + "," + s.move.column + ")");
-                    //Util.log_minimax(file_directory, "Information about the cild");
-                    //Util.log_minimax(file_directory, "move of child state: (" + child_state.move.row + "," + child_state.move.column + "), value: " + child_state.value);
-                    //Util.log_minimax(file_directory, "depth: " + child_state.depth);
-                    //Util.log_minimax(file_directory, "# possible states: " + child_state.possible_hexes.Count);
-                    //Util.log_minimax(file_directory, "\n\n");
+                    //string file_directory = Util.check_folder_file_minimax_directory();
+                    //Util.log_info(file_directory, "Recursive call for min player with depth: " + (depth_minimax - 1));
+                    //Util.log_info(file_directory, "Ancestor move: (" + s.move.row + "," + s.move.column + ")");
+                    //Util.log_info(file_directory, "Information about the cild");
+                    //Util.log_info(file_directory, "move of child state: (" + child_state.move.row + "," + child_state.move.column + "), value: " + child_state.value);
+                    //Util.log_info(file_directory, "depth: " + child_state.depth);
+                    //Util.log_info(file_directory, "# possible states: " + child_state.possible_hexes.Count);
+                    //Util.log_info(file_directory, "\n\n");
                     eval = minimax(child_state, depth_minimax - 1, false);
 
                     if (eval > maxEval)
@@ -47,14 +47,14 @@ namespace Andantino_Search
                         }
                         //ai_move = child_state.move;
                         //ai_state = child_state;
-                        //Util.log_minimax(file_directory, "move chosen in condition: (" + child_state.move.row + "," + child_state.move.column + ")");
-                        //Util.log_minimax(file_directory, "Recursive call for min player with depth: " + (depth_minimax - 1));
-                        //Util.log_minimax(file_directory, "Ancestor move: (" + s.move.row + "," + s.move.column + ")");
-                        //Util.log_minimax(file_directory, "Information about the cild");
-                        //Util.log_minimax(file_directory, "move of child state: (" + child_state.move.row + "," + child_state.move.column + "), value: " + child_state.value);
-                        //Util.log_minimax(file_directory, "depth: " + child_state.depth);
-                        //Util.log_minimax(file_directory, "# possible states: " + child_state.possible_hexes.Count);
-                        //Util.log_minimax(file_directory, "\n\n");
+                        //Util.log_info(file_directory, "move chosen in condition: (" + child_state.move.row + "," + child_state.move.column + ")");
+                        //Util.log_info(file_directory, "Recursive call for min player with depth: " + (depth_minimax - 1));
+                        //Util.log_info(file_directory, "Ancestor move: (" + s.move.row + "," + s.move.column + ")");
+                        //Util.log_info(file_directory, "Information about the cild");
+                        //Util.log_info(file_directory, "move of child state: (" + child_state.move.row + "," + child_state.move.column + "), value: " + child_state.value);
+                        //Util.log_info(file_directory, "depth: " + child_state.depth);
+                        //Util.log_info(file_directory, "# possible states: " + child_state.possible_hexes.Count);
+                        //Util.log_info(file_directory, "\n\n");
                         //ai_move = s.move;
 
                     }
@@ -67,14 +67,14 @@ namespace Andantino_Search
                 for (int i = 0; i < s.possible_hexes.Count; i++)
                 {
                     child_state = s.get_state_after_move(s, s.possible_hexes[i]);
-                    //string file_directory = Util.check_folder_file_directory();
-                    //Util.log_minimax(file_directory, "Recursive call for max player with depth: " + (depth_minimax + 1));
-                    //Util.log_minimax(file_directory, "Ancestor move: (" + s.move.row + "," + s.move.column + ")");
-                    //Util.log_minimax(file_directory, "Information about the cild");
-                    //Util.log_minimax(file_directory, "move of child state: (" + child_state.move.row + "," + child_state.move.column + "), value: " + child_state.value);
-                    //Util.log_minimax(file_directory, "depth: " + child_state.depth);
-                    //Util.log_minimax(file_directory, "# possible states: " + child_state.possible_hexes.Count);
-                    //Util.log_minimax(file_directory, "\n\n");
+                    //string file_directory = Util.check_folder_file_minimax_directory();
+                    //Util.log_info(file_directory, "Recursive call for max player with depth: " + (depth_minimax + 1));
+                    //Util.log_info(file_directory, "Ancestor move: (" + s.move.row + "," + s.move.column + ")");
+                    //Util.log_info(file_directory, "Information about the cild");
+                    //Util.log_info(file_directory, "move of child state: (" + child_state.move.row + "," + child_state.move.column + "), value: " + child_state.value);
+                    //Util.log_info(file_directory, "depth: " + child_state.depth);
+                    //Util.log_info(file_directory, "# possible states: " + child_state.possible_hexes.Count);
+                    //Util.log_info(file_directory, "\n\n");
                     eval = minimax(child_state, depth_minimax - 1, true);
                     if (eval < minEval)
                     {
@@ -85,14 +85,14 @@ namespace Andantino_Search
                             ai_move = child_state.move;
                             ai_state = child_state;
                         }
-                        //Util.log_minimax(file_directory, "move chosen in condition: (" + child_state.move.row + "," + child_state.move.column + ")");
-                        //Util.log_minimax(file_directory, "Recursive call for max player with depth: " + (depth_minimax + 1));
-                        //Util.log_minimax(file_directory, "Ancestor move: (" + s.move.row + "," + s.move.column + ")");
-                        //Util.log_minimax(file_directory, "Information about the cild");
-                        //Util.log_minimax(file_directory, "move of child state: (" + child_state.move.row + "," + child_state.move.column + "), value: " + child_state.value);
-                        //Util.log_minimax(file_directory, "depth: " + child_state.depth);
-                        //Util.log_minimax(file_directory, "# possible states: " + child_state.possible_hexes.Count);
-                        //Util.log_minimax(file_directory, "\n\n");
+                        //Util.log_info(file_directory, "move chosen in condition: (" + child_state.move.row + "," + child_state.move.column + ")");
+                        //Util.log_info(file_directory, "Recursive call for max player with depth: " + (depth_minimax + 1));
+                        //Util.log_info(file_directory, "Ancestor move: (" + s.move.row + "," + s.move.column + ")");
+                        //Util.log_info(file_directory, "Information about the cild");
+                        //Util.log_info(file_directory, "move of child state: (" + child_state.move.row + "," + child_state.move.column + "), value: " + child_state.value);
+                        //Util.log_info(file_directory, "depth: " + child_state.depth);
+                        //Util.log_info(file_directory, "# possible states: " + child_state.possible_hexes.Count);
+                        //Util.log_info(file_directory, "\n\n");
                         //ai_state = child_state;
                     }
 
@@ -129,7 +129,7 @@ namespace Andantino_Search
 
                     if (eval > maxEval)
                     {
-                        //string file_directory = Util.check_folder_file_directory();
+                        //string file_directory = Util.check_folder_file_minimax_directory();
                         if (depth_alpha_beta == Option.depth_of_search - 1)
                         {
                             ai_move = child_state.move;
@@ -137,18 +137,18 @@ namespace Andantino_Search
                             //ai_move = sorted_children[i].move;
                             //ai_state = sorted_children[i];
 
-                            //Util.log_minimax(file_directory, "!! \tcondition true, move assigned");
+                            //Util.log_info(file_directory, "!! \tcondition true, move assigned");
 
                         }
-                        
-                        //Util.log_minimax(file_directory, "move chosen in condition: (" + child_state.move.row + "," + child_state.move.column + ")");
-                        //Util.log_minimax(file_directory, "Recursive call for min player with depth: " + (depth_alpha_beta - 1));
-                        //Util.log_minimax(file_directory, "Ancestor move: (" + s.move.row + "," + s.move.column + ")");
-                        //Util.log_minimax(file_directory, "Information about the child");
-                        //Util.log_minimax(file_directory, "move of child state: (" + child_state.move.row + "," + child_state.move.column + "), value: " + child_state.value);
-                        //Util.log_minimax(file_directory, "depth: " + child_state.depth);
-                        //Util.log_minimax(file_directory, "# possible states: " + child_state.possible_hexes.Count);
-                        //Util.log_minimax(file_directory, "\n\n");
+
+                        //Util.log_info(file_directory, "move chosen in condition: (" + child_state.move.row + "," + child_state.move.column + ")");
+                        //Util.log_info(file_directory, "Recursive call for min player with depth: " + (depth_alpha_beta - 1));
+                        //Util.log_info(file_directory, "Ancestor move: (" + s.move.row + "," + s.move.column + ")");
+                        //Util.log_info(file_directory, "Information about the child");
+                        //Util.log_info(file_directory, "move of child state: (" + child_state.move.row + "," + child_state.move.column + "), value: " + child_state.value);
+                        //Util.log_info(file_directory, "depth: " + child_state.depth);
+                        //Util.log_info(file_directory, "# possible states: " + child_state.possible_hexes.Count);
+                        //Util.log_info(file_directory, "\n\n");
 
                     }
 
@@ -177,7 +177,7 @@ namespace Andantino_Search
                     //eval = minimax_alpha_beta_pruning(sorted_children[i], depth_alpha_beta - 1, alpha, beta, true);
                     if (eval < minEval)
                     {
-                        //string file_directory = Util.check_folder_file_directory();
+                        //string file_directory = Util.check_folder_file_minimax_directory();
                         minEval = eval;
                         if(depth_alpha_beta == Option.depth_of_search - 1)
                         {
@@ -187,14 +187,14 @@ namespace Andantino_Search
                             //ai_move = sorted_children[i].move;
                             //ai_state = sorted_children[i];
                         }
-                        //Util.log_minimax(file_directory, "move chosen in condition: (" + child_state.move.row + "," + child_state.move.column + ")");
-                        //Util.log_minimax(file_directory, "Recursive call for min player with depth: " + (depth_alpha_beta - 1));
-                        //Util.log_minimax(file_directory, "Ancestor move: (" + s.move.row + "," + s.move.column + ")");
-                        //Util.log_minimax(file_directory, "Information about the child");
-                        //Util.log_minimax(file_directory, "move of child state: (" + child_state.move.row + "," + child_state.move.column + "), value: " + child_state.value);
-                        //Util.log_minimax(file_directory, "depth: " + child_state.depth);
-                        //Util.log_minimax(file_directory, "# possible states: " + child_state.possible_hexes.Count);
-                        //Util.log_minimax(file_directory, "\n\n");
+                        //Util.log_info(file_directory, "move chosen in condition: (" + child_state.move.row + "," + child_state.move.column + ")");
+                        //Util.log_info(file_directory, "Recursive call for min player with depth: " + (depth_alpha_beta - 1));
+                        //Util.log_info(file_directory, "Ancestor move: (" + s.move.row + "," + s.move.column + ")");
+                        //Util.log_info(file_directory, "Information about the child");
+                        //Util.log_info(file_directory, "move of child state: (" + child_state.move.row + "," + child_state.move.column + "), value: " + child_state.value);
+                        //Util.log_info(file_directory, "depth: " + child_state.depth);
+                        //Util.log_info(file_directory, "# possible states: " + child_state.possible_hexes.Count);
+                        //Util.log_info(file_directory, "\n\n");
                     }
                     beta = Math.Min(beta, eval);
                     if (beta <= alpha)

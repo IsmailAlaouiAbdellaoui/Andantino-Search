@@ -5,8 +5,6 @@ using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using System.Linq;
 using System.Diagnostics;
-using System.Threading.Tasks;
-using System.IO;
 using System.Collections;
 
 namespace Andantino_Search
@@ -18,6 +16,7 @@ namespace Andantino_Search
 
         //State GameState.game_state = new State();
         //Stack game_history = new Stack();
+        Random r = new Random();
 
         bool isplayer1_turn = false;
         bool isplayer2_turn = true;
@@ -43,12 +42,9 @@ namespace Andantino_Search
         private void Form1_Load(object sender, EventArgs e)
         {
 
-
             set_labels();
 
             set_timer();
-
-            
 
             GameStatic.all_hexes = new List<Hexagon>();
             GameStatic.hexes_in_board = new List<Hexagon>();
@@ -74,6 +70,8 @@ namespace Andantino_Search
             txtbox_number_possible_hexes.Text = GameState.game_state.possible_hexes.Count.ToString();
 
             GameState.game_history.Push(GameState.game_state);
+            //MessageBox.Show(GameStatic.hexes_in_board.Count.ToString());
+            generate_zobrist_table();
 
         }
 
@@ -390,6 +388,23 @@ namespace Andantino_Search
             label2.Text = test;
 
         }
+
+        public void generate_zobrist_table()
+        {
+            Zobrist.zobrist_dict = new Dictionary<int, ulong>();
+            string dir = Util.check_folder_file_zobrist_directory();
+            for (int i = 0; i < 542; i++)
+            {
+                
+                Zobrist.zobrist_dict.Add(i, Util.Get64BitRandom(Option.minimum_random_value_zobrist, ulong.MaxValue));
+                //Util.log_info(dir, Zobrist.zobrist_dict[i].ToString());
+            }
+        }
+
+
+        
+
+
     }
 
     
