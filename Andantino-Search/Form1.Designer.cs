@@ -154,6 +154,7 @@
             // textBox6
             // 
             this.textBox6.BackColor = System.Drawing.Color.RoyalBlue;
+            this.textBox6.Enabled = false;
             this.textBox6.Location = new System.Drawing.Point(860, 304);
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(40, 20);
@@ -162,6 +163,7 @@
             // textBox7
             // 
             this.textBox7.BackColor = System.Drawing.Color.IndianRed;
+            this.textBox7.Enabled = false;
             this.textBox7.Location = new System.Drawing.Point(860, 333);
             this.textBox7.Name = "textBox7";
             this.textBox7.Size = new System.Drawing.Size(40, 20);

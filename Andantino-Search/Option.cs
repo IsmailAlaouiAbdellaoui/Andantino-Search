@@ -11,6 +11,11 @@ namespace Andantino_Search
         public static float first_center_x = 20f;
         public static float first_center_y = first_center_x + 30f;
 
+        public static int hexes_board_row_start = 0;
+        public static int hexes_board_col_start = 5;
+        public static int hexes_board_number_hexes_row = 10;
+        public static int hexes_board_size = 19;
+
         public static Brush color_player1 = Brushes.RoyalBlue;
         public static Pen color_possible_hexes_p1 = Pens.DarkBlue;
 
@@ -43,5 +48,8 @@ namespace Andantino_Search
         public static int time_limit_minutes_tournament = 10;
 
         public static ulong minimum_random_value_zobrist = 1; //if 0 then exception
+
+        public static int player1_type;
+        public static int player2_type;
     }
 }

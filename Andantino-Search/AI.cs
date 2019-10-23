@@ -130,6 +130,7 @@ namespace Andantino_Search
                     if (eval > maxEval)
                     {
                         //string file_directory = Util.check_folder_file_minimax_directory();
+                        maxEval = eval;
                         if (depth_alpha_beta == Option.depth_of_search - 1)
                         {
                             ai_move = child_state.move;

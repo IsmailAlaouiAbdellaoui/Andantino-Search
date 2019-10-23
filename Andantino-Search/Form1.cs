@@ -159,16 +159,13 @@ namespace Andantino_Search
         public List<Hexagon> set_hexes_board(List<Hexagon> hexes)
         {
             List<Hexagon> hexes_board = new List<Hexagon>();
-            int row_start = 0;
-            int col_start = 5;
-            int number_hexes_row = 10;
-            for (int i = 0; i < 19; i++)
+            for (int i = 0; i < Option.hexes_board_size; i++)
             {
-                for (int j = 0; j < number_hexes_row; j++)
+                for (int j = 0; j < Option.hexes_board_number_hexes_row; j++)
                 {
                     for (int k = 0; k < GameStatic.all_hexes.Count; k++)
                     {
-                        if (hexes[k].row == row_start && hexes[k].column == col_start)
+                        if (hexes[k].row == Option.hexes_board_row_start && hexes[k].column == Option.hexes_board_col_start)
                         {
                             hexes_board.Add(hexes[k]);
                         }
@@ -178,18 +175,18 @@ namespace Andantino_Search
                     {
                         for (int l = 0; l < hexes.Count; l++)
                         {
-                            if (hexes[l].row == row_start && (hexes[l].column == (col_start - 1)))
+                            if (hexes[l].row == Option.hexes_board_row_start && (hexes[l].column == (Option.hexes_board_col_start - 1)))
                             {
                                 Option.hexes_outer_board.Add(hexes[l]);
                             }
                         }
                     }
 
-                    if (j == number_hexes_row - 1)
+                    if (j == Option.hexes_board_number_hexes_row - 1)
                     {
                         for (int l = 0; l < hexes.Count; l++)
                         {
-                            if (hexes[l].row == row_start && (hexes[l].column == (col_start + 1)))
+                            if (hexes[l].row == Option.hexes_board_row_start && (hexes[l].column == (Option.hexes_board_col_start + 1)))
                             {
                                 Option.hexes_outer_board.Add(hexes[l]);
                             }
@@ -198,27 +195,27 @@ namespace Andantino_Search
                     //end part outer hexes
 
 
-                    col_start += 1;
+                    Option.hexes_board_col_start += 1;
 
                 }
-                col_start -= number_hexes_row;
+                Option.hexes_board_col_start -= Option.hexes_board_number_hexes_row;
                 if (i >= 9)
                 {
                     if (i % 2 != 0)
                     {
-                        col_start += 1;
+                        Option.hexes_board_col_start += 1;
                     }
-                    number_hexes_row -= 1;
+                    Option.hexes_board_number_hexes_row -= 1;
                 }
                 else
                 {
                     if (i % 2 == 0)
                     {
-                        col_start -= 1;
+                        Option.hexes_board_col_start -= 1;
                     }
-                    number_hexes_row += 1;
+                    Option.hexes_board_number_hexes_row += 1;
                 }
-                row_start += 1;
+                Option.hexes_board_row_start += 1;
             }
             return hexes_board;
         }
@@ -309,8 +306,8 @@ namespace Andantino_Search
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
             //double value = AI.minimax(GameState.game_state, Option.depth_of_search, true);
-            double value = AI.minimax_alpha_beta_pruning(GameState.game_state, Option.depth_of_search, Option.minimum_score, double.PositiveInfinity, true);
-            //double value = AI.negamax(GameState.game_state, Option.depth_of_search, double.NegativeInfinity, double.PositiveInfinity);
+            //double value = AI.minimax_alpha_beta_pruning(GameState.game_state, Option.depth_of_search, Option.minimum_score, double.PositiveInfinity, true);
+            double value = AI.negamax(GameState.game_state, Option.depth_of_search, double.NegativeInfinity, double.PositiveInfinity);
             stopWatch.Stop();
             //depth_game++;
             label_ai_move_result.Text = "(" + AI.ai_move.row.ToString() + "," + AI.ai_move.column.ToString() + "," + "value:" + AI.ai_state.value.ToString() + ")";

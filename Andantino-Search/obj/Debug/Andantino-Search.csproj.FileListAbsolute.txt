@@ -132,3 +132,4 @@ F:\GitHub\Andantino-Search\Andantino-Search\bin\Debug\System.Numerics.Vectors.xm
 F:\GitHub\Andantino-Search\Andantino-Search\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 F:\GitHub\Andantino-Search\Andantino-Search\obj\Debug\Andantino-Search.exe.config
 F:\GitHub\Andantino-Search\Andantino-Search\obj\Debug\Andantino-Search.csproj.CopyComplete
+F:\GitHub\Andantino-Search\Andantino-Search\obj\Debug\Andantino_Search.Home.resources

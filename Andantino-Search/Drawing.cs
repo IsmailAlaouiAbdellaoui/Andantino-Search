@@ -137,5 +137,17 @@ namespace Andantino_Search
             return new PointF(center.X + (size * (float)Math.Cos(angle_rad)), center.Y + (size * (float)Math.Sin(angle_rad)));
         }
 
+        public static void draw_player1_home(Graphics g,int p1_label_x,int p1_label_y)
+        {
+            g.FillEllipse(Option.color_player1, p1_label_x - Option.radius_coins, p1_label_y - Option.radius_coins, 2 * Option.radius_coins, 2 * Option.radius_coins);
+
+        }
+
+        public static void draw_player2_home(Graphics g, int p2_label_x, int p2_label_y)
+        {
+            g.FillEllipse(Option.color_player2, p2_label_x - Option.radius_coins, p2_label_y - Option.radius_coins, 2 * Option.radius_coins, 2 * Option.radius_coins);
+
+        }
+
     }
 }
