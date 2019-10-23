@@ -152,6 +152,11 @@ namespace Andantino_Search
             txtbox_p1_number_coins.Text = GameState.game_state.state_player1_hexes.Count.ToString();
             txtbox_p2_number_coins.Text = GameState.game_state.state_player2_hexes.Count.ToString();
 
+            Drawing.draw_notation_letters_top(e.Graphics,Option.letters_first_side);
+            Drawing.draw_notation_letters_right(e.Graphics, Option.letters_second_side);
+            Drawing.draw_notation_numbers_top_left(e.Graphics);
+            Drawing.draw_notation_numbers_bottom_left(e.Graphics);
+
         }
 
 
@@ -313,8 +318,6 @@ namespace Andantino_Search
             label_ai_move_result.Text = "(" + AI.ai_move.row.ToString() + "," + AI.ai_move.column.ToString() + "," + "value:" + AI.ai_state.value.ToString() + ")";
             TimeSpan ts = stopWatch.Elapsed;
             string elapsedTimeString = String.Format("{0:00}:{1:00}:{2:00}",ts.Minutes, ts.Seconds,ts.Milliseconds / 10);
-            //dataGridView1.Rows.Clear();
-            //dataGridView1.Rows.Add(elapsedTime);
             label_ai_move_stats.Text = elapsedTimeString + ", depth =  " + AI.ai_state.depth;
 
 

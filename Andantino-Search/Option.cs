@@ -51,5 +51,13 @@ namespace Andantino_Search
 
         public static int player1_type;
         public static int player2_type;
+
+        public static char[] letters_first_side = "ABCDEFGHIJ".ToCharArray();
+        public static char[] letters_second_side = "KLMNOPQRS".ToCharArray();
+
+        public static Font font_notation_elements = new Font("Microsoft Sans Serif", 8.25f,FontStyle.Bold);
+        
+        public static SolidBrush brush_notation_elements = new SolidBrush(Color.Black);
+
     }
 }

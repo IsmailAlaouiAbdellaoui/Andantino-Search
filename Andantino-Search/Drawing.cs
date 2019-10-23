@@ -149,5 +149,54 @@ namespace Andantino_Search
 
         }
 
+        public static void draw_notation_letters_top(Graphics g, char[] letters_top_side)
+        {
+            for (int i = 0; i < letters_top_side.Length; i++)
+            {
+                g.DrawString(letters_top_side[i].ToString(), Option.font_notation_elements, Option.brush_notation_elements, GameStatic.hexes_in_board[i].center.X + 10, GameStatic.hexes_in_board[0].center.Y - 30);
+
+            }
+        }
+
+        public static void draw_notation_letters_right(Graphics g, char[] letters_right_side)
+        {
+            int[] test = new int[] { 20, 32, 45, 59, 74, 90, 107, 125,144 };
+            for (int i = 0; i < 9; i++)
+            {
+                g.DrawString(letters_right_side[i].ToString(), Option.font_notation_elements, Option.brush_notation_elements, GameStatic.hexes_in_board[test[i]].center.X + 10, GameStatic.hexes_in_board[test[i]].center.Y - 30);
+            }
+        }
+
+        public static void draw_notation_numbers_top_left(Graphics g)
+        {
+            int[] test = new[] { 0, 10, 21, 33, 46, 60, 75, 91, 108, 126 };
+            for (int i = 0; i < 10; i++)
+            {
+                if(i<9)
+                {
+                    g.DrawString((i + 1).ToString(), Option.font_notation_elements, Option.brush_notation_elements, GameStatic.hexes_in_board[test[i]].center.X - 30, GameStatic.hexes_in_board[test[i]].center.Y - 5);
+
+                }
+                else
+                {
+                    g.DrawString((i + 1).ToString(), Option.font_notation_elements, Option.brush_notation_elements, GameStatic.hexes_in_board[test[i]].center.X - 35, GameStatic.hexes_in_board[test[i]].center.Y - 5);
+
+                }
+
+            }
+        }
+
+        public static void draw_notation_numbers_bottom_left(Graphics g)
+        {
+            int[] test = new[] { 145, 163, 180, 196, 211,225 ,238 ,250 ,261  };
+
+            for (int i = 0; i < test.Length; i++)
+            {
+                g.DrawString((i + 11).ToString(), Option.font_notation_elements, Option.brush_notation_elements, GameStatic.hexes_in_board[test[i]].center.X - 35, GameStatic.hexes_in_board[test[i]].center.Y - 5);
+
+            }
+
+        }
+
     }
 }
