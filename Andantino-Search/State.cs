@@ -656,8 +656,13 @@ namespace Andantino_Search
         public bool check_is_trapped(Hexagon middle, List<Hexagon> previous)
         {
             bool is_trapped = false;
-            if (get_neighbors(middle).Count<6):
+            if (get_neighbors(middle).Count<6)
+            {
                 is_trapped = true;
+            }
+
+                
+
 
 
             return is_trapped;
