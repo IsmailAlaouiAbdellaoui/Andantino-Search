@@ -261,6 +261,7 @@ namespace Andantino_Search
             Hexagon move = GameStatic.hexes_in_board[index_min_distance];
 
             //bool result;
+            //when you click,
             if (!isplayer1_turn && isplayer2_turn)//Human TURN == p2
             {
                 int number_hexes_player2_before = GameState.game_state.state_player2_hexes.Count;
@@ -395,6 +396,36 @@ namespace Andantino_Search
             label2.Text = test;
 
         }
+
+        public bool check_is_trapped(Hexagon middle, List<Hexagon> previous)
+        {
+            bool is_trapped = false;
+
+
+            return is_trapped;
+
+        }
+
+    //    def flood_fill(self, hex_center, prev_hexes, player):
+    //neigh = []
+    
+    //if len(self.neighbour(hex_center)) < 6:
+    //    print("hex_center flood", [hex_center.row, hex_center.col])
+    //    return True
+    //if hex_center in player:
+    //    print("hex_center in self.hexagons_ play on!")
+    //    return False
+    //if  hex_center in prev_hexes:
+    //    print("hex_center in prev_hexes play on!")
+    //    return False
+    //else:
+    //    prev_hexes.append(hex_center)
+    //    print("hex center", [hex_center.row, hex_center.col])
+    //    for neigh in self.neighbour(hex_center):
+    //        print("neigh", [neigh.row, neigh.col])
+    //        if self.flood_fill(neigh, prev_hexes, player):
+    //            return True
+    //return False
 
     }
 
