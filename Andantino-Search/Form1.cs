@@ -16,7 +16,7 @@ namespace Andantino_Search
 
         //State GameState.game_state = new State();
         //Stack game_history = new Stack();
-
+        
         bool isplayer1_turn = false;
         bool isplayer2_turn = true;
 
@@ -62,6 +62,27 @@ namespace Andantino_Search
             GameState.game_history.Push(GameState.game_state);
             //MessageBox.Show(GameStatic.hexes_in_board.Count.ToString());
             Zobrist.generate_zobrist_table(false);
+            if(Option.player1_type == 1 && Option.player2_type == 1)
+            {
+                //disable click on board and on ai_move button
+                //change the counter
+                //while (!Option.is_game_over)
+                //{
+                //    //if checkbox of which algo to use
+                //    AI.negamax(GameState.game_state, Option.depth_of_search, Option.minimum_score, double.PositiveInfinity);
+                //    //put pawn of p2 in board
+                //    //check game over
+                //    //update stack
+
+                //    AI.negamax(GameState.game_state, Option.depth_of_search, Option.minimum_score, double.PositiveInfinity);
+                //    //put pawn of p1 in board
+                //    //check game over
+                //    //update stack
+
+                //}
+
+            }
+            
 
         }
 

@@ -50,6 +50,9 @@
             this.label_ai_move_stats = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label_time_limit = new System.Windows.Forms.Label();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.picGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -87,6 +90,7 @@
             // 
             // txtbox_number_possible_hexes
             // 
+            this.txtbox_number_possible_hexes.Enabled = false;
             this.txtbox_number_possible_hexes.Location = new System.Drawing.Point(860, 166);
             this.txtbox_number_possible_hexes.Name = "txtbox_number_possible_hexes";
             this.txtbox_number_possible_hexes.Size = new System.Drawing.Size(40, 20);
@@ -103,6 +107,7 @@
             // 
             // txtbox_p1_number_coins
             // 
+            this.txtbox_p1_number_coins.Enabled = false;
             this.txtbox_p1_number_coins.Location = new System.Drawing.Point(860, 217);
             this.txtbox_p1_number_coins.Name = "txtbox_p1_number_coins";
             this.txtbox_p1_number_coins.Size = new System.Drawing.Size(40, 20);
@@ -110,6 +115,7 @@
             // 
             // txtbox_p2_number_coins
             // 
+            this.txtbox_p2_number_coins.Enabled = false;
             this.txtbox_p2_number_coins.Location = new System.Drawing.Point(860, 257);
             this.txtbox_p2_number_coins.Name = "txtbox_p2_number_coins";
             this.txtbox_p2_number_coins.Size = new System.Drawing.Size(40, 20);
@@ -236,11 +242,44 @@
             this.label_time_limit.Size = new System.Drawing.Size(0, 13);
             this.label_time_limit.TabIndex = 28;
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(949, 139);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(64, 17);
+            this.checkBox1.TabIndex = 29;
+            this.checkBox1.Text = "Minimax";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(949, 180);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(78, 17);
+            this.checkBox2.TabIndex = 30;
+            this.checkBox2.Text = "Alpha Beta";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Location = new System.Drawing.Point(949, 224);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(75, 17);
+            this.checkBox3.TabIndex = 31;
+            this.checkBox3.Text = "Nega Max";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1056, 653);
+            this.Controls.Add(this.checkBox3);
+            this.Controls.Add(this.checkBox2);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.label_time_limit);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label_ai_move_stats);
@@ -293,6 +332,9 @@
         private System.Windows.Forms.Label label_ai_move_stats;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label_time_limit;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox checkBox3;
     }
 }
 

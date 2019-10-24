@@ -59,5 +59,7 @@ namespace Andantino_Search
         
         public static SolidBrush brush_notation_elements = new SolidBrush(Color.Black);
 
+        public static bool is_game_over = false;
+
     }
 }
