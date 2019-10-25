@@ -14,11 +14,16 @@ namespace Andantino_Search
         //P1 AI
         //P2 Human
 
-        //State GameState.game_state = new State();
-        //Stack game_history = new Stack();
-        
         bool isplayer1_turn = false;
         bool isplayer2_turn = true;
+
+        //bool isplayer1_turn = true;
+        //bool isplayer2_turn = false;
+
+
+        //bool i_play_second = true;//My AI has the RED pawns
+        bool i_play_second = false;//My AI has the BLUE pawns
+
 
         int depth_game = 1;
 
@@ -52,14 +57,36 @@ namespace Andantino_Search
             {
                 GameStatic.hexes_board_dict.Add(Tuple.Create(GameStatic.hexes_in_board[i].row, GameStatic.hexes_in_board[i].column), GameStatic.hexes_in_board[i]);
             }
-
-            Hexagon player1_hex = GameStatic.hexes_in_board.Find(hex => hex.row == Option.row_init_coin && hex.column == Option.col_init_coin);
-            set_initial_state(player1_hex);
+            if(isplayer2_turn)
+            {
+                Hexagon player1_hex = GameStatic.hexes_in_board.Find(hex => hex.row == Option.row_init_coin && hex.column == Option.col_init_coin);
+                set_initial_state(player1_hex);
+            }
+            else
+            {
+                Hexagon player2_hex = GameStatic.hexes_in_board.Find(hex => hex.row == Option.row_init_coin && hex.column == Option.col_init_coin);
+                set_initial_state(player2_hex);
+            }
+            
+            
 
             
             txtbox_number_possible_hexes.Text = GameState.game_state.possible_hexes.Count.ToString();
 
             GameState.game_history.Push(GameState.game_state);
+            if(i_play_second)
+            {
+                make_ai_move();
+                depth_game++;
+                GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, AI.ai_move);
+                isplayer1_turn = true;
+                isplayer2_turn = false;
+                label_player_turn.Text = "Player 1";
+                label_player_turn.ForeColor = Color.RoyalBlue;
+            }
+            
+
+
             //MessageBox.Show(GameStatic.hexes_in_board.Count.ToString());
             Zobrist.generate_zobrist_table(false);
             if(Option.player1_type == 1 && Option.player2_type == 1)
@@ -94,9 +121,17 @@ namespace Andantino_Search
             label_time_limit.ForeColor = Option.color_time_limit;
             label_time_limit.Font = Option.font_time_limit;
 
-            label_player_turn.Text = "Player 2";
-
-            label_player_turn.ForeColor = Color.Crimson;
+            if(isplayer2_turn)
+            {
+                label_player_turn.Text = "Player 2";
+                label_player_turn.ForeColor = Color.Crimson;
+            }
+            else
+            {
+                label_player_turn.Text = "Player 1";
+                label_player_turn.ForeColor = Color.RoyalBlue;
+            }
+            
 
 
 
@@ -112,14 +147,41 @@ namespace Andantino_Search
         public void set_initial_state(Hexagon first_hex)
         {
             GameState.game_state.state_player1_hexes = new List<Hexagon>();
-            GameState.game_state.state_player1_hexes.Add(first_hex);
+            GameState.game_state.state_player2_hexes = new List<Hexagon>();
+            if (isplayer2_turn)
+            {
+                
+                GameState.game_state.state_player1_hexes.Add(first_hex);
+            }
+            else
+            {
+                
+                GameState.game_state.state_player2_hexes.Add(first_hex);
+            }
+            
             GameState.game_state.empty_hexes = new List<Hexagon>(GameStatic.hexes_in_board);
             GameState.game_state.empty_hexes.Remove(first_hex);
-            GameState.game_state.possible_hexes = GameState.game_state.get_neighbors(GameState.game_state.state_player1_hexes[0]);
+            if(isplayer2_turn)
+            {
+                GameState.game_state.possible_hexes = GameState.game_state.get_neighbors(GameState.game_state.state_player1_hexes[0]);
+            }
+            else
+            {
+                GameState.game_state.possible_hexes = GameState.game_state.get_neighbors(GameState.game_state.state_player2_hexes[0]);
+            }
+            
             GameState.game_state.is_game_over = false;
             GameState.game_state.move = first_hex;
-            GameState.game_state.player = 1;
-            GameState.game_state.state_player2_hexes = new List<Hexagon>();
+            if(isplayer1_turn == false && isplayer2_turn == true)
+            {
+                GameState.game_state.player = 1;
+            }
+            else
+            {
+                GameState.game_state.player = 2;
+            }
+            
+            //GameState.game_state.state_player2_hexes = new List<Hexagon>();
             GameState.game_state.value = 1;
             GameState.game_state.depth = depth_game;
 
@@ -160,12 +222,20 @@ namespace Andantino_Search
 
             Drawing.draw_hexes_board(e.Graphics, GameStatic.hexes_in_board);
 
-            //painting player1 coins
-            Drawing.draw_player1_hexes(e.Graphics, GameState.game_state.state_player1_hexes);
+            
+            if(GameState.game_state.state_player1_hexes.Count>0)
+            {
+                //painting player1 coins
+                Drawing.draw_player1_hexes(e.Graphics, GameState.game_state.state_player1_hexes);
+            }
+            
+            if(GameState.game_state.state_player2_hexes.Count > 0)
+            {
+                //painting player2 coins
+                Drawing.draw_player2_hexes(e.Graphics, GameState.game_state.state_player2_hexes);
+            }
 
-
-            //painting player2 coins
-            Drawing.draw_player2_hexes(e.Graphics, GameState.game_state.state_player2_hexes);
+            
 
 
             Drawing.draw_possible_hexes(e.Graphics, GameState.game_state.possible_hexes,isplayer1_turn);
@@ -269,47 +339,38 @@ namespace Andantino_Search
                 {
                     depth_game++;
                     GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, move);
-                    List<Hexagon> move_neighbors = GameState.game_state.get_neighbors(move);
-                    int temp = 1;
-                    //for (int i = 0; i < move_neighbors.Count; i++)
-                    //{
-                        
-                    //    if(!GameState.game_state.state_player2_hexes.Contains(move_neighbors[i]))
-                    //    {
-                    //        break;
-                    //    }
-                    //    else
-                    //    {
-                    //        temp += 1;
-                    //    }
-                    //}
-                    if (temp <6)
+                    if (GameState.game_state.is_game_over)
                     {
-                        if (GameState.game_state.state_player1_hexes.Count > 5)
-                        {
-                            for (int i = 0; i < GameState.game_state.state_player1_hexes.Count; i++)
-                            {
-                                if (out_of_boundaries(GameState.game_state.state_player1_hexes[i], GameState.game_state.state_player2_hexes, GameState.game_state))
-                                {
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Surrounded");
+                        MessageBox.Show("Game Over. Player 2 (Red) wins !");
                     }
 
+                    
+
+                    GameState.game_history.Push(GameState.game_state);
+
+                    make_ai_move();
+                    depth_game++;
+                    GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, AI.ai_move);
+                    //stop timer
+                    if (GameState.game_state.is_game_over)
+                    {
+                        MessageBox.Show("Game Over. Player 1 (Blue) wins !");
+                    }
                     GameState.game_history.Push(GameState.game_state);
                 }
 
                 if (GameState.game_state.state_player1_hexes.Count>number_hexes_player2_before)
                 {
-                    isplayer1_turn = true;
-                    label_player_turn.Text = "Player 1";
-                    label_player_turn.ForeColor = Color.RoyalBlue;
-                    isplayer2_turn = false;                    
+                    //isplayer1_turn = true;
+                    //label_player_turn.Text = "Player 1";
+                    //label_player_turn.ForeColor = Color.RoyalBlue;
+                    //isplayer2_turn = false;
+
+                    isplayer1_turn = false;
+                    isplayer2_turn = true;
+                    label_player_turn.Text = "Player 2";
+                    label_player_turn.ForeColor = Color.Crimson;
+
                     txtbox_number_possible_hexes.Text = GameState.game_state.possible_hexes.Count.ToString();
                     picGrid.Refresh();
                 }
@@ -329,48 +390,41 @@ namespace Andantino_Search
                 {
                     depth_game++;
                     GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, move);
-                    List<Hexagon> move_neighbors = GameState.game_state.get_neighbors(move);
-                    int temp = 1;
-                    for (int i = 0; i < move_neighbors.Count; i++)
+                    if (GameState.game_state.is_game_over)
                     {
+                        MessageBox.Show("Game Over. Player 1 (Blue) wins !");
+                    }
 
-                        if (!GameState.game_state.state_player1_hexes.Contains(move_neighbors[i]))
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            temp += 1;
-                        }
-                    }
-                    if(temp<6)
-                    {
-                        if (GameState.game_state.state_player2_hexes.Count > 5)
-                        {
-                            for (int i = 0; i < GameState.game_state.state_player2_hexes.Count; i++)
-                            {
-                                if (out_of_boundaries(GameState.game_state.state_player2_hexes[i], GameState.game_state.state_player1_hexes, GameState.game_state))
-                                {
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Surrounded");
-                    }
+
                     
+
+
+                    GameState.game_history.Push(GameState.game_state);
+
+
+                    make_ai_move();
+                    depth_game++;
+                    GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, AI.ai_move);
+                    if (GameState.game_state.is_game_over)
+                    {
+                        MessageBox.Show("Game Over. Player 2 (Red) wins !");
+                    }
 
                     GameState.game_history.Push(GameState.game_state);
                 }
 
                 if (GameState.game_state.state_player1_hexes.Count>number_hexes_player1_before)
                 {
-                    isplayer1_turn = false;
-                    isplayer2_turn = true;
-                    label_player_turn.Text = "Player 2";
-                    label_player_turn.ForeColor = Color.Crimson;                    
+                    //isplayer1_turn = false;
+                    //isplayer2_turn = true;
+                    //label_player_turn.Text = "Player 2";
+                    //label_player_turn.ForeColor = Color.Crimson;
+
+                    isplayer1_turn = true;
+                    isplayer2_turn = false;
+                    label_player_turn.Text = "Player 1";
+                    label_player_turn.ForeColor = Color.RoyalBlue;
+
                     txtbox_number_possible_hexes.Text = GameState.game_state.possible_hexes.Count.ToString();
                     picGrid.Refresh();
                 }
@@ -394,24 +448,42 @@ namespace Andantino_Search
             //iterative deepening
             //timer
             //all span
+            make_ai_move();
 
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-            //double value = AI.minimax(GameState.game_state, Option.depth_of_search, true);
-            //double value = AI.minimax_alpha_beta_pruning(GameState.game_state, Option.depth_of_search, Option.minimum_score, double.PositiveInfinity, true);
-            double value = AI.negamax(GameState.game_state, Option.depth_of_search, double.NegativeInfinity, double.PositiveInfinity);
-            stopWatch.Stop();
-            //depth_game++;
-            label_ai_move_result.Text = "(" + AI.ai_move.row.ToString() + "," + AI.ai_move.column.ToString() + "," + "value:" + AI.ai_state.value.ToString() + ")";
-            TimeSpan ts = stopWatch.Elapsed;
-            string elapsedTimeString = String.Format("{0:00}:{1:00}:{2:00}",ts.Minutes, ts.Seconds,ts.Milliseconds / 10);
-            label_ai_move_stats.Text = elapsedTimeString + ", depth =  " + AI.ai_state.depth;
 
 
             //GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, ai_move);
             //game_history.Push(GameState.game_state);
 
 
+
+        }
+
+        public void make_ai_move()
+        {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            double value;
+            if(checkBox1.Checked)
+            {
+                value = AI.minimax(GameState.game_state, Option.depth_of_search, true);
+
+            }
+            if(checkBox2.Checked)
+            {
+                value = AI.minimax_alpha_beta_pruning(GameState.game_state, Option.depth_of_search, Option.minimum_score, double.PositiveInfinity, true);
+
+            }
+            if(checkBox3.Checked)
+            {
+                value = AI.negamax(GameState.game_state, Option.depth_of_search, double.NegativeInfinity, double.PositiveInfinity);
+
+            }
+            stopWatch.Stop();
+            label_ai_move_result.Text = "(" + AI.ai_move.row.ToString() + "," + AI.ai_move.column.ToString() + "," + "value:" + AI.ai_state.value.ToString() + ")";
+            TimeSpan ts = stopWatch.Elapsed;
+            string elapsedTimeString = String.Format("{0:00}:{1:00}:{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+            label_ai_move_stats.Text = elapsedTimeString + ", depth =  " + AI.ai_state.depth;
 
         }
 
@@ -462,32 +534,50 @@ namespace Andantino_Search
 
         }
 
-        //def out_of_boundaries(self, hex_center, player):
-        //if not game_rules.flood_fill(hex_center, [], player, self.hexagons_board):
-        //    print("WIN!!!!!!!!!!!!!!!!")
-        //    print("check", [hex_center.row, hex_center.col])
-        //    return True
-        //else:
-        //    # print("keep on trying")
-        //    return False
-
-        public bool out_of_boundaries(Hexagon hex, List<Hexagon> hexes_player,State game_state)
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            List<Hexagon> temp = new List<Hexagon>();
-            if (!game_state.check_is_trapped(hex, temp, hexes_player, GameStatic.hexes_in_board))
+            if(checkBox1.Checked)
             {
-                MessageBox.Show("Test");
-                return true;
+                checkBox2.Enabled = false;
+                checkBox3.Enabled = false;
             }
             else
-                return false;
+            {
+                checkBox2.Enabled = true;
+                checkBox3.Enabled = true;
+            }
+
         }
 
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if(checkBox2.Checked)
+            {
+                checkBox1.Enabled = false;
+                checkBox3.Enabled = false;
+            }
+            else
+            {
+                checkBox1.Enabled = true;
+                checkBox3.Enabled = true;
+            }
 
+        }
 
-
-
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            if(checkBox3.Checked)
+            {
+                checkBox1.Enabled = false;
+                checkBox2.Enabled = false;
+            }
+            else
+            {
+                checkBox1.Enabled = true;
+                checkBox2.Enabled = true;
+            }
+        }
     }
 
-    
+
 }

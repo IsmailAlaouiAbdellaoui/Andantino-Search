@@ -28,7 +28,7 @@ namespace Andantino_Search
 
         
 
-        public State(Hexagon move, int player, List<Hexagon> p1_hexes, int eva_p1, List<Hexagon> p2_hexes, int depth,
+        public State(Hexagon move, int player, List<Hexagon> p1_hexes, List<Hexagon> p2_hexes, int depth,
             List<Hexagon> empty_hexes, List<Hexagon> possible_hexes, bool is_over, double value)
         //public State()
         {
@@ -391,10 +391,8 @@ namespace Andantino_Search
 
         }
 
-        public bool check_is_victory(Hexagon new_hex, int which_player_played)//P1 = 1, P2 = 2
+        public int[] check_is_victory(Hexagon new_hex, int which_player_played)//P1 = 1, P2 = 2
         {
-            bool is_winner = false;
-            //int[] test = new int[3];
 
             int number_coins_required = 5;
 
@@ -404,40 +402,9 @@ namespace Andantino_Search
 
             int left_diagonal_sequential = count_left_diagonal_sequence(new_hex, number_coins_required, which_player_played, horizontal_sequential, right_diagonal_sequential);
 
-            //bool is_trapped = false;
-            //if(player == 1)
-            //{
-            //    List<Hexagon> empty_previous_hexes = new List<Hexagon>();
-            //    for (int i = 0; i < state_player1_hexes.Count; i++)
-            //    {
-            //        is_trapped = check_is_trapped(state_player1_hexes[i], empty_previous_hexes, state_player2_hexes, GameStatic.hexes_in_board);
+            int[] result = new int[] { horizontal_sequential,right_diagonal_sequential,left_diagonal_sequential };
+            return result;
 
-            //    }
-            //}
-            //else
-            //{
-            //    List<Hexagon> empty_previous_hexes = new List<Hexagon>();
-            //    for (int i = 0; i < state_player2_hexes.Count; i++)
-            //    {
-            //        is_trapped = check_is_trapped(state_player2_hexes[i], empty_previous_hexes, state_player1_hexes, GameStatic.hexes_in_board);
-
-            //    }
-
-            //}
-            //if(!is_trapped)
-            //{
-            //    System.Windows.Forms.MessageBox.Show("Trapped");
-            //}
-            if (horizontal_sequential == 5 || right_diagonal_sequential == 5 || left_diagonal_sequential == 5)
-            {
-                is_winner = true;
-            }
-            //test[0] = horizontal_sequential;
-            //test[1] = right_diagonal_sequential;
-            //test[2] = left_diagonal_sequential;
-
-            return is_winner;
-            //return is_winner;
 
         }
 
@@ -569,20 +536,20 @@ namespace Andantino_Search
             for (int i = 0; i < state_player1_hexes.Count; i++)
             {
                 int index = neighbors2.FindIndex(hex => hex.Equals(state_player1_hexes[i]));
-                if(index>=0)
+                if (index >= 0)
                 {
                     neighbors2.RemoveAt(index);
                 }
-                
+
             }
             for (int i = 0; i < state_player2_hexes.Count; i++)
             {
                 int index = neighbors2.FindIndex(hex => hex.Equals(state_player2_hexes[i]));
-                if(index>=0)
+                if (index >= 0)
                 {
                     neighbors2.RemoveAt(index);
                 }
-                
+
             }
 
             for (int i = 0; i < neighbors2.Count; i++)
@@ -595,11 +562,95 @@ namespace Andantino_Search
                 }
             }
 
-
-
             return possible_hexes;
 
         }
+
+        //public List<Hexagon> set_possible_hexes(List<Hexagon> state_player1_hexes, List<Hexagon> state_player2_hexes)
+        //{
+        //    //Dictionary<Tuple<int, int>, Hexagon> neighbors2 = new Dictionary<Tuple<int, int>, Hexagon>();
+        //    Dictionary<Tuple<int, int>, Hexagon> possible_hexes = new Dictionary<Tuple<int, int>, Hexagon>();
+        //    List<Hexagon> poss_hexes = new List<Hexagon>();
+        //    List<Hexagon> neighbors2 = new List<Hexagon>();
+        //    //ReadOnlySpan<Hexagon> test = new ReadOnlySpan<Hexagon>(neighbors2.ToArray());
+        //    //test.BinarySearch(possible_hexes[0]);
+        //    //neighbors2.BinarySearch(possible_hexes[0]);
+
+        //    for (int i = 0; i < state_player1_hexes.Count; i++)//choosing possible hexes
+        //    {
+        //        neighbors2.AddRange(get_neighbors(state_player1_hexes[i]));
+
+        //    }
+        //    for (int i = 0; i < state_player2_hexes.Count; i++)
+        //    {
+        //        neighbors2.AddRange(get_neighbors(state_player2_hexes[i]));
+        //    }
+
+        //    for (int i = 0; i < state_player1_hexes.Count; i++)
+        //    {
+        //        int index = neighbors2.FindIndex(hex => hex.Equals(state_player1_hexes[i]));
+        //        if (index >= 0)
+        //        {
+        //            neighbors2.RemoveAt(index);
+        //        }
+
+        //    }
+        //    for (int i = 0; i < state_player2_hexes.Count; i++)
+        //    {
+        //        int index = neighbors2.FindIndex(hex => hex.Equals(state_player2_hexes[i]));
+        //        if (index >= 0)
+        //        {
+        //            neighbors2.RemoveAt(index);
+        //        }
+
+        //    }
+        //    Dictionary<Tuple<int, int>, Hexagon> neighbors2_dict = new Dictionary<Tuple<int, int>, Hexagon>();
+        //    Dictionary<Tuple<int, int>, Hexagon> p1_dict = new Dictionary<Tuple<int, int>, Hexagon>();
+        //    Dictionary<Tuple<int, int>, Hexagon> p2_dict = new Dictionary<Tuple<int, int>, Hexagon>();
+
+        //    for (int i = 0; i < state_player1_hexes.Count; i++)
+        //    {
+        //        p1_dict.Add(Tuple.Create(state_player1_hexes[i].row, state_player1_hexes[i].column), state_player1_hexes[i]);
+        //    }
+
+        //    for (int i = 0; i < state_player2_hexes.Count; i++)
+        //    {
+        //        p2_dict.Add(Tuple.Create(state_player2_hexes[i].row, state_player2_hexes[i].column), state_player2_hexes[i]);
+        //    }
+
+        //    for (int i = 0; i < neighbors2.Count; i++)
+        //    {
+        //        try
+        //        {
+        //            neighbors2_dict.Add(Tuple.Create(neighbors2[i].row, neighbors2[i].column), neighbors2[i]);
+        //        }
+        //        catch (Exception)
+        //        {
+
+
+        //        }
+
+        //    }
+
+
+
+        //    for (int i = 0; i < neighbors2.Count; i++)
+        //    {
+        //        //List<Hexagon> temp_list = new List<Hexagon>(neighbors2);
+        //        Dictionary<Tuple<int, int>, Hexagon> temp_list = new Dictionary<Tuple<int, int>, Hexagon>(neighbors2_dict);
+        //        temp_list.Remove(temp_list.ElementAt(i).Key);
+        //        if (temp_list.ContainsKey(neighbors2_dict.ElementAt(i).Key) && !p1_dict.ContainsKey(neighbors2_dict.ElementAt(i).Key) && !p2_dict.ContainsKey(neighbors2_dict.ElementAt(i).Key) && !possible_hexes.ContainsKey(neighbors2_dict.ElementAt(i).Key))
+        //        {
+        //            possible_hexes.Add(neighbors2_dict.ElementAt(i).Key, neighbors2_dict.ElementAt(i).Value);
+        //        }
+        //    }
+        //    for (int i = 0; i < possible_hexes.Count; i++)
+        //    {
+        //        poss_hexes.Add(possible_hexes.ElementAt(i).Value);
+        //    }
+        //    return poss_hexes;
+
+        //}
 
 
         public State get_state_after_move(State ancestor_state,Hexagon move)//New state after move from 1 of possible hexes
@@ -612,8 +663,11 @@ namespace Andantino_Search
             s.empty_hexes.Remove(move);
             s.depth = ancestor_state.depth + 1;
             s.possible_hexes = new List<Hexagon>();
+
+
             
-            if(ancestor_state.player == 1)
+
+            if (ancestor_state.player == 1)
             {
                 s.player = 2;
             }
@@ -624,38 +678,131 @@ namespace Andantino_Search
 
 
             if(s.player == 2)
-            { 
+            {
                 s.state_player2_hexes.Add(move);
-                s.is_game_over = s.check_is_victory(move, 2);
-                
+                s.is_game_over = false;
+                int[] result = s.check_is_victory(move, 2);
 
+                s.value = Math.Pow(result[0], result[0]) + Math.Pow(result[1], result[1]) + Math.Pow(result[2], result[2]);
+                List<Hexagon> move_neighbors = get_neighbors(move);
+                int temp = 0;
+                for (int i = 0; i < move_neighbors.Count; i++)
+                {
+                    if (s.state_player2_hexes.Contains(move_neighbors[i]))
+                    {
+                        temp += 1;
+                    }
+                }
+                if (temp == 0)
+                {
+                    s.value -= 50;
+                }
+                foreach (var item in result)
+                {
+                    if(item == 5)
+                    {
+                        s.is_game_over = true;
+                    }
+                }
+                if (!s.is_game_over)
+                {
+                    s.is_game_over = is_draw(s.empty_hexes);
+                }
+                //if (!s.is_game_over)
+                //{
+                //    s.is_game_over = s.base_case_surrounding(s.state_player1_hexes, s.state_player2_hexes);
+                //}
+                if (!s.is_game_over)
+                {
+                    if (s.state_player1_hexes.Count > 5)
+                    {
+                        for (int i = 0; i < s.state_player1_hexes.Count; i++)
+                        {
+                            if (out_of_boundaries(s.state_player1_hexes[i], s.state_player2_hexes))
+                            {
+                                s.is_game_over = true;
+                                break;
+                            }
+                        }
+                    }
+
+                }
             }
             else//player1
             {
                 s.state_player1_hexes.Add(move);
-                s.is_game_over = s.check_is_victory(move, 1);
+                s.is_game_over = false;
+                int[] result = s.check_is_victory(move, 1);
+                s.value = Math.Pow(result[0], result[0]) + Math.Pow(result[1], result[1]) + Math.Pow(result[2], result[2]);
+                List<Hexagon> move_neighbors = get_neighbors(move);
+                int temp = 0;
+                for (int i = 0; i < move_neighbors.Count; i++)
+                {
+                    if(s.state_player1_hexes.Contains(move_neighbors[i]))
+                    {
+                        temp += 1;
+                    }
+                }
+                if(temp == 0)
+                {
+                    s.value -= 50;
+                }
+                foreach (var item in result)
+                {
+                    if(item == 5)
+                    {
+                        s.is_game_over = true;
+                    }
+                }
+                if(!s.is_game_over)
+                {
+                    s.is_game_over = is_draw(s.empty_hexes);
+                }
 
+                //if(!s.is_game_over)
+                //{
+                //    s.is_game_over = s.base_case_surrounding(s.state_player2_hexes, s.state_player1_hexes);
+                //}
+                if (!s.is_game_over)
+                {
+                    if (s.state_player2_hexes.Count > 5)
+                    {
+                        for (int i = 0; i < s.state_player2_hexes.Count; i++)
+                        {
+                            if (out_of_boundaries(s.state_player2_hexes[i], s.state_player1_hexes))
+                            {
+                                s.is_game_over = true;
+                                break;
+                            }
+                        }
+                    }
+                }
                 
             }
-            if (!s.is_game_over)// || not draw
+            Dictionary <Tuple<int, int>, Hexagon > p1_dict = new Dictionary<Tuple<int, int>, Hexagon>();
+            Dictionary <Tuple<int, int>, Hexagon> p2_dict = new Dictionary<Tuple<int, int>, Hexagon>();
+            for (int i = 0; i < s.state_player1_hexes.Count; i++)
+            {
+                p1_dict.Add(Tuple.Create(s.state_player1_hexes[i].row, s.state_player1_hexes[i].column), s.state_player1_hexes[i]);
+            }
+            for (int i = 0; i < s.state_player2_hexes.Count; i++)
+            {
+                p2_dict.Add(Tuple.Create(s.state_player2_hexes[i].row, s.state_player2_hexes[i].column), s.state_player2_hexes[i]);
+            }
+
+            if (!s.is_game_over)
             {
                 //calculate possible hexes
                 s.possible_hexes = s.set_possible_hexes(s.state_player1_hexes, s.state_player2_hexes);
+                //s.possible_hexes = s.set_possible_hexes(p1_dict, p2_dict);
 
             }
 
-            int horizontal_score = s.count_horizontal_sequence(move, Option.number_coins_required, s.player);
 
-            int right_diagonal_score = s.count_diagonal_right_sequence(move, Option.number_coins_required, s.player, horizontal_score);
-
-            int left_diagonal_score = s.count_left_diagonal_sequence(move, Option.number_coins_required, s.player, horizontal_score, right_diagonal_score);
-
-            s.value = Math.Pow(horizontal_score, horizontal_score) + Math.Pow(right_diagonal_score, right_diagonal_score) + Math.Pow(left_diagonal_score, left_diagonal_score);
 
 
             return s;
 
-            //cloning is useless since we now create a new state ?
 
             //define function is_game_over that checks victory or if all_hexes_taken
             //if 2nd case, then draw
@@ -669,11 +816,11 @@ namespace Andantino_Search
             }
             if(other.value> value)
             {
-                return -1;
+                return 1;
             }
             else
             {
-                return 1;
+                return -1;
             }
         }
 
@@ -694,7 +841,7 @@ namespace Andantino_Search
                 List<Hexagon> temp = get_neighbors(middle);
                 for (int i = 0; i < temp.Count; i++)
                 {
-                    Option.number_calls_flood_fill += 1;
+                    //Option.number_calls_flood_fill += 1;
                     if(check_is_trapped(temp[i],previous,hex_players,hexes_board))
                     {
                         return true;
@@ -704,7 +851,61 @@ namespace Andantino_Search
             return false;
 
         }
+        public bool out_of_boundaries(Hexagon hex, List<Hexagon> hexes_player)
+        {
+            List<Hexagon> temp1 = new List<Hexagon>();
+            if (!check_is_trapped(hex, temp1, hexes_player, GameStatic.hexes_in_board))
+            {
+                //MessageBox.Show("Game Over");
+                
+                return true;
+            }
+            else
+                return false;
+        }
 
-    
+        public bool base_case_surrounding(List<Hexagon> hexes_player, List<Hexagon> other_player_hexes)
+        {
+            int temp;
+            for (int j = 0; j < hexes_player.Count; j++)
+            {
+                
+                List<Hexagon> move_neighbors = GameState.game_state.get_neighbors(hexes_player[j]);
+                temp = 1;
+                for (int i = 0; i < move_neighbors.Count; i++)
+                {
+
+                    if (!other_player_hexes.Contains(move_neighbors[i]))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        temp += 1;
+                    }
+                }
+                if (temp == move_neighbors.Count)
+                {
+
+                    return true;
+                }
+            }
+            return false;
+            
+        }
+
+        public bool is_draw(List<Hexagon> empty_hexes)
+        {
+            if(empty_hexes.Count == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
     }
 }

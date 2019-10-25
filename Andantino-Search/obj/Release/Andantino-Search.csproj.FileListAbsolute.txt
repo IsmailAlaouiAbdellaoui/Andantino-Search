@@ -113,3 +113,4 @@ F:\GitHub\Andantino-Search\Andantino-Search\obj\Release\Andantino-Search.csproj.
 F:\GitHub\Andantino-Search\Andantino-Search\obj\Release\Andantino-Search.exe
 F:\GitHub\Andantino-Search\Andantino-Search\obj\Release\Andantino-Search.pdb
 F:\GitHub\Andantino-Search\Andantino-Search\obj\Release\Andantino-Search.csprojAssemblyReference.cache
+F:\GitHub\Andantino-Search\Andantino-Search\obj\Release\Andantino_Search.Home.resources
