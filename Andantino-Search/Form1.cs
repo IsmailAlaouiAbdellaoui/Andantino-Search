@@ -269,10 +269,42 @@ namespace Andantino_Search
                 {
                     depth_game++;
                     GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, move);
+                    List<Hexagon> move_neighbors = GameState.game_state.get_neighbors(move);
+                    int temp = 1;
+                    //for (int i = 0; i < move_neighbors.Count; i++)
+                    //{
+                        
+                    //    if(!GameState.game_state.state_player2_hexes.Contains(move_neighbors[i]))
+                    //    {
+                    //        break;
+                    //    }
+                    //    else
+                    //    {
+                    //        temp += 1;
+                    //    }
+                    //}
+                    if (temp <6)
+                    {
+                        if (GameState.game_state.state_player1_hexes.Count > 5)
+                        {
+                            for (int i = 0; i < GameState.game_state.state_player1_hexes.Count; i++)
+                            {
+                                if (out_of_boundaries(GameState.game_state.state_player1_hexes[i], GameState.game_state.state_player2_hexes, GameState.game_state))
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Surrounded");
+                    }
+
                     GameState.game_history.Push(GameState.game_state);
                 }
 
-                if (GameState.game_state.state_player2_hexes.Count>number_hexes_player2_before)
+                if (GameState.game_state.state_player1_hexes.Count>number_hexes_player2_before)
                 {
                     isplayer1_turn = true;
                     label_player_turn.Text = "Player 1";
@@ -297,6 +329,39 @@ namespace Andantino_Search
                 {
                     depth_game++;
                     GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, move);
+                    List<Hexagon> move_neighbors = GameState.game_state.get_neighbors(move);
+                    int temp = 1;
+                    for (int i = 0; i < move_neighbors.Count; i++)
+                    {
+
+                        if (!GameState.game_state.state_player1_hexes.Contains(move_neighbors[i]))
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            temp += 1;
+                        }
+                    }
+                    if(temp<6)
+                    {
+                        if (GameState.game_state.state_player2_hexes.Count > 5)
+                        {
+                            for (int i = 0; i < GameState.game_state.state_player2_hexes.Count; i++)
+                            {
+                                if (out_of_boundaries(GameState.game_state.state_player2_hexes[i], GameState.game_state.state_player1_hexes, GameState.game_state))
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Surrounded");
+                    }
+                    
+
                     GameState.game_history.Push(GameState.game_state);
                 }
 
@@ -397,9 +462,30 @@ namespace Andantino_Search
 
         }
 
-        
+        //def out_of_boundaries(self, hex_center, player):
+        //if not game_rules.flood_fill(hex_center, [], player, self.hexagons_board):
+        //    print("WIN!!!!!!!!!!!!!!!!")
+        //    print("check", [hex_center.row, hex_center.col])
+        //    return True
+        //else:
+        //    # print("keep on trying")
+        //    return False
 
-    
+        public bool out_of_boundaries(Hexagon hex, List<Hexagon> hexes_player,State game_state)
+        {
+            List<Hexagon> temp = new List<Hexagon>();
+            if (!game_state.check_is_trapped(hex, temp, hexes_player, GameStatic.hexes_in_board))
+            {
+                MessageBox.Show("Test");
+                return true;
+            }
+            else
+                return false;
+        }
+
+
+
+
 
     }
 

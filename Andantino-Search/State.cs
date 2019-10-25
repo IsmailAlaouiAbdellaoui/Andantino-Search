@@ -404,6 +404,30 @@ namespace Andantino_Search
 
             int left_diagonal_sequential = count_left_diagonal_sequence(new_hex, number_coins_required, which_player_played, horizontal_sequential, right_diagonal_sequential);
 
+            //bool is_trapped = false;
+            //if(player == 1)
+            //{
+            //    List<Hexagon> empty_previous_hexes = new List<Hexagon>();
+            //    for (int i = 0; i < state_player1_hexes.Count; i++)
+            //    {
+            //        is_trapped = check_is_trapped(state_player1_hexes[i], empty_previous_hexes, state_player2_hexes, GameStatic.hexes_in_board);
+
+            //    }
+            //}
+            //else
+            //{
+            //    List<Hexagon> empty_previous_hexes = new List<Hexagon>();
+            //    for (int i = 0; i < state_player2_hexes.Count; i++)
+            //    {
+            //        is_trapped = check_is_trapped(state_player2_hexes[i], empty_previous_hexes, state_player1_hexes, GameStatic.hexes_in_board);
+
+            //    }
+
+            //}
+            //if(!is_trapped)
+            //{
+            //    System.Windows.Forms.MessageBox.Show("Trapped");
+            //}
             if (horizontal_sequential == 5 || right_diagonal_sequential == 5 || left_diagonal_sequential == 5)
             {
                 is_winner = true;
@@ -653,41 +677,34 @@ namespace Andantino_Search
             }
         }
 
-        public bool check_is_trapped(Hexagon middle, List<Hexagon> previous)
+        public bool check_is_trapped(Hexagon middle, List<Hexagon> previous, List<Hexagon> hex_players, List<Hexagon> hexes_board)
         {
-            bool is_trapped = false;
+            //bool is_trapped = false;
             if (get_neighbors(middle).Count<6)
             {
-                is_trapped = true;
+                return true;
             }
-
-                
-
-
-
-            return is_trapped;
+            if(hex_players.Contains(middle) || previous.Contains(middle))
+            {
+                return false;
+            }
+            else
+            {
+                previous.Add(middle);
+                List<Hexagon> temp = get_neighbors(middle);
+                for (int i = 0; i < temp.Count; i++)
+                {
+                    Option.number_calls_flood_fill += 1;
+                    if(check_is_trapped(temp[i],previous,hex_players,hexes_board))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
 
         }
 
-        //    def flood_fill(self, hex_center, prev_hexes, player):
-        //neigh = []
-
-        //if len(self.neighbour(hex_center)) < 6:
-        //    print("hex_center flood", [hex_center.row, hex_center.col])
-        //    return True
-        //if hex_center in player:
-        //    print("hex_center in self.hexagons_ play on!")
-        //    return False
-        //if  hex_center in prev_hexes:
-        //    print("hex_center in prev_hexes play on!")
-        //    return False
-        //else:
-        //    prev_hexes.append(hex_center)
-        //    print("hex center", [hex_center.row, hex_center.col])
-        //    for neigh in self.neighbour(hex_center):
-        //        print("neigh", [neigh.row, neigh.col])
-        //        if self.flood_fill(neigh, prev_hexes, player):
-        //            return True
-        //return False
+    
     }
 }
