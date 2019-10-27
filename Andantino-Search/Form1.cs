@@ -82,7 +82,7 @@ namespace Andantino_Search
                 depth_game++;
                 if(is_iterative_depth)
                 {
-                    GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, AI.ai_move_iterative_deepning);
+                    GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, AI.get_ai_move_iterative());
                 }
                 else
                 {
@@ -361,7 +361,7 @@ namespace Andantino_Search
                     depth_game++;
                     if (is_iterative_depth)
                     {
-                        GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, AI.ai_move_iterative_deepning);
+                        GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, AI.get_ai_move_iterative());
                     }
                     else
                     {
@@ -419,7 +419,7 @@ namespace Andantino_Search
                     depth_game++;
                     if(is_iterative_depth)
                     {
-                        GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, AI.ai_move_iterative_deepning);
+                        GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, AI.get_ai_move_iterative());
                     }
                     else
                     {
@@ -505,7 +505,7 @@ namespace Andantino_Search
 
             if (is_iterative_depth)
             {
-                label_ai_move_result.Text = "(" + AI.ai_move_iterative_deepning.row.ToString() + "," + AI.ai_move_iterative_deepning.column.ToString() + "," + "value:" + AI.ai_state_iterative_deepening.value.ToString() + ")";
+                label_ai_move_result.Text = "(" + AI.get_ai_move_iterative().row.ToString() + "," + AI.get_ai_move_iterative().column.ToString() + "," + "value:" + AI.ai_state_iterative_deepening.value.ToString() + ")";
                 label_ai_move_stats.Text = elapsedTimeString + ", depth of iterative deepening =  " + depth_deepening.ToString();
 
             }
@@ -537,7 +537,18 @@ namespace Andantino_Search
                     {
                         double x = await AI.pvs_id(GameState.game_state, iterative_depth, double.NegativeInfinity, double.PositiveInfinity, ct);
                     }
-                    AI.ai_move_iterative_deepning = AI.ai_move;
+                    if(search_type == 2)
+                    {
+                        double x = await AI.minimax_alpha_beta_pruning_id(GameState.game_state, Option.depth_of_search, double.NegativeInfinity, double.PositiveInfinity, true,ct);
+                    }
+                    //if(ct.CanBeCanceled)
+                    //{
+                    //    AI.ai_move_iterative_deepning = AI.ai_move;
+                    //}
+                    AI.set_ai_move_iterative(AI.ai_move);
+                    //label_ai_move_result.Text = "(" + AI.ai_move_iterative_deepning.row.ToString() + "," + AI.ai_move_iterative_deepning.column.ToString() + "," + "value:" + AI.ai_state_iterative_deepening.value.ToString() + ")";
+                    string info = "(" + AI.get_ai_move_iterative().row.ToString() + "," + AI.get_ai_move_iterative().column.ToString() + "," + "value:" + AI.ai_state_iterative_deepening.value.ToString() + ")";
+                    //MessageBox.Show(info + " " + depth_deepening.ToString());
                     AI.ai_state_iterative_deepening = AI.ai_state;
                     iterative_depth += 2;
                     depth_deepening = iterative_depth;

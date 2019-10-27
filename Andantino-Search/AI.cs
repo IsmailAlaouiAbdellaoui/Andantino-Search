@@ -9,7 +9,7 @@ namespace Andantino_Search
     {
         public static Hexagon ai_move { get; set; }
         public static State ai_state { get; set; }       
-        public static Hexagon ai_move_iterative_deepning { get; set; }
+        private static Hexagon ai_move_iterative_deepning { get; set; }
         public static State ai_state_iterative_deepening { get; set; }
         public static double minimax(State s, int depth_minimax, bool maximizing_player)
         {
@@ -407,6 +407,7 @@ namespace Andantino_Search
             {
                 ct.ThrowIfCancellationRequested();
             }
+            //await Task.Yield();
             if (depth_negamax == 0)// || s.is_game_over)
             {
                 return s.value;
@@ -450,12 +451,17 @@ namespace Andantino_Search
                 }
 
             }
+            //await Task.Yield();
             return (score);
 
         }
 
         public static async Task<double> pvs_id(State s, int depth_pvs, double alpha, double beta, CancellationToken ct)
         {
+            if (ct.IsCancellationRequested)
+            {
+                ct.ThrowIfCancellationRequested();
+            }
             double score;
             if (depth_pvs == 0 || s.is_game_over)
             {
@@ -505,7 +511,112 @@ namespace Andantino_Search
 
         }
 
+        public static async Task<double> minimax_alpha_beta_pruning_id(State s, int depth_alpha_beta, double alpha, double beta, bool maximizing_player, CancellationToken ct)
+        {
+            if (ct.IsCancellationRequested)
+            {
+                ct.ThrowIfCancellationRequested();
+            }
+            double eval;
+            if (depth_alpha_beta == 0)
+            {
+                return s.value;
+            }
 
+            if (maximizing_player)
+            {
+                double maxEval = Option.minimum_score;
+                List<State> sorted_children = new List<State>();
+                for (int i = 0; i < s.possible_hexes.Count; i++)
+                {
+                    if (!s.is_game_over)
+                    {
+                        sorted_children.Add(s.get_state_after_move(s, s.possible_hexes[i]));
+                    }
+
+                }
+                sorted_children.Sort();
+                for (int i = 0; i < sorted_children.Count; i++)
+                {
+                    State child_state = sorted_children[i];
+                    {
+                        eval = await minimax_alpha_beta_pruning_id(child_state, depth_alpha_beta - 1, alpha, beta, false, ct);
+
+                        if (eval > maxEval)
+                        {
+                            maxEval = eval;
+                            if (depth_alpha_beta == Option.depth_of_search - 1)
+                            {
+                                ai_move = child_state.move;
+                                ai_state = child_state;
+
+                            }
+
+
+                        }
+
+                        alpha = Math.Max(alpha, eval);
+                        if (beta <= alpha)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                return maxEval;
+            }
+            else
+            {
+                double minEval = double.PositiveInfinity;
+                List<State> sorted_children = new List<State>();
+                for (int i = 0; i < s.possible_hexes.Count; i++)
+                {
+                    if (!s.is_game_over)
+                    {
+                        sorted_children.Add(s.get_state_after_move(s, s.possible_hexes[i]));
+                    }
+
+                }
+                sorted_children.Sort();
+                for (int i = 0; i < sorted_children.Count; i++)
+                {
+                    State child_state = sorted_children[i];
+
+                    {
+                        eval = await minimax_alpha_beta_pruning_id(child_state, depth_alpha_beta - 1, alpha, beta, true,ct);
+
+                        if (eval < minEval)
+                        {
+                            minEval = eval;
+                            if (depth_alpha_beta == Option.depth_of_search - 1)
+                            {
+                                ai_move = child_state.move;
+                                ai_state = child_state;
+
+                            }
+
+                        }
+                        beta = Math.Min(beta, eval);
+                        if (beta <= alpha)
+                        {
+                            break;
+                        }
+                    }
+                }
+                return minEval;
+            }
+
+        }
+
+        public static void set_ai_move_iterative(Hexagon move)
+        {
+            ai_move_iterative_deepning = move;
+        }
+
+        public static Hexagon get_ai_move_iterative()
+        {
+            return ai_move_iterative_deepning;
+        }
     }
 
 
