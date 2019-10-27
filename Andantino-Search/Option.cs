@@ -37,7 +37,7 @@ namespace Andantino_Search
 
         public static List<Hexagon> hexes_outer_board = new List<Hexagon>();
 
-        public static int depth_of_search = 5;
+        public static int depth_of_search = 4;
 
         public static double minimum_score = 3;
 
@@ -60,7 +60,7 @@ namespace Andantino_Search
         public static SolidBrush brush_notation_elements = new SolidBrush(Color.Black);
 
         public static bool is_game_over = false;
-        public static int number_calls_flood_fill = 0;
+        public static int iterative_deepening_time_limit_milliseconds = 3000;
 
     }
 }

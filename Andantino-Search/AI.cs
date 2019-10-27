@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Andantino_Search
@@ -7,7 +8,9 @@ namespace Andantino_Search
     public static class AI
     {
         public static Hexagon ai_move { get; set; }
-        public static State ai_state { get; set; }
+        public static State ai_state { get; set; }       
+        public static Hexagon ai_move_iterative_deepning { get; set; }
+        public static State ai_state_iterative_deepening { get; set; }
         public static double minimax(State s, int depth_minimax, bool maximizing_player)
         {
             double eval;
@@ -292,7 +295,7 @@ namespace Andantino_Search
 
         public static double negamax(State s, int depth_negamax, double alpha, double beta)
         {
-            if (depth_negamax == 0)
+            if (depth_negamax == 0)// || s.is_game_over)
             {
                 return s.value;
             }
@@ -300,19 +303,17 @@ namespace Andantino_Search
             List<State> temp = new List<State>();
             for (int i = 0; i < s.possible_hexes.Count; i++)
             {
-                if(!s.is_game_over)
+                State temp_child = s.get_state_after_move(s, s.possible_hexes[i]);
+                if (!s.is_game_over)
                 {
-                    temp.Add(s.get_state_after_move(s, s.possible_hexes[i]));
+                    temp.Add(temp_child);
                 }
                 
             }
             temp.Sort();
-
             for (int i = 0; i < temp.Count; i++)
             {
-                //State child_state = s.get_state_after_move(s, s.possible_hexes[i]);
                 State child_state = temp[i];
-                //if (!child_state.is_game_over)
                 {
                     double value = -1 * negamax(child_state, depth_negamax - 1, -beta, -alpha);
                     if (value > score)
@@ -323,9 +324,6 @@ namespace Andantino_Search
                             ai_move = child_state.move;
                             ai_state = child_state;
                         }
-
-                        //ai_move = child_state.move;
-                        //ai_state = child_state;
                     }
                     if (score > alpha)
                     {
@@ -340,5 +338,175 @@ namespace Andantino_Search
             }
             return (score);
         }
+
+        public static double pvs(State s, int depth_pvs, double alpha, double beta)
+        {
+            double score;
+            if (depth_pvs == 0 || s.is_game_over)
+            {
+                return s.value;
+            }
+            List<State> sorted_children = new List<State>();
+            for (int i = 0; i < s.possible_hexes.Count; i++)
+            {
+                //if (!s.is_game_over)
+                //{
+                    sorted_children.Add(s.get_state_after_move(s, s.possible_hexes[i]));
+                //}
+
+            }
+            sorted_children.Sort();
+            //sorted_children.Reverse();
+
+            for (int i = 0; i < sorted_children.Count; i++)
+            {
+                //State child = s.get_state_after_move(s, s.possible_hexes[i]);
+                State child = sorted_children[i];
+                //System.Windows.Forms.MessageBox.Show(child.value.ToString());
+                if (i==0)
+                {
+                    
+                    score = -1 * pvs(child, depth_pvs - 1, -beta, -alpha);
+                    ai_move = child.move;
+                }
+                else
+                {
+                    score = -1 * pvs(child, depth_pvs - 1, -alpha - 1, -alpha);
+                    if (alpha < score && score < beta)
+                    {
+                        score = -1 * pvs(child, depth_pvs - 1, -beta, -score);
+                        //if (child.depth == 2)
+                        //{
+                        //    ai_move = child.move;
+                        //    ai_state = child;
+                        //}
+                        if (score > alpha)
+                        {
+                            ai_move = child.move;
+                            ai_state = child;
+                            //if (depth_pvs == 2)
+                            //{
+                            //    ai_move = child.move;
+                            //    ai_state = child;
+                            //}
+                        }
+                    }
+                }
+                if(alpha >= beta)
+                {
+                    break;
+                }
+            }
+            return alpha;
+
+        }
+
+        public static async Task<double> negamax_id(State s, int depth_negamax, double alpha, double beta, CancellationToken ct)
+        {
+            if (ct.IsCancellationRequested)
+            {
+                ct.ThrowIfCancellationRequested();
+            }
+            if (depth_negamax == 0)// || s.is_game_over)
+            {
+                return s.value;
+            }
+            double score = alpha;
+            //List<State> temp = new List<State>();
+            //for (int i = 0; i < s.possible_hexes.Count; i++)
+            //{
+            //    State temp_child = s.get_state_after_move(s, s.possible_hexes[i]);
+            //    if (!s.is_game_over)
+            //    {
+            //        temp.Add(temp_child);
+            //    }
+
+            //}
+            //temp.Sort();
+
+            for (int i = 0; i < s.possible_hexes.Count; i++)
+            {
+                State child_state = s.get_state_after_move(s, s.possible_hexes[i]);
+                {
+                    //Task<double> value = Task.Run(()=>negamax(child_state, depth_negamax - 1, -beta, -alpha));
+                    double value = await negamax_id(child_state, depth_negamax - 1, -beta, -alpha,ct)*-1;
+                    if (value > score)
+                    {
+                        score = value;
+                        if (s.depth == GameState.game_state.depth)
+                        {
+                            ai_move = child_state.move;
+                            ai_state = child_state;
+                        }
+                    }
+                    if (score > alpha)
+                    {
+                        alpha = score;
+                    }
+                    if (score >= beta)
+                    {
+                        break;
+                    }
+                }
+
+            }
+            return (score);
+
+        }
+
+        public static async Task<double> pvs_id(State s, int depth_pvs, double alpha, double beta, CancellationToken ct)
+        {
+            double score;
+            if (depth_pvs == 0 || s.is_game_over)
+            {
+                return s.value;
+            }
+            List<State> sorted_children = new List<State>();
+            for (int i = 0; i < s.possible_hexes.Count; i++)
+            {
+                //if (!s.is_game_over)
+                //{
+                sorted_children.Add(s.get_state_after_move(s, s.possible_hexes[i]));
+                //}
+
+            }
+            sorted_children.Sort();
+            //sorted_children.Reverse();
+
+            for (int i = 0; i < sorted_children.Count; i++)
+            {
+                State child = sorted_children[i];
+                if (i == 0)
+                {
+
+                    score = await  pvs_id(child, depth_pvs - 1, -beta, -alpha,ct) * -1;
+                    ai_move = child.move;
+                }
+                else
+                {
+                    score = await  pvs_id(child, depth_pvs - 1, -alpha - 1, -alpha,ct) * -1;
+                    if (alpha < score && score < beta)
+                    {
+                        score = await  pvs_id(child, depth_pvs - 1, -beta, -score,ct) * -1;
+                        if (score > alpha)
+                        {
+                            ai_move = child.move;
+                            ai_state = child;
+
+                        }
+                    }
+                }
+                if (alpha >= beta)
+                {
+                    break;
+                }
+            }
+            return alpha;
+
+        }
+
+
     }
+
+
 }

@@ -779,16 +779,16 @@ namespace Andantino_Search
                 }
                 
             }
-            Dictionary <Tuple<int, int>, Hexagon > p1_dict = new Dictionary<Tuple<int, int>, Hexagon>();
-            Dictionary <Tuple<int, int>, Hexagon> p2_dict = new Dictionary<Tuple<int, int>, Hexagon>();
-            for (int i = 0; i < s.state_player1_hexes.Count; i++)
-            {
-                p1_dict.Add(Tuple.Create(s.state_player1_hexes[i].row, s.state_player1_hexes[i].column), s.state_player1_hexes[i]);
-            }
-            for (int i = 0; i < s.state_player2_hexes.Count; i++)
-            {
-                p2_dict.Add(Tuple.Create(s.state_player2_hexes[i].row, s.state_player2_hexes[i].column), s.state_player2_hexes[i]);
-            }
+            //Dictionary <Tuple<int, int>, Hexagon > p1_dict = new Dictionary<Tuple<int, int>, Hexagon>();
+            //Dictionary <Tuple<int, int>, Hexagon> p2_dict = new Dictionary<Tuple<int, int>, Hexagon>();
+            //for (int i = 0; i < s.state_player1_hexes.Count; i++)
+            //{
+            //    p1_dict.Add(Tuple.Create(s.state_player1_hexes[i].row, s.state_player1_hexes[i].column), s.state_player1_hexes[i]);
+            //}
+            //for (int i = 0; i < s.state_player2_hexes.Count; i++)
+            //{
+            //    p2_dict.Add(Tuple.Create(s.state_player2_hexes[i].row, s.state_player2_hexes[i].column), s.state_player2_hexes[i]);
+            //}
 
             if (!s.is_game_over)
             {
@@ -816,7 +816,7 @@ namespace Andantino_Search
             }
             if(other.value> value)
             {
-                return 1;
+                return 1;//with 1 here it sorts from smallest to biggest
             }
             else
             {

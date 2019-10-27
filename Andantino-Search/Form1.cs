@@ -6,6 +6,8 @@ using System.Windows.Forms;
 using System.Linq;
 using System.Diagnostics;
 using System.Collections;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Andantino_Search
 {
@@ -26,6 +28,9 @@ namespace Andantino_Search
 
 
         int depth_game = 1;
+
+        public static int depth_deepening;
+        bool is_iterative_depth = true;
 
         DateTime Started = DateTime.Now;
 
@@ -68,17 +73,21 @@ namespace Andantino_Search
                 set_initial_state(player2_hex);
             }
             
-            
-
-            
             txtbox_number_possible_hexes.Text = GameState.game_state.possible_hexes.Count.ToString();
 
             GameState.game_history.Push(GameState.game_state);
             if(i_play_second)
             {
-                make_ai_move();
+                make_ai_move(is_iterative_depth);
                 depth_game++;
-                GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, AI.ai_move);
+                if(is_iterative_depth)
+                {
+                    GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, AI.ai_move_iterative_deepning);
+                }
+                else
+                {
+                    GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, AI.ai_move);
+                }
                 isplayer1_turn = true;
                 isplayer2_turn = false;
                 label_player_turn.Text = "Player 1";
@@ -88,7 +97,7 @@ namespace Andantino_Search
 
 
             //MessageBox.Show(GameStatic.hexes_in_board.Count.ToString());
-            Zobrist.generate_zobrist_table(false);
+            //Zobrist.generate_zobrist_table(false);
             if(Option.player1_type == 1 && Option.player2_type == 1)
             {
                 //disable click on board and on ai_move button
@@ -348,9 +357,17 @@ namespace Andantino_Search
 
                     GameState.game_history.Push(GameState.game_state);
 
-                    make_ai_move();
+                    make_ai_move(is_iterative_depth);
                     depth_game++;
-                    GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, AI.ai_move);
+                    if (is_iterative_depth)
+                    {
+                        GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, AI.ai_move_iterative_deepning);
+                    }
+                    else
+                    {
+                        GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, AI.ai_move);
+
+                    }
                     //stop timer
                     if (GameState.game_state.is_game_over)
                     {
@@ -395,16 +412,21 @@ namespace Andantino_Search
                         MessageBox.Show("Game Over. Player 1 (Blue) wins !");
                     }
 
-
-                    
-
-
                     GameState.game_history.Push(GameState.game_state);
 
 
-                    make_ai_move();
+                    make_ai_move(is_iterative_depth);
                     depth_game++;
-                    GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, AI.ai_move);
+                    if(is_iterative_depth)
+                    {
+                        GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, AI.ai_move_iterative_deepning);
+                    }
+                    else
+                    {
+                        GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, AI.ai_move);
+
+                    }
+
                     if (GameState.game_state.is_game_over)
                     {
                         MessageBox.Show("Game Over. Player 2 (Red) wins !");
@@ -443,49 +465,116 @@ namespace Andantino_Search
         private void button1_Click(object sender, EventArgs e)
         {
             //to do
-            //double check that everything works fine ( value + recursion + pruning)
             //transposition table
             //iterative deepening
             //timer
             //all span
-            make_ai_move();
+            make_ai_move(is_iterative_depth);
 
 
-
-            //GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, ai_move);
-            //game_history.Push(GameState.game_state);
 
 
 
         }
-
-        public void make_ai_move()
+       
+        public async  void make_ai_move(bool is_iterative_deepening)
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
             double value;
-            if(checkBox1.Checked)
-            {
-                value = AI.minimax(GameState.game_state, Option.depth_of_search, true);
+            //value = AI.negamax(GameState.game_state, Option.depth_of_search, double.NegativeInfinity, double.PositiveInfinity);
+            //value = AI.pvs(GameState.game_state, 3, double.NegativeInfinity, double.PositiveInfinity);
+            //iterative_deepening();
+            //MessageBox.Show("making ai move");
 
-            }
-            if(checkBox2.Checked)
+            if(is_iterative_deepening)
             {
-                value = AI.minimax_alpha_beta_pruning(GameState.game_state, Option.depth_of_search, Option.minimum_score, double.PositiveInfinity, true);
-
+                run_iterative_deepening(0);
             }
-            if(checkBox3.Checked)
+            else
             {
                 value = AI.negamax(GameState.game_state, Option.depth_of_search, double.NegativeInfinity, double.PositiveInfinity);
+            }
+            
+
+
+
+            stopWatch.Stop();
+            TimeSpan ts = stopWatch.Elapsed;
+            string elapsedTimeString = string.Format("{0:00}:{1:00}:{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+
+            if (is_iterative_depth)
+            {
+                label_ai_move_result.Text = "(" + AI.ai_move_iterative_deepning.row.ToString() + "," + AI.ai_move_iterative_deepning.column.ToString() + "," + "value:" + AI.ai_state_iterative_deepening.value.ToString() + ")";
+                label_ai_move_stats.Text = elapsedTimeString + ", depth of iterative deepening =  " + depth_deepening.ToString();
 
             }
-            stopWatch.Stop();
-            label_ai_move_result.Text = "(" + AI.ai_move.row.ToString() + "," + AI.ai_move.column.ToString() + "," + "value:" + AI.ai_state.value.ToString() + ")";
-            TimeSpan ts = stopWatch.Elapsed;
-            string elapsedTimeString = String.Format("{0:00}:{1:00}:{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
-            label_ai_move_stats.Text = elapsedTimeString + ", depth =  " + AI.ai_state.depth;
+            else
+            {
+                label_ai_move_result.Text = "(" + AI.ai_move.row.ToString() + "," + AI.ai_move.column.ToString() + "," + "value:" + AI.ai_state.value.ToString() + ")";
+                label_ai_move_stats.Text = elapsedTimeString + ", depth of iterative deepening =  " + depth_deepening.ToString();
+            }
+
+            
+            
+            //MessageBox.Show(depth_deepening.ToString());
 
         }
+
+        
+        public static Task CancellableSearch(CancellationToken ct,int search_type)
+        {
+            //https://arghya.xyz/articles/task-cancellation/
+            return Task.Factory.StartNew(async () => {
+                int iterative_depth = Option.depth_of_search;
+                while (true)
+                {
+                    if(search_type == 0)//Negamax
+                    {
+                        double x = await AI.negamax_id(GameState.game_state, iterative_depth, double.NegativeInfinity, double.PositiveInfinity, ct);
+                    }
+                    if(search_type == 1)
+                    {
+                        double x = await AI.pvs_id(GameState.game_state, iterative_depth, double.NegativeInfinity, double.PositiveInfinity, ct);
+                    }
+                    AI.ai_move_iterative_deepning = AI.ai_move;
+                    AI.ai_state_iterative_deepening = AI.ai_state;
+                    iterative_depth += 2;
+                    depth_deepening = iterative_depth;
+                }
+
+            }, ct);
+        }
+
+        public async void run_iterative_deepening(int search_type)
+        {
+            CancellationTokenSource source = new CancellationTokenSource();
+            var task = CancellableSearch(source.Token,search_type);
+            try
+            {
+                task.Wait(Option.iterative_deepening_time_limit_milliseconds);
+            }
+            catch (AggregateException ae)
+            {
+                if (ae.InnerExceptions.Any(e => e is TaskCanceledException))
+                    MessageBox.Show("Task cancelled exception detected");
+                else
+                    throw;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                source.Dispose();
+            }
+
+        }
+
+
+        
+
 
 
         private void button3_Click(object sender, EventArgs e)
@@ -577,6 +666,8 @@ namespace Andantino_Search
                 checkBox2.Enabled = true;
             }
         }
+
+        
     }
 
 
