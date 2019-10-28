@@ -16,15 +16,7 @@ namespace Andantino_Search
         //P1 AI
         //P2 Human
 
-        //bool Option.isplayer1_turn = false;
-        //bool Option.isplayer2_turn = true;
-
-        //bool Option.isplayer1_turn = true;
-        //bool Option.isplayer2_turn = false;
-
-
-        //bool i_play_second = true;//My AI has the RED pawns
-        //bool i_play_second = false;//My AI has the BLUE pawns
+       
 
 
         int depth_game = 1;
@@ -485,6 +477,10 @@ namespace Andantino_Search
                     value = AI.pvs(GameState.game_state, Option.depth_of_search, double.NegativeInfinity, double.PositiveInfinity);
                 }
 
+            }
+            if(!checkBox1.Checked && !checkBox2.Checked && !checkBox3.Checked && !checkBox4.Checked)
+            {
+                value = AI.negamax(GameState.game_state, Option.depth_of_search, double.NegativeInfinity, double.PositiveInfinity);
             }
             
 

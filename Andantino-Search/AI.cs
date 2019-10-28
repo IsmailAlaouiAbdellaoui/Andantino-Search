@@ -22,7 +22,7 @@ namespace Andantino_Search
 
             State child_state = new State();
 
-            string dir = Util.check_folder_file_minimax_directory();
+            //string dir = Util.check_folder_file_minimax_directory();
             if (maximizing_player)
             {
                 double maxEval = double.NegativeInfinity;
@@ -38,7 +38,7 @@ namespace Andantino_Search
                     //Util.log_info(file_directory, "depth: " + child_state.depth);
                     //Util.log_info(file_directory, "# possible states: " + child_state.possible_hexes.Count);
                     //Util.log_info(file_directory, "\n\n");
-                    Util.log_info(dir, "node");
+                    //Util.log_info(dir, "node");
                     eval = minimax(child_state, depth_minimax - 1, false);
 
                     if (eval > maxEval)
@@ -80,7 +80,7 @@ namespace Andantino_Search
                     //Util.log_info(file_directory, "depth: " + child_state.depth);
                     //Util.log_info(file_directory, "# possible states: " + child_state.possible_hexes.Count);
                     //Util.log_info(file_directory, "\n\n");
-                    Util.log_info(dir, "node");
+                    //Util.log_info(dir, "node");
                     eval = minimax(child_state, depth_minimax - 1, true);
                     if (eval < minEval)
                     {
@@ -130,7 +130,7 @@ namespace Andantino_Search
                     
                 }
                 sorted_children.Sort();
-                string file_directory = Util.check_folder_file_alphabeta_directory();
+                //string file_directory = Util.check_folder_file_alphabeta_directory();
                 for (int i = 0; i < sorted_children.Count; i++)
                 {
                     State child_state = sorted_children[i];
@@ -138,7 +138,7 @@ namespace Andantino_Search
 
                     //if(!child_state.is_game_over)
                     {
-                        Util.log_info(file_directory, "node");
+                        //Util.log_info(file_directory, "node");
                         eval = minimax_alpha_beta_pruning(child_state, depth_alpha_beta - 1, alpha, beta, false);
                         //eval = minimax_alpha_beta_pruning(sorted_children[i], depth_alpha_beta - 1, alpha, beta, false);
 
@@ -171,7 +171,7 @@ namespace Andantino_Search
                         alpha = Math.Max(alpha, eval);
                         if (beta <= alpha)
                         {
-                            Util.log_info(file_directory, "prune");
+                            //Util.log_info(file_directory, "prune");
                             break;
                         }
                     }
@@ -369,7 +369,7 @@ namespace Andantino_Search
             }
             sorted_children.Sort();
             //sorted_children.Reverse();
-            string dir = Util.check_folder_file_pvs_directory();
+            //string dir = Util.check_folder_file_pvs_directory();
             for (int i = 0; i < sorted_children.Count; i++)
             {
                 //State child = s.get_state_after_move(s, s.possible_hexes[i]);
@@ -377,17 +377,17 @@ namespace Andantino_Search
                 //System.Windows.Forms.MessageBox.Show(child.value.ToString());
                 if (i==0)
                 {
-                    Util.log_info(dir, "node");
+                    //Util.log_info(dir, "node");
                     score = -1 * pvs(child, depth_pvs - 1, -beta, -alpha);
                     ai_move = child.move;
                 }
                 else
                 {
-                    Util.log_info(dir, "node");
+                    //Util.log_info(dir, "node");
                     score = -1 * pvs(child, depth_pvs - 1, -alpha - 1, -alpha);
                     if (alpha < score && score < beta)
                     {
-                        Util.log_info(dir, "node");
+                        //Util.log_info(dir, "node");
                         score = -1 * pvs(child, depth_pvs - 1, -beta, -score);
                         //if (child.depth == 2)
                         //{
@@ -408,7 +408,7 @@ namespace Andantino_Search
                 }
                 if(alpha >= beta)
                 {
-                    Util.log_info(dir, "prune");
+                    //Util.log_info(dir, "prune");
                     break;
                 }
             }
