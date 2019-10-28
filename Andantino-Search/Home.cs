@@ -69,23 +69,47 @@ namespace Andantino_Search
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if(box_p1_ai.Checked && box_p2_ai.Checked)
+            {
+                MessageBox.Show("AI vs AI option not implemented");
+                return;
+            }
+            if(box_p2_human.Checked && box_p1_human.Checked )
+            {
+                MessageBox.Show("Human vs Human option deprecated :(");
+                return;
+            }
+
             if((box_p1_ai.Checked || box_p1_human.Checked) && (box_p2_ai.Checked || box_p2_human.Checked))
             {
-                if(box_p1_ai.Checked)
+                //if(box_p1_ai.Checked)
+                //{
+                //    Option.player1_type = 1;
+                //    Option
+                //}
+                //else
+                //{
+                //    Option.player1_type = 2;
+                //}
+                //if(box_p2_ai.Checked)
+                //{
+                //    Option.player2_type = 1;
+                //}
+                //else
+                //{
+                //    Option.player2_type = 2;
+                //}
+                if(box_p1_ai.Checked && box_p2_human.Checked)
                 {
-                    Option.player1_type = 1;
+                    Option.isplayer1_turn = false;
+                    Option.isplayer2_turn = true;
+                    Option.i_play_second = false;
                 }
                 else
                 {
-                    Option.player1_type = 2;
-                }
-                if(box_p2_ai.Checked)
-                {
-                    Option.player2_type = 1;
-                }
-                else
-                {
-                    Option.player2_type = 2;
+                    Option.isplayer1_turn = true;
+                    Option.isplayer2_turn = false;
+                    Option.i_play_second = true;
                 }
 
                 //this.Hide();
@@ -99,6 +123,7 @@ namespace Andantino_Search
             else
             {
                 MessageBox.Show("Please choose a type of player for both players.");
+                return;
             }
         }
 

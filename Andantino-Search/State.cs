@@ -733,20 +733,21 @@ namespace Andantino_Search
                 s.state_player1_hexes.Add(move);
                 s.is_game_over = false;
                 int[] result = s.check_is_victory(move, 1);
-                s.value = Math.Pow(result[0], result[0]) + Math.Pow(result[1], result[1]) + Math.Pow(result[2], result[2]);
+                //s.value = Math.Pow(result[0], result[0]) + Math.Pow(result[1], result[1]) + Math.Pow(result[2], result[2]);
                 List<Hexagon> move_neighbors = get_neighbors(move);
-                int temp = 0;
-                for (int i = 0; i < move_neighbors.Count; i++)
-                {
-                    if(s.state_player1_hexes.Contains(move_neighbors[i]))
-                    {
-                        temp += 1;
-                    }
-                }
-                if(temp == 0)
-                {
-                    s.value -= 50;
-                }
+                //int temp = 0;
+                //for (int i = 0; i < move_neighbors.Count; i++)
+                //{
+                //    if(s.state_player1_hexes.Contains(move_neighbors[i]))
+                //    {
+                //        temp += 1;
+                //    }
+                //}
+                //if(temp == 0)
+                //{
+                //    s.value -= 50;
+                //}
+                s.value = get_fitness(result, move_neighbors, s);
                 foreach (var item in result)
                 {
                     if(item == 5)
@@ -779,16 +780,7 @@ namespace Andantino_Search
                 }
                 
             }
-            //Dictionary <Tuple<int, int>, Hexagon > p1_dict = new Dictionary<Tuple<int, int>, Hexagon>();
-            //Dictionary <Tuple<int, int>, Hexagon> p2_dict = new Dictionary<Tuple<int, int>, Hexagon>();
-            //for (int i = 0; i < s.state_player1_hexes.Count; i++)
-            //{
-            //    p1_dict.Add(Tuple.Create(s.state_player1_hexes[i].row, s.state_player1_hexes[i].column), s.state_player1_hexes[i]);
-            //}
-            //for (int i = 0; i < s.state_player2_hexes.Count; i++)
-            //{
-            //    p2_dict.Add(Tuple.Create(s.state_player2_hexes[i].row, s.state_player2_hexes[i].column), s.state_player2_hexes[i]);
-            //}
+            
 
             if (!s.is_game_over)
             {
@@ -806,6 +798,25 @@ namespace Andantino_Search
 
             //define function is_game_over that checks victory or if all_hexes_taken
             //if 2nd case, then draw
+        }
+
+        public double get_fitness(int[] result, List<Hexagon> move_neighbors, State s)
+        {
+            double fitness_value;
+            fitness_value = Math.Pow(result[0], result[0]) + Math.Pow(result[1], result[1]) + Math.Pow(result[2], result[2]);
+            int temp = 0;
+            for (int i = 0; i < move_neighbors.Count; i++)
+            {
+                if (s.state_player1_hexes.Contains(move_neighbors[i]))
+                {
+                    temp += 1;
+                }
+            }
+            if (temp == 0)
+            {
+                fitness_value -= 50;
+            }
+            return fitness_value;
         }
 
         public int CompareTo(State other)

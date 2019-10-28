@@ -9,7 +9,7 @@ namespace Andantino_Search
     {
         public static Hexagon ai_move { get; set; }
         public static State ai_state { get; set; }       
-        private static Hexagon ai_move_iterative_deepning { get; set; }
+        private static Hexagon ai_move_iterative_deepening { get; set; }
         public static State ai_state_iterative_deepening { get; set; }
         public static double minimax(State s, int depth_minimax, bool maximizing_player)
         {
@@ -22,7 +22,7 @@ namespace Andantino_Search
 
             State child_state = new State();
 
-
+            string dir = Util.check_folder_file_minimax_directory();
             if (maximizing_player)
             {
                 double maxEval = double.NegativeInfinity;
@@ -38,13 +38,14 @@ namespace Andantino_Search
                     //Util.log_info(file_directory, "depth: " + child_state.depth);
                     //Util.log_info(file_directory, "# possible states: " + child_state.possible_hexes.Count);
                     //Util.log_info(file_directory, "\n\n");
+                    Util.log_info(dir, "node");
                     eval = minimax(child_state, depth_minimax - 1, false);
 
                     if (eval > maxEval)
                     {
 
                         maxEval = eval;
-                        if(s.depth == Option.depth_of_search - 1)
+                        if(child_state.depth == GameState.game_state.depth+1)
                         {
                             ai_move = child_state.move;
                             ai_state = child_state;
@@ -79,12 +80,13 @@ namespace Andantino_Search
                     //Util.log_info(file_directory, "depth: " + child_state.depth);
                     //Util.log_info(file_directory, "# possible states: " + child_state.possible_hexes.Count);
                     //Util.log_info(file_directory, "\n\n");
+                    Util.log_info(dir, "node");
                     eval = minimax(child_state, depth_minimax - 1, true);
                     if (eval < minEval)
                     {
 
                         minEval = eval;
-                        if(s.depth == Option.depth_of_search - 1)
+                        if(child_state.depth == GameState.game_state.depth + 1)
                         {
                             ai_move = child_state.move;
                             ai_state = child_state;
@@ -128,6 +130,7 @@ namespace Andantino_Search
                     
                 }
                 sorted_children.Sort();
+                string file_directory = Util.check_folder_file_alphabeta_directory();
                 for (int i = 0; i < sorted_children.Count; i++)
                 {
                     State child_state = sorted_children[i];
@@ -135,6 +138,7 @@ namespace Andantino_Search
 
                     //if(!child_state.is_game_over)
                     {
+                        Util.log_info(file_directory, "node");
                         eval = minimax_alpha_beta_pruning(child_state, depth_alpha_beta - 1, alpha, beta, false);
                         //eval = minimax_alpha_beta_pruning(sorted_children[i], depth_alpha_beta - 1, alpha, beta, false);
 
@@ -167,6 +171,7 @@ namespace Andantino_Search
                         alpha = Math.Max(alpha, eval);
                         if (beta <= alpha)
                         {
+                            Util.log_info(file_directory, "prune");
                             break;
                         }
                     }
@@ -186,6 +191,7 @@ namespace Andantino_Search
                     }
                     
                 }
+                string file_directory = Util.check_folder_file_alphabeta_directory();
                 sorted_children.Sort();
                 for (int i = 0; i < sorted_children.Count; i++)
                 {
@@ -193,6 +199,7 @@ namespace Andantino_Search
                     //child_state = s.get_state_after_move(s, s.possible_hexes[i]);
                     //if(!child_state.is_game_over)
                     {
+                        Util.log_info(file_directory, "node");
                         eval = minimax_alpha_beta_pruning(child_state, depth_alpha_beta - 1, alpha, beta, true);
 
                         //eval = minimax_alpha_beta_pruning(sorted_children[i], depth_alpha_beta - 1, alpha, beta, true);
@@ -220,6 +227,7 @@ namespace Andantino_Search
                         beta = Math.Min(beta, eval);
                         if (beta <= alpha)
                         {
+                            Util.log_info(file_directory, "prune");
                             break;
                         }
                     }
@@ -311,10 +319,13 @@ namespace Andantino_Search
                 
             }
             temp.Sort();
+            //string dir = Util.check_folder_file_negamax_directory();
             for (int i = 0; i < temp.Count; i++)
             {
                 State child_state = temp[i];
                 {
+
+                    //Util.log_info(dir, "node");
                     double value = -1 * negamax(child_state, depth_negamax - 1, -beta, -alpha);
                     if (value > score)
                     {
@@ -331,6 +342,7 @@ namespace Andantino_Search
                     }
                     if (score >= beta)
                     {
+                        //Util.log_info(dir, "pruned");
                         break;
                     }
                 }
@@ -357,7 +369,7 @@ namespace Andantino_Search
             }
             sorted_children.Sort();
             //sorted_children.Reverse();
-
+            string dir = Util.check_folder_file_pvs_directory();
             for (int i = 0; i < sorted_children.Count; i++)
             {
                 //State child = s.get_state_after_move(s, s.possible_hexes[i]);
@@ -365,15 +377,17 @@ namespace Andantino_Search
                 //System.Windows.Forms.MessageBox.Show(child.value.ToString());
                 if (i==0)
                 {
-                    
+                    Util.log_info(dir, "node");
                     score = -1 * pvs(child, depth_pvs - 1, -beta, -alpha);
                     ai_move = child.move;
                 }
                 else
                 {
+                    Util.log_info(dir, "node");
                     score = -1 * pvs(child, depth_pvs - 1, -alpha - 1, -alpha);
                     if (alpha < score && score < beta)
                     {
+                        Util.log_info(dir, "node");
                         score = -1 * pvs(child, depth_pvs - 1, -beta, -score);
                         //if (child.depth == 2)
                         //{
@@ -394,6 +408,7 @@ namespace Andantino_Search
                 }
                 if(alpha >= beta)
                 {
+                    Util.log_info(dir, "prune");
                     break;
                 }
             }
@@ -434,7 +449,8 @@ namespace Andantino_Search
                     if (value > score)
                     {
                         score = value;
-                        if (s.depth == GameState.game_state.depth)
+                        //if (s.depth == GameState.game_state.depth)
+                        if(child_state.depth == GameState.game_state.depth + 1)
                         {
                             ai_move = child_state.move;
                             ai_state = child_state;
@@ -610,12 +626,12 @@ namespace Andantino_Search
 
         public static void set_ai_move_iterative(Hexagon move)
         {
-            ai_move_iterative_deepning = move;
+            ai_move_iterative_deepening = move;
         }
 
         public static Hexagon get_ai_move_iterative()
         {
-            return ai_move_iterative_deepning;
+            return ai_move_iterative_deepening;
         }
     }
 

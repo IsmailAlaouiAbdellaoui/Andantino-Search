@@ -6,6 +6,12 @@ namespace Andantino_Search
 {
     public struct Option
     {
+        public static bool isplayer1_turn = false;
+        public static bool isplayer2_turn = true;
+
+        public static bool i_play_second = false;
+
+
         public static float size = 20f;
 
         public static float first_center_x = 20f;
@@ -37,7 +43,7 @@ namespace Andantino_Search
 
         public static List<Hexagon> hexes_outer_board = new List<Hexagon>();
 
-        public static int depth_of_search = 6;
+        public static int depth_of_search = 4;
 
         public static double minimum_score = 3;
 
@@ -60,7 +66,7 @@ namespace Andantino_Search
         public static SolidBrush brush_notation_elements = new SolidBrush(Color.Black);
 
         public static bool is_game_over = false;
-        public static int iterative_deepening_time_limit_milliseconds = 4500;
+        public static int iterative_deepening_time_limit_milliseconds = 1000;
 
     }
 }

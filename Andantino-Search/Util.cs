@@ -32,6 +32,63 @@ namespace Andantino_Search
             return file_directory;
         }
 
+        public static string check_folder_file_alphabeta_directory()
+        {
+            string current_directory = Directory.GetCurrentDirectory();
+            string minimax_folder = "\\log_alphabeta";
+            string complete_directory = current_directory + minimax_folder;
+            string file_directory = complete_directory + "\\log_alphabeta.txt";
+            if (!Directory.Exists(complete_directory))
+            {
+                Directory.CreateDirectory(complete_directory);
+                if (!File.Exists(file_directory))
+                {
+                    File.Create(file_directory);
+                }
+
+            }
+            return file_directory;
+        }
+
+
+
+        public static string check_folder_file_negamax_directory()
+        {
+            string current_directory = Directory.GetCurrentDirectory();
+            string minimax_folder = "\\log_negamax";
+            string complete_directory = current_directory + minimax_folder;
+            string file_directory = complete_directory + "\\log_negamax.txt";
+            if (!Directory.Exists(complete_directory))
+            {
+                Directory.CreateDirectory(complete_directory);
+                if (!File.Exists(file_directory))
+                {
+                    File.Create(file_directory);
+                }
+
+            }
+            return file_directory;
+        }
+
+        public static string check_folder_file_pvs_directory()
+        {
+            string current_directory = Directory.GetCurrentDirectory();
+            string minimax_folder = "\\log_pvs";
+            string complete_directory = current_directory + minimax_folder;
+            string file_directory = complete_directory + "\\log_pvs.txt";
+            if (!Directory.Exists(complete_directory))
+            {
+                Directory.CreateDirectory(complete_directory);
+                if (!File.Exists(file_directory))
+                {
+                    File.Create(file_directory);
+                }
+
+            }
+            return file_directory;
+        }
+
+
         public static string check_folder_file_zobrist_directory()
         {
             string current_directory = Directory.GetCurrentDirectory();

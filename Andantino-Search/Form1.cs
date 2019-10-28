@@ -16,21 +16,21 @@ namespace Andantino_Search
         //P1 AI
         //P2 Human
 
-        bool isplayer1_turn = false;
-        bool isplayer2_turn = true;
+        //bool Option.isplayer1_turn = false;
+        //bool Option.isplayer2_turn = true;
 
-        //bool isplayer1_turn = true;
-        //bool isplayer2_turn = false;
+        //bool Option.isplayer1_turn = true;
+        //bool Option.isplayer2_turn = false;
 
 
         //bool i_play_second = true;//My AI has the RED pawns
-        bool i_play_second = false;//My AI has the BLUE pawns
+        //bool i_play_second = false;//My AI has the BLUE pawns
 
 
         int depth_game = 1;
 
         public static int depth_deepening;
-        bool is_iterative_depth = true;
+        bool is_iterative_depth = false;
 
         DateTime Started = DateTime.Now;
 
@@ -62,7 +62,7 @@ namespace Andantino_Search
             {
                 GameStatic.hexes_board_dict.Add(Tuple.Create(GameStatic.hexes_in_board[i].row, GameStatic.hexes_in_board[i].column), GameStatic.hexes_in_board[i]);
             }
-            if(isplayer2_turn)
+            if(Option.isplayer2_turn)
             {
                 Hexagon player1_hex = GameStatic.hexes_in_board.Find(hex => hex.row == Option.row_init_coin && hex.column == Option.col_init_coin);
                 set_initial_state(player1_hex);
@@ -76,7 +76,7 @@ namespace Andantino_Search
             txtbox_number_possible_hexes.Text = GameState.game_state.possible_hexes.Count.ToString();
 
             GameState.game_history.Push(GameState.game_state);
-            if(i_play_second)
+            if(Option.i_play_second)
             {
                 make_ai_move(is_iterative_depth);
                 depth_game++;
@@ -88,36 +88,17 @@ namespace Andantino_Search
                 {
                     GameState.game_state = GameState.game_state.get_state_after_move(GameState.game_state, AI.ai_move);
                 }
-                isplayer1_turn = true;
-                isplayer2_turn = false;
+                Option.isplayer1_turn = true;
+                Option.isplayer2_turn = false;
                 label_player_turn.Text = "Player 1";
                 label_player_turn.ForeColor = Color.RoyalBlue;
             }
             
 
 
-            //MessageBox.Show(GameStatic.hexes_in_board.Count.ToString());
+            
             //Zobrist.generate_zobrist_table(false);
-            if(Option.player1_type == 1 && Option.player2_type == 1)
-            {
-                //disable click on board and on ai_move button
-                //change the counter
-                //while (!Option.is_game_over)
-                //{
-                //    //if checkbox of which algo to use
-                //    AI.negamax(GameState.game_state, Option.depth_of_search, Option.minimum_score, double.PositiveInfinity);
-                //    //put pawn of p2 in board
-                //    //check game over
-                //    //update stack
-
-                //    AI.negamax(GameState.game_state, Option.depth_of_search, Option.minimum_score, double.PositiveInfinity);
-                //    //put pawn of p1 in board
-                //    //check game over
-                //    //update stack
-
-                //}
-
-            }
+            
             
 
         }
@@ -130,7 +111,7 @@ namespace Andantino_Search
             label_time_limit.ForeColor = Option.color_time_limit;
             label_time_limit.Font = Option.font_time_limit;
 
-            if(isplayer2_turn)
+            if(Option.isplayer2_turn)
             {
                 label_player_turn.Text = "Player 2";
                 label_player_turn.ForeColor = Color.Crimson;
@@ -157,7 +138,7 @@ namespace Andantino_Search
         {
             GameState.game_state.state_player1_hexes = new List<Hexagon>();
             GameState.game_state.state_player2_hexes = new List<Hexagon>();
-            if (isplayer2_turn)
+            if (Option.isplayer2_turn)
             {
                 
                 GameState.game_state.state_player1_hexes.Add(first_hex);
@@ -170,7 +151,7 @@ namespace Andantino_Search
             
             GameState.game_state.empty_hexes = new List<Hexagon>(GameStatic.hexes_in_board);
             GameState.game_state.empty_hexes.Remove(first_hex);
-            if(isplayer2_turn)
+            if(Option.isplayer2_turn)
             {
                 GameState.game_state.possible_hexes = GameState.game_state.get_neighbors(GameState.game_state.state_player1_hexes[0]);
             }
@@ -181,7 +162,7 @@ namespace Andantino_Search
             
             GameState.game_state.is_game_over = false;
             GameState.game_state.move = first_hex;
-            if(isplayer1_turn == false && isplayer2_turn == true)
+            if(Option.isplayer1_turn == false && Option.isplayer2_turn == true)
             {
                 GameState.game_state.player = 1;
             }
@@ -247,7 +228,7 @@ namespace Andantino_Search
             
 
 
-            Drawing.draw_possible_hexes(e.Graphics, GameState.game_state.possible_hexes,isplayer1_turn);
+            Drawing.draw_possible_hexes(e.Graphics, GameState.game_state.possible_hexes,Option.isplayer1_turn);
 
             txtbox_p1_number_coins.Text = GameState.game_state.state_player1_hexes.Count.ToString();
             txtbox_p2_number_coins.Text = GameState.game_state.state_player2_hexes.Count.ToString();
@@ -341,7 +322,7 @@ namespace Andantino_Search
 
             //bool result;
             //when you click,
-            if (!isplayer1_turn && isplayer2_turn)//Human TURN == p2
+            if (!Option.isplayer1_turn && Option.isplayer2_turn)//Human TURN == p2
             {
                 int number_hexes_player2_before = GameState.game_state.state_player2_hexes.Count;
                 if(GameState.game_state.possible_hexes.Any(hex=> hex.Equals(move)))
@@ -378,13 +359,13 @@ namespace Andantino_Search
 
                 if (GameState.game_state.state_player1_hexes.Count>number_hexes_player2_before)
                 {
-                    //isplayer1_turn = true;
+                    //Option.isplayer1_turn = true;
                     //label_player_turn.Text = "Player 1";
                     //label_player_turn.ForeColor = Color.RoyalBlue;
-                    //isplayer2_turn = false;
+                    //Option.isplayer2_turn = false;
 
-                    isplayer1_turn = false;
-                    isplayer2_turn = true;
+                    Option.isplayer1_turn = false;
+                    Option.isplayer2_turn = true;
                     label_player_turn.Text = "Player 2";
                     label_player_turn.ForeColor = Color.Crimson;
 
@@ -437,13 +418,13 @@ namespace Andantino_Search
 
                 if (GameState.game_state.state_player1_hexes.Count>number_hexes_player1_before)
                 {
-                    //isplayer1_turn = false;
-                    //isplayer2_turn = true;
+                    //Option.isplayer1_turn = false;
+                    //Option.isplayer2_turn = true;
                     //label_player_turn.Text = "Player 2";
                     //label_player_turn.ForeColor = Color.Crimson;
 
-                    isplayer1_turn = true;
-                    isplayer2_turn = false;
+                    Option.isplayer1_turn = true;
+                    Option.isplayer2_turn = false;
                     label_player_turn.Text = "Player 1";
                     label_player_turn.ForeColor = Color.RoyalBlue;
 
@@ -464,11 +445,7 @@ namespace Andantino_Search
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //to do
-            //transposition table
-            //iterative deepening
-            //timer
-            //all span
+            
             make_ai_move(is_iterative_depth);
 
 
@@ -484,8 +461,6 @@ namespace Andantino_Search
             double value;
             //value = AI.negamax(GameState.game_state, Option.depth_of_search, double.NegativeInfinity, double.PositiveInfinity);
             //value = AI.pvs(GameState.game_state, 3, double.NegativeInfinity, double.PositiveInfinity);
-            //iterative_deepening();
-            //MessageBox.Show("making ai move");
 
             if(is_iterative_deepening)
             {
@@ -493,7 +468,23 @@ namespace Andantino_Search
             }
             else
             {
-                value = AI.negamax(GameState.game_state, Option.depth_of_search, double.NegativeInfinity, double.PositiveInfinity);
+                if(checkBox1.Checked)
+                {
+                    value = AI.minimax(GameState.game_state, Option.depth_of_search, true);
+                }
+                if(checkBox2.Checked)
+                {
+                    value = AI.minimax_alpha_beta_pruning(GameState.game_state, Option.depth_of_search, double.NegativeInfinity, double.PositiveInfinity, true);
+                }
+                if(checkBox3.Checked)
+                {
+                    value = AI.negamax(GameState.game_state, Option.depth_of_search, double.NegativeInfinity, double.PositiveInfinity);
+                }
+                if(checkBox4.Checked)
+                {
+                    value = AI.pvs(GameState.game_state, Option.depth_of_search, double.NegativeInfinity, double.PositiveInfinity);
+                }
+
             }
             
 
@@ -515,9 +506,6 @@ namespace Andantino_Search
                 label_ai_move_stats.Text = elapsedTimeString + ", depth of iterative deepening =  " + depth_deepening.ToString();
             }
 
-            
-            
-            //MessageBox.Show(depth_deepening.ToString());
 
         }
 
@@ -541,16 +529,10 @@ namespace Andantino_Search
                     {
                         double x = await AI.minimax_alpha_beta_pruning_id(GameState.game_state, Option.depth_of_search, double.NegativeInfinity, double.PositiveInfinity, true,ct);
                     }
-                    //if(ct.CanBeCanceled)
-                    //{
-                    //    AI.ai_move_iterative_deepning = AI.ai_move;
-                    //}
                     AI.set_ai_move_iterative(AI.ai_move);
-                    //label_ai_move_result.Text = "(" + AI.ai_move_iterative_deepning.row.ToString() + "," + AI.ai_move_iterative_deepning.column.ToString() + "," + "value:" + AI.ai_state_iterative_deepening.value.ToString() + ")";
                     string info = "(" + AI.get_ai_move_iterative().row.ToString() + "," + AI.get_ai_move_iterative().column.ToString() + "," + "value:" + AI.ai_state_iterative_deepening.value.ToString() + ")";
-                    //MessageBox.Show(info + " " + depth_deepening.ToString());
                     AI.ai_state_iterative_deepening = AI.ai_state;
-                    iterative_depth += 2;
+                    iterative_depth += 1;
                     depth_deepening = iterative_depth;
                 }
 
@@ -584,10 +566,6 @@ namespace Andantino_Search
         }
 
 
-        
-
-
-
         private void button3_Click(object sender, EventArgs e)
         {
             if(GameState.game_history.Count == 1)
@@ -599,15 +577,15 @@ namespace Andantino_Search
             {
                 GameState.game_history.Pop();
                 GameState.game_state = (State)GameState.game_history.Peek();
-                if(isplayer1_turn)
+                if(Option.isplayer1_turn)
                 {
-                    isplayer1_turn = false;
-                    isplayer2_turn = true;
+                    Option.isplayer1_turn = false;
+                    Option.isplayer2_turn = true;
                 }
                 else
                 {
-                    isplayer1_turn = true;
-                    isplayer2_turn = false;
+                    Option.isplayer1_turn = true;
+                    Option.isplayer2_turn = false;
                 }
                 picGrid.Refresh();
                 
@@ -640,11 +618,13 @@ namespace Andantino_Search
             {
                 checkBox2.Enabled = false;
                 checkBox3.Enabled = false;
+                checkBox4.Enabled = false;
             }
             else
             {
                 checkBox2.Enabled = true;
                 checkBox3.Enabled = true;
+                checkBox4.Enabled = true;
             }
 
         }
@@ -655,11 +635,13 @@ namespace Andantino_Search
             {
                 checkBox1.Enabled = false;
                 checkBox3.Enabled = false;
+                checkBox4.Enabled = false;
             }
             else
             {
                 checkBox1.Enabled = true;
                 checkBox3.Enabled = true;
+                checkBox4.Enabled = true;
             }
 
         }
@@ -670,15 +652,31 @@ namespace Andantino_Search
             {
                 checkBox1.Enabled = false;
                 checkBox2.Enabled = false;
+                checkBox4.Enabled = false;
             }
             else
             {
                 checkBox1.Enabled = true;
                 checkBox2.Enabled = true;
+                checkBox4.Enabled = true;
             }
         }
 
-        
+        private void checkBox4_CheckedChanged(object sender, EventArgs e)
+        {
+            if(checkBox4.Checked)
+            {
+                checkBox1.Enabled = false;
+                checkBox2.Enabled = false;
+                checkBox3.Enabled = false;
+            }
+            else
+            {
+                checkBox1.Enabled = true;
+                checkBox2.Enabled = true;
+                checkBox3.Enabled = true;
+            }
+        }
     }
 
 
