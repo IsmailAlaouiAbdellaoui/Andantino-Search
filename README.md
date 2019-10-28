@@ -29,3 +29,7 @@
  - Using the executable: clone the repository and double click on the executable file located in "Andantino-Search/bin/Release"
  - Choose AI vs Human option ( Human vs Human and AI vs AI not implemented)
  - Click on the the possible moves each turn
+
+Screenshot of the board :
+
+![alt text](https://github.com/IsmailAlaouiAbdellaoui/Andantino-Search/blob/master/GamePlayBoard.JPG)
